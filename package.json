@@ -1,0 +1,12 @@
+{
+  "name": "zombie-conqueror",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@poki/cli": "^0.1.15",
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
