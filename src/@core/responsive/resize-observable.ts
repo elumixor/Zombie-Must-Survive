@@ -1,12 +1,12 @@
 import { inject } from "@core/di";
 import { type AnyConstructor, wraps } from "@elumixor/frontils";
-import { ResizeObserver } from "./resize-observer";
+import { Resizer } from "./resizer";
 import { metadataKey, type OrientationMap, observableProxies } from "./types";
 import { updateResponsiveElements } from "./update-responsive-elements";
-import type { IRotateObservable, IResizeObservable, IDimensions } from "./resize-observer";
+import type { IRotateObservable, IResizeObservable, IDimensions } from "./resizer";
 
 /**
- * Automatically subscribes to the {@link ResizeObserver} upon the object's instantiation.
+ * Automatically subscribes to the {@link Resizer} upon the object's instantiation.
  */
 export function resizeObservable<TBase extends AnyConstructor<Partial<IResizeObservable | IRotateObservable>>>(
     Base: TBase,
@@ -21,11 +21,14 @@ export function resizeObservable<TBase extends AnyConstructor<Partial<IResizeObs
     const isRotateObservable = "changeOrientation" in prototype;
     const isBeforeRotateObservable = "beforeChangeOrientation" in prototype;
 
-    if (!responsiveMetadata && !isResizeObservable && !isRotateObservable && !isBeforeRotateObservable)
-        throw new Error(
+    if (!responsiveMetadata && !isResizeObservable && !isRotateObservable && !isBeforeRotateObservable) {
+        debug(
             `Class ${Base.name} should define either resize(), changeOrientation(), beforeChangeOrientation(), ` +
                 `or have at least one field decorated with "@responsive"`,
         );
+
+        return Base;
+    }
 
     @wraps(Base)
     class Wrapper extends Base {
@@ -37,7 +40,7 @@ export function resizeObservable<TBase extends AnyConstructor<Partial<IResizeObs
             // eslint-disable-next-line @typescript-eslint/no-unsafe-call
             super(...params);
 
-            const resizeObserver = inject(ResizeObserver);
+            const resizeObserver = inject(Resizer);
 
             // Subscribe to resize observer
             // We create a proxy object to keep the correct method of the prototype.

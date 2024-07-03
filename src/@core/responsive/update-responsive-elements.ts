@@ -1,6 +1,6 @@
 import { Container, type Point } from "pixi.js";
 import { type IElementConfig, type OrientationMap, metadataKey } from "./types";
-import type { IDimensions } from "./resize-observer";
+import type { IDimensions } from "./resizer";
 import { unwrap } from "@core/utils";
 
 interface IResponsiveTarget {

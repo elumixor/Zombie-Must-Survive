@@ -23,19 +23,19 @@ export class App {
     readonly renderer = this.pixiApp.renderer;
     readonly stage = this.pixiApp.stage;
 
-    constructor(scales: RequiredScales) {
+    constructor({ scales, maxFPS = 60 }: { scales: RequiredScales; maxFPS?: number }) {
         new ResizeObserver(this.renderer, scales);
 
         Ticker.shared.autoStart = false;
         Ticker.shared.start();
-        Ticker.shared.maxFPS = 60;
-        gsap.ticker.fps(60);
+        Ticker.shared.maxFPS = maxFPS;
+        gsap.ticker.fps(maxFPS);
 
         const { stage, ticker, view } = this.pixiApp;
         const canvas = view as HTMLCanvasElement;
 
         stage.interactive = true;
-        ticker.maxFPS = 60;
+        ticker.maxFPS = maxFPS;
 
         this.canvasContainer.appendChild(canvas);
         canvas.addEventListener("contextmenu", (e) => e.preventDefault());

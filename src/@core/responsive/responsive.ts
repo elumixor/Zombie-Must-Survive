@@ -1,7 +1,7 @@
 import { type AnyConstructor, DefaultMap } from "@elumixor/frontils";
 import { type IElementConfig, metadataKey, type Orientation, type OrientationMap } from "./types";
 import { resizeObservable } from "./resize-observable";
-import { ResizeObserver } from "./resize-observer";
+import { Resizer } from "./resizer";
 import { isStatic, updateResponsiveElement } from "./update-responsive-elements";
 import { inject } from "@core/di";
 import "reflect-metadata";
@@ -62,7 +62,7 @@ export const responsive = Object.assign(
         const config = args[2] as IElementConfig;
 
         propertyDecorator(config, ["portrait", "landscape", "desktop", "desktopNarrow"])(target, key);
-        updateResponsiveElement(target[key], config, inject(ResizeObserver).dimensions, isStatic(config));
+        updateResponsiveElement(target[key], config, inject(Resizer).dimensions, isStatic(config));
         return;
     },
     {
@@ -76,7 +76,7 @@ export const responsive = Object.assign(
             const config = args[2] as IElementConfig;
 
             propertyDecorator(config, ["portrait", "desktopNarrow"])(target, key);
-            updateResponsiveElement(target[key], config, inject(ResizeObserver).dimensions, isStatic(config));
+            updateResponsiveElement(target[key], config, inject(Resizer).dimensions, isStatic(config));
             return;
         },
         landscape: (...args: unknown[]) => {
@@ -87,7 +87,7 @@ export const responsive = Object.assign(
             const config = args[2] as IElementConfig;
 
             propertyDecorator(config, ["landscape", "desktop"])(target, key);
-            updateResponsiveElement(target[key], config, inject(ResizeObserver).dimensions, isStatic(config));
+            updateResponsiveElement(target[key], config, inject(Resizer).dimensions, isStatic(config));
             return;
         },
         desktop: (...args: unknown[]) => {
@@ -98,7 +98,7 @@ export const responsive = Object.assign(
             const config = args[2] as IElementConfig;
 
             propertyDecorator(config, ["desktop"])(target, key);
-            updateResponsiveElement(target[key], config, inject(ResizeObserver).dimensions, isStatic(config));
+            updateResponsiveElement(target[key], config, inject(Resizer).dimensions, isStatic(config));
             return;
         },
         desktopNarrow: (...args: unknown[]) => {
@@ -109,7 +109,7 @@ export const responsive = Object.assign(
             const config = args[2] as IElementConfig;
 
             propertyDecorator(config, ["desktopNarrow"])(target, key);
-            updateResponsiveElement(target[key], config, inject(ResizeObserver).dimensions, isStatic(config));
+            updateResponsiveElement(target[key], config, inject(Resizer).dimensions, isStatic(config));
             return;
         },
     },

@@ -1,6 +1,10 @@
 declare global {
     function log(...args: unknown[]): void;
-    function debug(...args: unknown[]): void; // based on the environment variable
+    // If PROD - will have no effect
+    const debug: {
+        (...args: unknown[]): void;
+        fn(fn: () => void): void;
+    };
 }
 
 Reflect.defineProperty(globalThis, "log", {
@@ -15,11 +19,19 @@ Reflect.defineProperty(globalThis, "log", {
 
 Reflect.defineProperty(globalThis, "debug", {
     value: import.meta.env.DEV
-        ? (...args: unknown[]) => {
-              // eslint-disable-next-line no-console
-              console.warn(...args);
-          }
-        : () => undefined,
+        ? (() => {
+              const fn = (...args: unknown[]) => {
+                  // eslint-disable-next-line no-console
+                  console.warn(...args);
+              };
+              Reflect.set(fn, "fn", (fn: () => void) => fn());
+              return fn;
+          })()
+        : (() => {
+              const fn = () => undefined;
+              Reflect.set(fn, "fn", () => undefined);
+              return fn;
+          })(),
     writable: false,
     enumerable: false,
     configurable: false,

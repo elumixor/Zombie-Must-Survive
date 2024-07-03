@@ -9,7 +9,7 @@ export interface RequiredScales {
 }
 
 @injectable
-export class ResizeObserver {
+export class Resizer {
     readonly requiredScales;
     protected readonly resized = new EventEmitter<IDimensions>();
     protected readonly rotated = new EventEmitter<IDimensions>();
@@ -108,7 +108,7 @@ export class ResizeObserver {
     }
 }
 
-export type IDimensions = ResizeObserver["dimensions"];
+export type IDimensions = Resizer["dimensions"];
 
 export interface IResizeObservable {
     ["resize"]: (dimensions: IDimensions) => void;

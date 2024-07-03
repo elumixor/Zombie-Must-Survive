@@ -4,13 +4,10 @@ import type { Spine } from "@core/spine";
 
 @injectable
 export class Resources extends BaseResources {
-    @spine("spineboy-ess", { extension: "json" })
-    declare readonly spineBoy: Spine;
+    @spine("spineboy", { extension: "json" })
+    declare readonly player: Spine<"death" | "hit" | "idle" | "jump" | "run" | "shoot" | "walk">;
 
     constructor() {
         super("resources/assets", "resources/html");
-
-        this.mainLoader.add("spritesheet", `${this.pathTo("sprites")}/spritesheet.json`);
-        this.mainLoader.add("quadrocopter", `${this.pathTo("sprites")}/quadrocopter.jpg`);
     }
 }
