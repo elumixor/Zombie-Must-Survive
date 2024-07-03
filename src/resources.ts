@@ -9,5 +9,8 @@ export class Resources extends BaseResources {
 
     constructor() {
         super("resources/assets", "resources/html");
+
+        this.mainLoader.add("zombie", `${this.pathTo("sprites")}/zombie.png`);
+        this.mainLoader.add("background", `${this.pathTo("sprites")}/background.png`);
     }
 }
