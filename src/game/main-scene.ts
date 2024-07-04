@@ -1,68 +1,60 @@
-import { App } from "@core/app";
-import { inject } from "@core/di";
 import { responsive } from "@core/responsive";
-import { Resizer, type IDimensions } from "@core/responsive/resizer";
-import { Viewport } from "pixi-viewport";
 import { Container, Graphics, Ticker } from "pixi.js";
 import { Player } from "./player";
+import { ZombieManager } from "./zombie-manager";
 
 @responsive
 export class MainScene extends Container {
-    private readonly app = inject(App);
-    private readonly resizer = inject(Resizer);
     private readonly player = new Player();
 
-    private readonly worldWidth = 1000;
-    private readonly worldHeight = 1000;
+    @responsive({ pin: 0.5 })
+    private readonly centered = new Container();
+    private readonly world = new Container();
 
-    private readonly viewport = new Viewport({
-        screenWidth: this.resizer.width,
-        screenHeight: this.resizer.height,
-        worldWidth: this.worldWidth,
-        worldHeight: this.worldHeight,
-        events: this.app.renderer.events,
-    });
-
+    private readonly zombies = new ZombieManager({ player: this.player });
     constructor() {
         super();
 
+        this.centered.addChild(this.world);
+        this.addChild(this.centered);
+
         debug.fn(() => {
-            const line = this.viewport.addChild(new Graphics());
-            line.lineStyle(10, 0xff0000).drawRect(0, 0, this.worldWidth, this.worldHeight);
+            const line = this.world.addChild(new Graphics());
+            const size = 500;
+            line.lineStyle(10, 0xff0000).drawRect(-size / 2, -size / 2, size, size);
         });
 
-        this.viewport.addChild(this.player);
-        this.addChild(this.viewport);
+        this.world.addChild(this.player);
 
-        this.viewport.fit();
-        this.viewport.moveCenter(this.worldWidth / 2, this.worldHeight / 2);
-
-        this.player.position.copyFrom(this.viewport.center);
+        this.world.sortableChildren = true;
 
         // Follow the player
         Ticker.shared.add(this.followPlayer);
+
+        // Spawn the zombies
+        this.zombies.spawned.subscribe((zombie) => {
+            zombie.x -= this.world.x;
+            zombie.y -= this.world.y;
+            this.world.addChild(zombie);
+        });
+
+        this.zombies.start();
     }
 
-    // Change the viewport's center to follow the player
-    // Unfortunately, viewport.follow() produced a jittery effect
+    // We need to keep player at the center, by moving the world
     private readonly followPlayer = (dt: number) => {
-        const { x: cx, y: cy } = this.viewport.center;
-        const { x: tx, y: ty } = this.player.position;
+        const { x: px, y: py } = this.player.position;
+        const { x: wx, y: wy } = this.world.position;
 
-        const dx = tx - cx;
-        const dy = ty - cy;
+        // Target
+        const tx = -px;
+        const ty = -py;
+
+        const dx = tx - wx;
+        const dy = ty - wy;
         const speed = 0.1;
 
-        const x = cx + dx * dt * speed;
-        const y = cy + dy * dt * speed;
-
-        this.viewport.moveCenter(x, y);
+        this.world.x += dx * speed * dt;
+        this.world.y += dy * speed * dt;
     };
-
-    resize({ height, width }: IDimensions) {
-        this.viewport.screenHeight = height;
-        this.viewport.screenWidth = width;
-        this.viewport.fit();
-        this.viewport.moveCenter(this.player.position);
-    }
 }

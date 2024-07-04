@@ -26,6 +26,8 @@ export class App {
     constructor({ scales, maxFPS = 60 }: { scales: RequiredScales; maxFPS?: number }) {
         new ResizeObserver(this.renderer, scales);
 
+        debug.fn(() => Reflect.set(globalThis, "__PIXI_APP__", this.pixiApp));
+
         Ticker.shared.autoStart = false;
         Ticker.shared.start();
         Ticker.shared.maxFPS = maxFPS;

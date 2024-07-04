@@ -6,12 +6,13 @@ import { Resources } from "resources";
 
 @responsive
 export class Player extends Container {
-    movementSpeed = 15;
+    movementSpeed = 3;
+    collisionDistance = 30;
 
     private readonly resources = inject(Resources);
     private readonly controls = inject(Controls);
 
-    @responsive({ scale: 0.4 })
+    @responsive({ scale: 0.1, y: 20 })
     private readonly spine = this.resources.player;
 
     private _moving = false;
@@ -22,7 +23,7 @@ export class Player extends Container {
         this.addChild(this.spine);
         this.spine.animate("idle", { loop: true });
 
-        this.controls.onMove(this.move.bind(this));
+        this.controls.onMove(this.move);
         this.controls.movementChanged.subscribe(([dx, dy]) => {
             if (dx === 0) {
                 if (dy === 0) this.moving = false;
@@ -33,7 +34,6 @@ export class Player extends Container {
 
             const { x } = this.spine.scale;
             this.spine.scale.x = Math.abs(x) * dx;
-
             this.moving = true;
         });
     }
@@ -54,8 +54,8 @@ export class Player extends Container {
         this.spine.animate("idle", { loop: true });
     }
 
-    private move(dx: number, dy: number, dt: number) {
+    private readonly move = (dx: number, dy: number, dt: number) => {
         this.x += dx * dt * this.movementSpeed;
         this.y += dy * dt * this.movementSpeed;
-    }
+    };
 }

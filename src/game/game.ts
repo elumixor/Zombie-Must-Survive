@@ -4,11 +4,13 @@ import { responsive, type IDimensions, type IResizeObservable } from "@core/resp
 import { Container } from "pixi.js";
 import { Sounds } from "sounds";
 import { MainScene } from "./main-scene";
+import { Controls } from "controls";
 
 @responsive
 export class Game extends Container implements IResizeObservable {
     private readonly app = inject(App);
     private readonly sounds = inject(Sounds);
+    private readonly controls = inject(Controls);
     private readonly mainScene = new MainScene();
 
     constructor() {
@@ -31,6 +33,6 @@ export class Game extends Container implements IResizeObservable {
         debug(value ? "Paused" : "Resumed");
 
         this.sounds.muted = value;
-        // disable keyboard if needed?
+        this.controls.disabled = value;
     }
 }
