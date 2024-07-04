@@ -36,6 +36,8 @@ declare module "pixi.js" {
          * @param after The child to add the child after.
          */
         addChildAfter<TChild extends Container>(child: TChild, after: Container): TChild;
+        distanceTo(other: Container): number;
+        angleTo(other: Container): number;
     }
 }
 
@@ -95,6 +97,20 @@ Reflect.defineProperty(Container.prototype, "addChildBefore", {
 Reflect.defineProperty(Container.prototype, "addChildAfter", {
     value(this: Container, child: Container, after: Container) {
         return this.addChildAt(child, this.children.indexOf(after) + 1);
+    },
+    configurable: true,
+});
+
+Reflect.defineProperty(Container.prototype, "distanceTo", {
+    value(this: Container, other: Container) {
+        return Math.hypot(this.x - other.x, this.y - other.y);
+    },
+    configurable: true,
+});
+
+Reflect.defineProperty(Container.prototype, "angleTo", {
+    value(this: Container, other: Container) {
+        return Math.atan2(other.y - this.y, other.x - this.x);
     },
     configurable: true,
 });

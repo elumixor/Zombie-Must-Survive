@@ -2,10 +2,11 @@ import { Container, Ticker } from "pixi.js";
 import { Zombie } from "./zombie";
 import { EventEmitter } from "@elumixor/frontils";
 import type { Player } from "./player";
-import { inject } from "@core/di";
+import { inject, injectable } from "@core/di";
 import { Resizer } from "@core/responsive/resizer";
 import { Interval } from "./interval";
 
+@injectable
 export class ZombieManager extends Container {
     readonly spawned = new EventEmitter<Zombie>();
 
@@ -19,7 +20,7 @@ export class ZombieManager extends Container {
     private readonly spawner;
     private readonly player;
 
-    private zombies = [] as Zombie[];
+    readonly zombies = [] as Zombie[];
 
     attraction = 1;
     repulsion = 0.5;
@@ -141,10 +142,12 @@ export class ZombieManager extends Container {
             const dpy = this.player.y - zombie.y;
             const distance = Math.hypot(dpx, dpy);
 
-            if (distance < this.player.collisionDistance) {
+            if (distance < this.player.radius) {
                 const angle = Math.atan2(dpy, dpx);
-                zombie.x = this.player.x - Math.cos(angle) * this.player.collisionDistance;
-                zombie.y = this.player.y - Math.sin(angle) * this.player.collisionDistance;
+                zombie.x = this.player.x - Math.cos(angle) * this.player.radius;
+                zombie.y = this.player.y - Math.sin(angle) * this.player.radius;
+
+                zombie.tryDamage(this.player);
             }
 
             // Check Z index

@@ -2,18 +2,36 @@ import { responsive } from "@core/responsive";
 import { Container, Graphics, Ticker } from "pixi.js";
 import { Player } from "./player";
 import { ZombieManager } from "./zombie-manager";
+import { Weapon } from "./weapon";
 
 @responsive
 export class MainScene extends Container {
+    readonly playerDied;
+
     private readonly player = new Player();
+    private readonly zombies = new ZombieManager({ player: this.player });
 
     @responsive({ pin: 0.5 })
     private readonly centered = new Container();
     private readonly world = new Container();
 
-    private readonly zombies = new ZombieManager({ player: this.player });
+    private readonly weapon = new Weapon({
+        particle: "shuriken",
+        numParticles: 3,
+        travelSpeed: 100,
+        travelDistance: 100,
+        fireRate: 0.1,
+        damage: 1,
+        spread: 0.3,
+        burst: 3,
+        radius: 5,
+        rotation: 20,
+    });
+
     constructor() {
         super();
+
+        this.playerDied = this.player.died.pipe();
 
         this.centered.addChild(this.world);
         this.addChild(this.centered);
@@ -37,6 +55,13 @@ export class MainScene extends Container {
             zombie.y -= this.world.y;
             this.world.addChild(zombie);
         });
+
+        // Start attacking
+        this.weapon.start();
+        // Stop when player has died
+        this.player.died.subscribe(() => this.weapon.stop());
+
+        this.weapon.particleSpawned.subscribe((particle) => this.world.addChild(particle));
 
         this.zombies.start();
     }

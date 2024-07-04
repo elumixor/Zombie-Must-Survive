@@ -22,6 +22,7 @@
   "dependencies": {
     "@elumixor/eslint": "^0.1.1",
     "@elumixor/frontils": "^2.2.0",
+    "@pixi/filter-color-overlay": "^5.1.1",
     "gsap": "^3.12.5",
     "howler": "^2.2.4",
     "pixi-spine": "^4.0.4",

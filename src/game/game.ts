@@ -1,10 +1,10 @@
 import { App } from "@core/app";
 import { inject } from "@core/di";
 import { responsive, type IDimensions, type IResizeObservable } from "@core/responsive";
-import { Container } from "pixi.js";
+import { Controls } from "controls";
+import { Container, Ticker } from "pixi.js";
 import { Sounds } from "sounds";
 import { MainScene } from "./main-scene";
-import { Controls } from "controls";
 
 @responsive
 export class Game extends Container implements IResizeObservable {
@@ -18,6 +18,11 @@ export class Game extends Container implements IResizeObservable {
 
         this.app.stage.addChild(this);
         this.addChild(this.mainScene);
+
+        this.mainScene.playerDied.subscribe(() => {
+            debug("Player died!");
+            this.paused = true;
+        });
     }
 
     resize({ scale }: IDimensions) {
@@ -31,6 +36,8 @@ export class Game extends Container implements IResizeObservable {
 
     set paused(value: boolean) {
         debug(value ? "Paused" : "Resumed");
+
+        Ticker.shared.stop();
 
         this.sounds.muted = value;
         this.controls.disabled = value;

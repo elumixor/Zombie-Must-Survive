@@ -1,13 +1,16 @@
-import { inject } from "@core/di";
+import { inject, injectable } from "@core/di";
 import { responsive } from "@core/responsive";
 import { Controls } from "controls";
 import { Container } from "pixi.js";
 import { Resources } from "resources";
+import { withHealth } from "./health";
+import { damageDealer } from "./damage-dealer";
 
+@injectable
 @responsive
-export class Player extends Container {
-    movementSpeed = 3;
-    collisionDistance = 30;
+export class Player extends damageDealer(withHealth(Container)) {
+    readonly movementSpeed = 3;
+    readonly radius = 30;
 
     private readonly resources = inject(Resources);
     private readonly controls = inject(Controls);
@@ -23,6 +26,7 @@ export class Player extends Container {
         this.addChild(this.spine);
         this.spine.animate("idle", { loop: true });
 
+        // Subscribe to controls
         this.controls.onMove(this.move);
         this.controls.movementChanged.subscribe(([dx, dy]) => {
             if (dx === 0) {
@@ -35,6 +39,14 @@ export class Player extends Container {
             const { x } = this.spine.scale;
             this.spine.scale.x = Math.abs(x) * dx;
             this.moving = true;
+        });
+
+        // Animate on hit - tween to red
+        this.tintOnHit(this.spine);
+
+        // Animate on death
+        this.died.subscribe(() => {
+            this.spine.animate("death");
         });
     }
 

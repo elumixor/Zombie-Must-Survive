@@ -1,3 +1,4 @@
+import "@core/extensions";
 import { App } from "@core/app";
 import "@core/logger";
 import "./style.css";

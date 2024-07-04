@@ -1,22 +1,35 @@
 import { responsive } from "@core/responsive";
-import { EventEmitter } from "@elumixor/frontils";
 import { Container, Point, Sprite, type IPointData } from "pixi.js";
+import { withHealth } from "./health";
+import { damageDealer } from "./damage-dealer";
+import { gsap } from "gsap";
 
 @responsive
-export class Zombie extends Container {
-    readonly died = new EventEmitter();
+export class Zombie extends damageDealer(withHealth(Container)) {
+    readonly radius = 30;
+    readonly speed = new Point();
 
     @responsive({ scale: 1, anchor: 0.5 })
     private readonly sprite = Sprite.from("zombie");
-
-    readonly speed = new Point();
 
     private lastChanged = 0;
     private readonly maxSpeed = 2;
 
     constructor(public mass: number) {
         super();
+
         this.addChild(this.sprite);
+        this.tintOnHit(this.sprite);
+
+        this.died.subscribe(() => {
+            gsap.to(this.sprite, {
+                alpha: 0,
+                angle: -90,
+                duration: 0.5,
+                ease: "expo.out",
+                onComplete: () => this.destroy(),
+            });
+        });
     }
 
     update(force: IPointData, dt: number) {
