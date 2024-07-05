@@ -8,7 +8,8 @@ import { Interval } from "./interval";
 
 @injectable
 export class ZombieManager extends Container {
-    readonly spawned = new EventEmitter<Zombie>();
+    readonly zombieSpawned = new EventEmitter<Zombie>();
+    readonly zombieDied = new EventEmitter<Zombie>();
 
     spawnInterval;
     maxZombies;
@@ -88,10 +89,11 @@ export class ZombieManager extends Container {
         }
 
         this.zombies.push(zombie);
-        this.spawned.emit(zombie);
+        this.zombieSpawned.emit(zombie);
 
         zombie.died.subscribe(() => {
             this.zombies.remove(zombie);
+            this.zombieDied.emit(zombie);
             if (this.zombies.length < this.minZombies) this.spawn();
         });
     }

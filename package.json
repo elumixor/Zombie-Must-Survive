@@ -1,33 +1,38 @@
 {
-  "name": "zombie-conqueror",
-  "module": "index.ts",
-  "type": "module",
-  "scripts": {
-    "dev": "bunx --bun vite",
-    "devp": "NODE_ENV='production' bunx --bun vite",
-    "lint": "bun run eslint --ext .ts .",
-    "build": "vite build",
-    "serve": "vite preview"
-  },
-  "devDependencies": {
-    "@poki/cli": "^0.1.15",
-    "@types/bun": "latest",
-    "@types/howler": "^2.2.11",
-    "vite": "^5.3.1",
-    "vite-tsconfig-paths": "^4.3.2"
-  },
-  "peerDependencies": {
-    "typescript": "^5.5.2"
-  },
-  "dependencies": {
-    "@elumixor/eslint": "^0.1.1",
-    "@elumixor/frontils": "^2.2.0",
-    "@pixi/filter-color-overlay": "^5.1.1",
-    "gsap": "^3.12.5",
-    "howler": "^2.2.4",
-    "pixi-spine": "^4.0.4",
-    "pixi.js": "^7.0.0",
-    "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.1"
-  }
+    "name": "zombie-conqueror",
+    "module": "index.ts",
+    "type": "module",
+    "scripts": {
+        "dev": "bunx --bun vite",
+        "devp": "NODE_ENV='production' bunx --bun vite",
+        "lint": "bun run eslint --ext .ts .",
+        "build": "vite build",
+        "build:dev": "vite build --mode=development",
+        "postbuild": "cp -r resources dist/resources",
+        "postbuild:dev": "cp -r resources dist/resources",
+        "prebuild": "rm -rf dist",
+        "prebuild:dev": "rm -rf dist",
+        "serve": "vite preview"
+    },
+    "devDependencies": {
+        "@poki/cli": "^0.1.15",
+        "@types/bun": "latest",
+        "@types/howler": "^2.2.11",
+        "vite": "^5.3.1",
+        "vite-tsconfig-paths": "^4.3.2"
+    },
+    "peerDependencies": {
+        "typescript": "^5.5.2"
+    },
+    "dependencies": {
+        "@elumixor/eslint": "^0.1.1",
+        "@elumixor/frontils": "^2.2.0",
+        "@pixi/filter-color-overlay": "^5.1.1",
+        "gsap": "^3.12.5",
+        "howler": "^2.2.4",
+        "pixi-spine": "^4.0.4",
+        "pixi.js": "^7.0.0",
+        "reflect-metadata": "^0.2.2",
+        "rxjs": "^7.8.1"
+    }
 }

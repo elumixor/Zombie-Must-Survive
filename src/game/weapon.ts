@@ -82,6 +82,8 @@ export class Weapon {
         const { x, y, radius } = this.player;
         const { first } = this.zombies.sort((a, b) => a.distanceTo(this.player) - b.distanceTo(this.player));
 
+        if (first.distanceTo(this.player) > 2 * this.travelDistance + first.radius + this.player.radius) return;
+
         // Determine direction
         const baseAngle = this.player.angleTo(first);
 
@@ -109,12 +111,16 @@ export class Weapon {
 
             let collided = false;
 
+            const fadeTween = gsap.to(sprite, {
+                alpha: 0,
+                duration: this.duration * 0.3,
+                delay: this.duration * 0.7,
+            });
+
             const tween = gsap.to(sprite, {
                 x: end.x,
                 y: end.y,
-                alpha: 0,
                 duration: this.duration,
-                ease: "expo.out",
                 onUpdate: () => {
                     if (this.rotation !== 0) sprite.angle += this.rotation;
 
@@ -125,13 +131,17 @@ export class Weapon {
                             zombie.takeDamage(this.damage);
                             collided = true;
                             sprite.destroy();
+                            fadeTween.kill();
                             tween.kill();
                             break;
                         }
                     }
                 },
                 onComplete: () => {
-                    if (!collided) sprite.destroy();
+                    if (collided) return;
+
+                    sprite.destroy();
+                    fadeTween.kill();
                 },
             });
 

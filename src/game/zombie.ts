@@ -1,5 +1,5 @@
 import { responsive } from "@core/responsive";
-import { Container, Point, Sprite, type IPointData } from "pixi.js";
+import { Container, Point, Sprite, Text, type IPointData } from "pixi.js";
 import { withHealth } from "./health";
 import { damageDealer } from "./damage-dealer";
 import { gsap } from "gsap";
@@ -20,6 +20,29 @@ export class Zombie extends damageDealer(withHealth(Container)) {
 
         this.addChild(this.sprite);
         this.tintOnHit(this.sprite);
+
+        this.damaged.subscribe((damage) => {
+            const text = new Text(-damage, {
+                fill: 0xffffff,
+                stroke: 0x000000,
+                strokeThickness: 2,
+                fontWeight: "bold",
+            });
+            text.resolution = 2;
+            text.zIndex = 10;
+            text.anchor.set(0.5);
+            this.parent.addChild(text);
+            text.position.copyFrom(this.parent.toLocal(new Point(), this));
+            text.y -= this.radius - Math.random() * 10;
+            gsap.to(text, {
+                y: text.y - 20,
+                alpha: 0,
+                angle: (Math.random() - 0.5) * 20,
+                duration: 0.5,
+                ease: "expo.out",
+                onComplete: () => text.destroy(),
+            });
+        });
 
         this.died.subscribe(() => {
             gsap.to(this.sprite, {
