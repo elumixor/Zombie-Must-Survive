@@ -12,7 +12,7 @@ export class MainScene extends Container implements IResizeObservable {
     readonly playerDied;
 
     private readonly player = new Player();
-    private readonly zombies = new ZombieManager({ player: this.player });
+    private readonly zombieManager = new ZombieManager();
 
     @responsive({ pin: 0.5 })
     private readonly centered = new Container();
@@ -55,13 +55,13 @@ export class MainScene extends Container implements IResizeObservable {
         Ticker.shared.add(this.followPlayer);
 
         // Spawn the zombies
-        this.zombies.zombieSpawned.subscribe((zombie) => {
+        this.zombieManager.zombieSpawned.subscribe((zombie) => {
             zombie.x -= this.world.x;
             zombie.y -= this.world.y;
             this.foreground.addChild(zombie);
         });
         // Spawn crystals on zombie death
-        this.zombies.zombieDied.subscribe((zombie) => {
+        this.zombieManager.zombieDied.subscribe((zombie) => {
             const crystal = new Crystal();
             crystal.zIndex = -10;
             crystal.position.copyFrom(zombie);
@@ -71,20 +71,32 @@ export class MainScene extends Container implements IResizeObservable {
         });
 
         // Start weapon
-        this.weapon.start();
         this.weapon.particleSpawned.subscribe((particle) => this.foreground.addChild(particle));
 
         // Player events
         this.player.damaged.subscribe((damage) => (this.playerUI.health -= damage));
         this.player.died.subscribe(() => {
             this.weapon.stop();
-            this.zombies.stop();
+            this.zombieManager.stop();
 
             Ticker.shared.remove(this.followPlayer);
             gsap.to(this.centered.scale, { x: 2, y: 2, duration: 5, ease: "expo.out" });
         });
+    }
 
-        this.zombies.start();
+    restart() {
+        this.player.position.set(0);
+        this.world.position.set(0);
+        this.background.tilePosition.set(0);
+        this.foreground.removeChildren();
+        this.foreground.addChild(this.player);
+
+        this.playerUI.reset();
+        this.player.reset();
+        this.zombieManager.restart();
+        this.weapon.start();
+
+        Ticker.shared.add(this.followPlayer);
     }
 
     resize({ width, height }: IDimensions) {
@@ -109,7 +121,7 @@ export class MainScene extends Container implements IResizeObservable {
         this.world.y += dy * speed * dt;
 
         const value = Math.hypot(dx, dy);
-        this.centered.scale.set(1 + value / 1000);
+        this.centered.scale.set(1.1 - value / 1000);
 
         this.background.tilePosition.x = this.world.x;
         this.background.tilePosition.y = this.world.y;

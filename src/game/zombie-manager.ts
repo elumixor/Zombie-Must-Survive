@@ -1,7 +1,7 @@
 import { Container, Ticker } from "pixi.js";
 import { Zombie } from "./zombie";
 import { EventEmitter } from "@elumixor/frontils";
-import type { Player } from "./player";
+import { Player } from "./player";
 import { inject, injectable } from "@core/di";
 import { Resizer } from "@core/responsive/resizer";
 import { Interval } from "./interval";
@@ -17,9 +17,9 @@ export class ZombieManager extends Container {
     zombieMass;
 
     private readonly resizer = inject(Resizer);
+    private readonly player = inject(Player);
 
     private readonly spawner;
-    private readonly player;
 
     readonly zombies = [] as Zombie[];
 
@@ -27,33 +27,22 @@ export class ZombieManager extends Container {
     repulsion = 0.5;
     friction = 0.5;
 
-    constructor({
-        spawnInterval = 0.3,
-        maxZombies = 100,
-        minZombies = 3,
-        zombieMass = 10,
-        player,
-    }: {
-        spawnInterval?: number;
-        maxZombies?: number;
-        minZombies?: number;
-        zombieMass?: number;
-        player: Player;
-    }) {
+    constructor({ spawnInterval = 0.3, maxZombies = 100, minZombies = 3, zombieMass = 10 } = {}) {
         super();
 
         this.spawnInterval = spawnInterval;
         this.maxZombies = maxZombies;
         this.minZombies = minZombies;
         this.zombieMass = zombieMass;
-        this.player = player;
 
         this.spawner = new Interval(() => this.spawn(), this.spawnInterval);
 
         Ticker.shared.add(this.move);
     }
 
-    start() {
+    restart() {
+        for (const zombie of this.zombies) zombie.destroy();
+        this.zombies.clear();
         this.spawner.start();
     }
 

@@ -1,9 +1,10 @@
 import { responsive } from "@core/responsive";
-import { Container, Text } from "pixi.js";
+import { Container } from "pixi.js";
 import { Bar } from "./bar";
 import { rectSprite } from "@core/pixi-utils";
 import gsap from "gsap";
 import { EventEmitter } from "@elumixor/frontils";
+import { Text } from "./text";
 
 @responsive
 export class PlayerUI extends Container {
@@ -37,12 +38,9 @@ export class PlayerUI extends Container {
     @responsive({ anchor: 0.5, angle: 45, x: 45, y: 39 })
     private readonly levelForeground = rectSprite({ width: 35, height: 35, color: 0x335699 });
 
-    @responsive({ anchor: 0.5, x: 44, y: 37 })
+    @responsive({ anchor: 0.5, x: 45, y: 37 })
     private readonly levelText = new Text("1", {
-        fill: 0xffffff,
-        stroke: 0x000000,
-        strokeThickness: 2,
-        fontWeight: "bold",
+        fontSize: 20,
     });
 
     constructor() {
@@ -51,6 +49,7 @@ export class PlayerUI extends Container {
         this.levelText.resolution = 2;
 
         this.addChild(this.healthBar, this.experienceBar, this.levelBackground, this.levelForeground, this.levelText);
+        this.alpha = 0;
     }
 
     get level() {
@@ -58,9 +57,19 @@ export class PlayerUI extends Container {
     }
     set level(value) {
         if (this._level === value) return;
+
+        const previousExperience = this.experience;
+        const remaining = Math.max(previousExperience - this.nextLevelExperience, 0);
+
         this._level = value;
         this.levelText.text = value.toString();
         gsap.to(this.levelText.scale, { x: 1.5, y: 1.5, duration: 0.1, yoyo: true, repeat: 1 });
+
+        this.healthBar.max = this.maxHealth;
+        this.healthBar.value = this.maxHealth;
+        this.experienceBar.max = this.nextLevelExperience;
+        this.experienceBar.value = remaining;
+
         this.levelChanged.emit(value);
     }
 
@@ -75,14 +84,8 @@ export class PlayerUI extends Container {
         return this.experienceBar.value;
     }
     set experience(value) {
-        if (value >= this.nextLevelExperience) {
-            const remainder = value - this.nextLevelExperience;
-            this.level++;
-            this.healthBar.max = this.maxHealth;
-            this.healthBar.value = this.maxHealth;
-            this.experienceBar.max = this.nextLevelExperience;
-            this.experienceBar.value = remainder;
-        } else this.experienceBar.value = value;
+        if (value >= this.nextLevelExperience) this.level++;
+        else this.experienceBar.value = value;
     }
 
     get health() {
@@ -92,5 +95,13 @@ export class PlayerUI extends Container {
         if (value === this.health) return;
         this.healthBar.value = value;
         this.healthChanged.emit(value);
+    }
+
+    reset() {
+        gsap.to(this, { alpha: 1, duration: 0.5 });
+
+        this.experience = 0;
+        this.level = 1;
+        this.health = this.maxHealth;
     }
 }

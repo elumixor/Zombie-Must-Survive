@@ -16,7 +16,7 @@ export function withHealth<T extends Constructor>(Base: T) {
 
         health = 10;
 
-        private _died = false;
+        protected _died = false;
 
         takeDamage(damage: number) {
             this.health -= damage;

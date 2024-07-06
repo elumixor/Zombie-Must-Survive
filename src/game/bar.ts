@@ -1,6 +1,7 @@
 import { rectSprite } from "@core/pixi-utils";
 import gsap from "gsap";
 import { Container } from "pixi.js";
+import { Text } from "./text";
 
 export class Bar extends Container {
     private _max;
@@ -10,6 +11,11 @@ export class Bar extends Container {
     private readonly foreground;
 
     private readonly fullWidth;
+
+    private readonly textElement = new Text("", {
+        fontSize: 20,
+        letterSpacing: 0,
+    });
 
     constructor({
         max,
@@ -38,10 +44,17 @@ export class Bar extends Container {
         this.foreground.x = padding;
         this.foreground.y = padding;
 
-        this.addChild(this.background, this.foreground);
+        this.textElement.anchor.set(1, 0.5);
+        this.textElement.resolution = 2;
+        this.textElement.x = width - padding * 2;
+        this.textElement.y = height / 2;
+
+        this.addChild(this.background, this.foreground, this.textElement);
 
         // Update instantly
         this.foreground.width = this.fullWidth * (this._value / this._max);
+        this.textElement.text = `${this._value} / ${this._max}`;
+        this.textElement.uniformHeight = this.background.height * 2;
     }
 
     get value() {
@@ -62,6 +75,8 @@ export class Bar extends Container {
 
     private update() {
         const target = this.fullWidth * (this._value / this._max);
+
+        this.textElement.text = `${this._value} / ${this._max}`;
 
         gsap.killTweensOf(this.foreground);
         gsap.to(this.foreground, { width: target, duration: 0.5 });

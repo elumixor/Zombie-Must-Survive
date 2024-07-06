@@ -34,5 +34,5 @@ void (async () => {
 
     await poki.playCommercialBreak();
 
-    await game.start();
+    game.start();
 })();

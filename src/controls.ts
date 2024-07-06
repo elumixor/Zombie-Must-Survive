@@ -3,6 +3,10 @@ import type { IPoint } from "@core/utils";
 import { EventEmitter } from "@elumixor/frontils";
 import { Ticker } from "pixi.js";
 
+export interface Subscription {
+    unsubscribe: () => void;
+}
+
 @injectable
 export class Controls {
     readonly movementChanged = new EventEmitter<IPoint>();
@@ -39,7 +43,7 @@ export class Controls {
         const cb = (dt: number) => callback(...this._currentSpeed, dt);
         let subscribed = false;
 
-        this.movementChanged.subscribe(([dx, dy]) => {
+        const cb_ = ([dx, dy]: [number, number]) => {
             if (dx === 0 && dy === 0) {
                 Ticker.shared.remove(cb);
                 subscribed = false;
@@ -47,7 +51,16 @@ export class Controls {
                 Ticker.shared.add(cb);
                 subscribed = true;
             }
-        });
+        };
+
+        this.movementChanged.subscribe(cb_);
+
+        return {
+            unsubscribe: () => {
+                this.movementChanged.unsubscribe(cb_);
+                if (subscribed) Ticker.shared.remove(cb);
+            },
+        };
     }
 
     get currentSpeed() {

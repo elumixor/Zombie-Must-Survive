@@ -1,10 +1,11 @@
 import { inject, injectable } from "@core/di";
 import { responsive } from "@core/responsive";
-import { Controls } from "controls";
+import { Controls, type Subscription } from "controls";
 import { Container } from "pixi.js";
 import { Resources } from "resources";
 import { withHealth } from "./health";
 import { damageDealer } from "./damage-dealer";
+import { gsap } from "gsap";
 
 @injectable
 @responsive
@@ -20,34 +21,22 @@ export class Player extends damageDealer(withHealth(Container)) {
 
     private _moving = false;
 
+    private moveSubscription?: Subscription;
+
     constructor() {
         super();
 
         this.addChild(this.spine);
-        this.spine.animate("idle", { loop: true });
-
-        // Subscribe to controls
-        this.controls.onMove(this.move);
-        this.controls.movementChanged.subscribe(([dx, dy]) => {
-            if (dx === 0) {
-                if (dy === 0) this.moving = false;
-                else this.moving = true;
-
-                return;
-            }
-
-            const { x } = this.spine.scale;
-            this.spine.scale.x = Math.abs(x) * dx;
-            this.moving = true;
-        });
 
         // Animate on hit - tween to red
         this.tintOnHit(this.spine);
 
         // Animate on death
         this.died.subscribe(() => {
-            this.spine.animate("death");
+            this.onDeath();
         });
+
+        this.alpha = 0;
     }
 
     set moving(value: boolean) {
@@ -56,6 +45,16 @@ export class Player extends damageDealer(withHealth(Container)) {
 
         if (value) this.run();
         else this.idle();
+    }
+
+    reset() {
+        this._died = false;
+        gsap.to(this, { alpha: 1, duration: 1 });
+        this.spine.animate("idle", { loop: true });
+
+        // Subscribe to controls
+        this.moveSubscription = this.controls.onMove(this.move);
+        this.controls.movementChanged.subscribe(this.onMovementChanged);
     }
 
     private run() {
@@ -70,4 +69,22 @@ export class Player extends damageDealer(withHealth(Container)) {
         this.x += dx * dt * this.movementSpeed;
         this.y += dy * dt * this.movementSpeed;
     };
+
+    private readonly onMovementChanged = ([dx, dy]: [number, number]) => {
+        if (dx === 0) {
+            if (dy === 0) this.moving = false;
+            else this.moving = true;
+            return;
+        }
+
+        const { x } = this.spine.scale;
+        this.spine.scale.x = Math.abs(x) * dx;
+        this.moving = true;
+    };
+
+    private onDeath() {
+        this.moveSubscription?.unsubscribe();
+        this.controls.movementChanged.unsubscribe(this.onMovementChanged);
+        this.spine.animate("death");
+    }
 }
