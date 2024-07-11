@@ -2,7 +2,7 @@ import { rectSprite } from "@core/pixi-utils";
 import { EventEmitter } from "@elumixor/frontils";
 import gsap from "gsap";
 import { Container, TextStyle } from "pixi.js";
-import { Text } from "./text";
+import { Text } from "../text";
 
 export class Button extends Container {
     readonly clicked = new EventEmitter();

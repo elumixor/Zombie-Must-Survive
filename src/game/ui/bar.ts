@@ -1,7 +1,7 @@
 import { rectSprite } from "@core/pixi-utils";
 import gsap from "gsap";
 import { Container } from "pixi.js";
-import { Text } from "./text";
+import { Text } from "../text";
 
 export class Bar extends Container {
     private _max;

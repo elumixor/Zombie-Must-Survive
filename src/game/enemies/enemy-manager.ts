@@ -1,27 +1,27 @@
-import { Container, Ticker } from "pixi.js";
-import { Zombie } from "./zombie";
-import { EventEmitter } from "@elumixor/frontils";
-import { Player } from "./player";
 import { inject, injectable } from "@core/di";
-import { Resizer } from "@core/responsive/resizer";
-import { Interval } from "./interval";
+import { Resizer } from "@core/responsive";
+import { GameTime } from "game/game-time";
+import { World } from "game/world";
+import { Container } from "pixi.js";
+import { Interval } from "../interval";
+import { Player } from "../player/player";
+import { Enemy } from "./enemy";
 
 @injectable
-export class ZombieManager extends Container {
-    readonly zombieSpawned = new EventEmitter<Zombie>();
-    readonly zombieDied = new EventEmitter<Zombie>();
+export class EnemyManager extends Container {
+    private readonly resizer = inject(Resizer);
+    private readonly player = inject(Player);
+    private readonly world = inject(World);
+    private readonly gameTime = inject(GameTime);
 
     spawnInterval;
     maxZombies;
     minZombies;
     zombieMass;
 
-    private readonly resizer = inject(Resizer);
-    private readonly player = inject(Player);
-
     private readonly spawner;
 
-    readonly zombies = [] as Zombie[];
+    readonly enemies = [] as Enemy[];
 
     attraction = 1;
     repulsion = 0.5;
@@ -36,29 +36,31 @@ export class ZombieManager extends Container {
         this.zombieMass = zombieMass;
 
         this.spawner = new Interval(() => this.spawn(), this.spawnInterval);
-
-        Ticker.shared.add(this.move);
     }
 
     restart() {
-        for (const zombie of this.zombies) zombie.destroy();
-        this.zombies.clear();
+        for (const zombie of this.enemies) zombie.destroy();
+        this.enemies.clear();
         this.spawner.start();
+        this.gameTime.remove(this.move);
+        this.gameTime.add(this.move);
     }
 
     stop() {
         this.spawner.pause();
+        this.gameTime.remove(this.move);
     }
 
     pause() {
         this.spawner.pause();
+        this.gameTime.remove(this.move);
     }
 
     private spawn() {
-        if (this.zombies.length >= this.maxZombies) return;
+        if (this.enemies.length >= this.maxZombies) return;
 
         // Spawn a zombie
-        const zombie = new Zombie(this.zombieMass);
+        const zombie = new Enemy(this.zombieMass);
 
         // Position it outside the screen
         const r = Math.random();
@@ -77,24 +79,23 @@ export class ZombieManager extends Container {
             zombie.y = (Math.random() - 0.5) * height;
         }
 
-        this.zombies.push(zombie);
-        this.zombieSpawned.emit(zombie);
+        this.enemies.push(zombie);
+        this.world.spawn(zombie, { tag: "enemy", relative: true });
 
         zombie.died.subscribe(() => {
-            this.zombies.remove(zombie);
-            this.zombieDied.emit(zombie);
-            if (this.zombies.length < this.minZombies) this.spawn();
+            this.enemies.remove(zombie);
+            if (this.enemies.length < this.minZombies) this.spawn();
         });
     }
 
     // Boids-like movement
     private readonly move = (dt: number) => {
-        for (const zombie of this.zombies) {
+        for (const enemy of this.enemies) {
             const force = { x: 0, y: 0 };
 
             // Attraction to the player
-            const dx = this.player.x - zombie.x;
-            const dy = this.player.y - zombie.y;
+            const dx = this.player.x - enemy.x;
+            const dy = this.player.y - enemy.y;
 
             const angle = Math.atan2(dy, dx);
 
@@ -102,11 +103,11 @@ export class ZombieManager extends Container {
             force.y += Math.sin(angle) * this.attraction;
 
             // Repulsion from other zombies
-            for (const other of this.zombies) {
-                if (other === zombie) continue;
+            for (const other of this.enemies) {
+                if (other === enemy) continue;
 
-                const dx = other.x - zombie.x;
-                const dy = other.y - zombie.y;
+                const dx = other.x - enemy.x;
+                const dy = other.y - enemy.y;
 
                 const distance = Math.hypot(dx, dy);
 
@@ -122,27 +123,23 @@ export class ZombieManager extends Container {
             }
 
             // Friction
-            force.x -= zombie.speed.x * this.friction;
-            force.y -= zombie.speed.y * this.friction;
+            force.x -= enemy.speed.x * this.friction;
+            force.y -= enemy.speed.y * this.friction;
 
             // Update
-            zombie.update(force, dt);
+            enemy.update(force, dt);
 
             // Check distance from the player
-            const dpx = this.player.x - zombie.x;
-            const dpy = this.player.y - zombie.y;
-            const distance = Math.hypot(dpx, dpy);
+            const distance = enemy.distanceTo(this.player);
 
             if (distance < this.player.radius) {
-                const angle = Math.atan2(dpy, dpx);
-                zombie.x = this.player.x - Math.cos(angle) * this.player.radius;
-                zombie.y = this.player.y - Math.sin(angle) * this.player.radius;
-
-                zombie.tryDamage(this.player);
+                const angle = enemy.angleTo(this.player);
+                enemy.x = this.player.x - Math.cos(angle) * this.player.radius;
+                enemy.y = this.player.y - Math.sin(angle) * this.player.radius;
             }
 
             // Check Z index
-            zombie.zIndex = zombie.y > this.player.y ? 1 : -1;
+            enemy.zIndex = enemy.y > this.player.y ? 1 : -1;
         }
     };
 }

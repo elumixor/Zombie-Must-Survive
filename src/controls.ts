@@ -30,25 +30,26 @@ export class Controls {
 
     set disabled(value: boolean) {
         if (value) {
+            debug("Controls disabled");
             window.removeEventListener("keydownonce", this.onKeyDown);
             window.removeEventListener("keyup", this.onKeyUp);
         } else {
-            debug("Adding event listeners...");
+            debug("Controls enabled");
             window.addEventListener("keydownonce", this.onKeyDown);
             window.addEventListener("keyup", this.onKeyUp);
         }
     }
 
-    onMove(callback: (dx: number, dy: number, dt: number) => void) {
+    onMove(callback: (dx: number, dy: number, dt: number) => void, ticker: Ticker) {
         const cb = (dt: number) => callback(...this._currentSpeed, dt);
         let subscribed = false;
 
         const cb_ = ([dx, dy]: [number, number]) => {
             if (dx === 0 && dy === 0) {
-                Ticker.shared.remove(cb);
+                ticker.remove(cb);
                 subscribed = false;
             } else if (!subscribed) {
-                Ticker.shared.add(cb);
+                ticker.add(cb);
                 subscribed = true;
             }
         };
@@ -58,7 +59,7 @@ export class Controls {
         return {
             unsubscribe: () => {
                 this.movementChanged.unsubscribe(cb_);
-                if (subscribed) Ticker.shared.remove(cb);
+                if (subscribed) ticker.remove(cb);
             },
         };
     }

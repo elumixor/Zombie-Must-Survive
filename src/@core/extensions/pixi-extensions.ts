@@ -1,4 +1,4 @@
-import { Container, type Loader, type Point } from "pixi.js";
+import { Container, type IPointData, type Loader, type Point } from "pixi.js";
 
 declare module "pixi.js" {
     interface ILoaderAdd {
@@ -36,8 +36,8 @@ declare module "pixi.js" {
          * @param after The child to add the child after.
          */
         addChildAfter<TChild extends Container>(child: TChild, after: Container): TChild;
-        distanceTo(other: Container): number;
-        angleTo(other: Container): number;
+        distanceTo(other: IPointData): number;
+        angleTo(other: IPointData): number;
     }
 }
 

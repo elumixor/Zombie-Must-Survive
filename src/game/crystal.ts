@@ -1,13 +1,18 @@
 import { inject } from "@core/di";
 import { Container, Sprite, Ticker } from "pixi.js";
-import { Player } from "./player";
-import { EventEmitter } from "@elumixor/frontils";
+import { Player } from "./player/player";
+import { all, EventEmitter } from "@elumixor/frontils";
 import { gsap } from "gsap";
+import { responsive } from "@core/responsive";
 
+@responsive
 export class Crystal extends Container {
     readonly collected = new EventEmitter();
 
+    @responsive({ scale: 0.3, anchor: [0.5, 1] })
     private readonly sprite = Sprite.from("crystal");
+    @responsive({ anchor: [0.5, 0] })
+    private readonly shadow = Sprite.from("shadow");
     private readonly player = inject(Player);
 
     pickupDistance = 50;
@@ -21,10 +26,23 @@ export class Crystal extends Container {
     constructor() {
         super();
 
-        this.addChild(this.sprite);
-        this.sprite.anchor.set(0.5);
+        this.addChild(this.shadow, this.sprite);
 
         Ticker.shared.add(this.checkCollection);
+
+        this.collected.subscribe(() => (this.player.xp += this.xp));
+
+        void this.animateShow();
+    }
+
+    async animateShow() {
+        await all(
+            gsap.fromTo(this.sprite, { y: 20 }, { y: 0, duration: 0.2, ease: "expo.out" }),
+            gsap.fromTo(this.shadow.scale, { x: 0.1, y: 0.1 }, { x: 0.3, y: 0.3, duration: 0.2, ease: "expo.out" }),
+        );
+
+        gsap.to(this.sprite, { y: -20, duration: 0.5, repeat: -1, yoyo: true, ease: "sine.inOut" });
+        gsap.to(this.shadow.scale, { x: 0.2, y: 0.2, duration: 0.5, repeat: -1, yoyo: true, ease: "sine.inOut" });
     }
 
     private get triggerDistance() {
@@ -37,6 +55,7 @@ export class Crystal extends Container {
         if (distance < this.triggerDistance) {
             Ticker.shared.remove(this.checkCollection);
             Ticker.shared.add(this.flyToPlayer);
+            gsap.to(this.shadow.scale, { x: 0, y: 0, duration: 0.15 });
         }
     };
 

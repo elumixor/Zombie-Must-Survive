@@ -4,7 +4,7 @@ import { EventEmitter } from "@elumixor/frontils";
 export class Text extends PixiText {
     readonly pressed = new EventEmitter();
 
-    constructor(text: string, style: Partial<TextStyle> = {}) {
+    constructor(text: string | number, style: Partial<TextStyle> = {}) {
         super(text, {
             fontSize: 16,
             letterSpacing: 2,

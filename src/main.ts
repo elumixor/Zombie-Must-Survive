@@ -6,7 +6,6 @@ import { Resources } from "resources";
 import { Sounds } from "sounds";
 import { Poki } from "poki";
 import { Game } from "game";
-import { Controls } from "controls";
 
 void (async () => {
     const poki = new Poki();
@@ -28,7 +27,6 @@ void (async () => {
     poki.onLoadingFinished();
     debug("Resources loaded");
 
-    new Controls();
     const game = new Game();
     poki.paused.subscribe((paused) => (game.paused = paused));
 

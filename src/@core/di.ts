@@ -1,8 +1,8 @@
 import { type AnyConstructor, wraps } from "@elumixor/frontils";
 
-const target = globalThis as typeof globalThis & { __di_injectable_map__?: Map<object, object> };
+const target = globalThis as typeof globalThis & { __di_injectable_map__?: Map<unknown, object> };
 if (!Reflect.has(target, "__di_injectable_map__"))
-    Reflect.set(target, "__di_injectable_map__", new Map<object, object>());
+    Reflect.set(target, "__di_injectable_map__", new Map<unknown, object>());
 
 const serviceMap = target.__di_injectable_map__!;
 

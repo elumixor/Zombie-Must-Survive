@@ -2,20 +2,21 @@ import { App } from "@core/app";
 import { inject } from "@core/di";
 import { responsive, type IDimensions, type IResizeObservable } from "@core/responsive";
 import { Controls } from "controls";
-import { Container, Ticker } from "pixi.js";
+import { Container } from "pixi.js";
 import { Sounds } from "sounds";
 import { MainScene } from "./main-scene";
-import { UI } from "./ui";
+import { GameUI } from "./ui/game-ui";
 import { settings } from "pixi-spine";
-import gsap from "gsap";
+import { GameTime } from "./game-time";
 
 @responsive
 export class Game extends Container implements IResizeObservable {
     private readonly app = inject(App);
     private readonly sounds = inject(Sounds);
-    private readonly controls = inject(Controls);
+    private readonly controls = new Controls();
+    private readonly gameTime = new GameTime();
     private readonly mainScene = new MainScene();
-    private readonly ui = new UI();
+    private readonly ui = new GameUI();
 
     private _paused = true;
 
@@ -51,15 +52,9 @@ export class Game extends Container implements IResizeObservable {
 
         debug(value ? "Paused" : "Resumed");
 
+        // TODO: we will need spines to be subscribed to the game time instead of the global ticker
         settings.GLOBAL_AUTO_UPDATE = !value;
-
-        if (value) {
-            Ticker.shared.stop();
-            gsap.globalTimeline.pause();
-        } else {
-            Ticker.shared.start();
-            gsap.globalTimeline.play();
-        }
+        this.gameTime.paused = value;
 
         this.sounds.muted = value;
         this.controls.disabled = value;
@@ -68,6 +63,7 @@ export class Game extends Container implements IResizeObservable {
     }
 
     private restart() {
+        this.gameTime.start();
         this.mainScene.restart();
         this.paused = false;
     }

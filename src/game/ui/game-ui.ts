@@ -3,10 +3,10 @@ import { responsive, type IDimensions, type IResizeObservable } from "@core/resp
 import gsap from "gsap";
 import { Container } from "pixi.js";
 import { Button } from "./button";
-import { Text } from "./text";
+import { Text } from "../text";
 
 @responsive
-export class UI extends Container implements IResizeObservable {
+export class GameUI extends Container implements IResizeObservable {
     readonly pausePressed;
 
     private readonly overlay = rectSprite({ color: 0x000000, alpha: 0.5 });

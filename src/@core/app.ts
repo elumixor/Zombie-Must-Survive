@@ -1,5 +1,5 @@
 import { injectable } from "@core/di";
-import { ResizeObserver, type RequiredScales } from "@core/responsive";
+import { Resizer, type RequiredScales } from "@core/responsive";
 import { getElementOrThrow } from "@elumixor/frontils";
 import { gsap } from "gsap";
 import { Application, Ticker } from "pixi.js";
@@ -22,9 +22,12 @@ export class App {
     });
     readonly renderer = this.pixiApp.renderer;
     readonly stage = this.pixiApp.stage;
+    readonly maxFPS;
 
     constructor({ scales, maxFPS = 60 }: { scales: RequiredScales; maxFPS?: number }) {
-        new ResizeObserver(this.renderer, scales);
+        new Resizer(this.renderer, scales);
+
+        this.maxFPS = maxFPS;
 
         debug.fn(() => Reflect.set(globalThis, "__PIXI_APP__", this.pixiApp));
 

@@ -1,129 +1,94 @@
-import { responsive, type IDimensions, type IResizeObservable } from "@core/responsive";
-import { Container, Ticker, TilingSprite } from "pixi.js";
-import { Player } from "./player";
-import { Weapon } from "./weapon";
-import { ZombieManager } from "./zombie-manager";
-import { Crystal } from "./crystal";
-import { gsap } from "gsap";
-import { PlayerUI } from "./player-ui";
+import { responsive } from "@core/responsive";
+import { Container } from "pixi.js";
+import { EnemyManager } from "./enemies/enemy-manager";
+import { Player } from "./player/player";
+// import { Crystal } from "./crystal";
+// import { gsap } from "gsap";
+import { PlayerUI } from "./ui/player-ui";
+import { World } from "./world";
+import { RangedAttack } from "./weapons";
 
 @responsive
-export class MainScene extends Container implements IResizeObservable {
+export class MainScene extends Container {
     readonly playerDied;
 
-    private readonly player = new Player();
-    private readonly zombieManager = new ZombieManager();
-
     @responsive({ pin: 0.5 })
-    private readonly centered = new Container();
-    private readonly world = new Container();
-    private readonly background = TilingSprite.from("background", { width: 500, height: 500 });
-    private readonly foreground = new Container();
+    private readonly world = new World();
+
+    private readonly player = new Player();
+    private readonly zombieManager = new EnemyManager();
 
     private readonly playerUI = new PlayerUI();
-
-    private readonly weapon = new Weapon({
-        particle: "shuriken",
-        numParticles: 3,
-        travelSpeed: 300,
-        travelDistance: 100,
-        fireRate: 0.1,
-        damage: 1,
-        spread: 0.3,
-        burst: 3,
-        radius: 5,
-        rotation: 20,
-    });
 
     constructor() {
         super();
 
         this.playerDied = this.player.died.pipe();
-        this.player.health = this.playerUI.health;
-        this.playerUI.healthChanged.subscribe((health) => (this.player.health = health));
 
-        this.addChild(this.centered, this.playerUI);
-        this.centered.addChild(this.background, this.world);
-        this.world.addChild(this.foreground);
+        this.addChild(this.world, this.playerUI);
 
-        this.background.anchor.set(0.5);
-
-        this.foreground.addChild(this.player);
-        this.foreground.sortableChildren = true;
-
-        // Follow the player
-        Ticker.shared.add(this.followPlayer);
-
-        // Spawn the zombies
-        this.zombieManager.zombieSpawned.subscribe((zombie) => {
-            zombie.x -= this.world.x;
-            zombie.y -= this.world.y;
-            this.foreground.addChild(zombie);
+        this.player.weapon = new RangedAttack({
+            projectile: {
+                texture: "shuriken",
+                radius: 5,
+                movement: {
+                    speed: 10,
+                    acceleration: -0.3,
+                    max: 10,
+                    min: 0,
+                },
+                rotation: {
+                    speed: 0,
+                    acceleration: 2,
+                    max: 5,
+                },
+                distance: 100,
+                lifetime: 1,
+                fadeDuration: 0.3,
+                fadeDeadly: true,
+                destroyOnCollision: false,
+                damageInterval: 0.2,
+            },
+            range: 300,
+            carrier: this.player,
+            targetType: "enemy",
+            damage: 1,
+            numProjectiles: 3,
+            rate: 0.3,
+            spread: 30,
         });
+
         // Spawn crystals on zombie death
-        this.zombieManager.zombieDied.subscribe((zombie) => {
-            const crystal = new Crystal();
-            crystal.zIndex = -10;
-            crystal.position.copyFrom(zombie);
-            this.foreground.addChild(crystal);
+        // this.zombieManager.enemyDied.subscribe((zombie) => {
 
-            crystal.collected.subscribe(() => (this.playerUI.experience += crystal.xp));
-        });
+        // });
 
         // Start weapon
-        this.weapon.particleSpawned.subscribe((particle) => this.foreground.addChild(particle));
+        // this.weapon.particleSpawned.subscribe((particle) => this.foreground.addChild(particle));
 
         // Player events
-        this.player.damaged.subscribe((damage) => (this.playerUI.health -= damage));
-        this.player.died.subscribe(() => {
-            this.weapon.stop();
-            this.zombieManager.stop();
+        // this.player.hpChanged.subscribe((damage) => (this.playerUI.hp -= damage));
+        // this.player.died.subscribe(() => {
+        //     this.weapon.stop();
+        //     this.zombieManager.stop();
 
-            Ticker.shared.remove(this.followPlayer);
-            gsap.to(this.centered.scale, { x: 2, y: 2, duration: 5, ease: "expo.out" });
-        });
+        //     Ticker.shared.remove(this.followPlayer);
+        //     gsap.to(this.centered.scale, { x: 2, y: 2, duration: 5, ease: "expo.out" });
+        // });
     }
 
     restart() {
-        this.player.position.set(0);
-        this.world.position.set(0);
-        this.background.tilePosition.set(0);
-        this.foreground.removeChildren();
-        this.foreground.addChild(this.player);
-
-        this.playerUI.reset();
+        this.world.reset();
         this.player.reset();
+
+        this.world.spawn(this.player, { tag: "player" });
+        this.world.track(this.player, true);
+
+        this.playerUI.hidden = false;
+        this.player.appear();
+
         this.zombieManager.restart();
-        this.weapon.start();
 
-        Ticker.shared.add(this.followPlayer);
+        // this.weapon.start();
     }
-
-    resize({ width, height }: IDimensions) {
-        this.background.width = width;
-        this.background.height = height;
-    }
-
-    // We need to keep player at the center, by moving the world
-    private readonly followPlayer = (dt: number) => {
-        const { x: px, y: py } = this.player.position;
-        const { x: wx, y: wy } = this.world.position;
-
-        // Target
-        const tx = -px;
-        const ty = -py;
-
-        const dx = tx - wx;
-        const dy = ty - wy;
-        const speed = 0.1;
-
-        this.world.x += dx * speed * dt;
-        this.world.y += dy * speed * dt;
-
-        const value = Math.hypot(dx, dy);
-        this.centered.scale.set(1.1 - value / 1000);
-
-        this.background.tilePosition.x = this.world.x;
-        this.background.tilePosition.y = this.world.y;
-    };
 }
