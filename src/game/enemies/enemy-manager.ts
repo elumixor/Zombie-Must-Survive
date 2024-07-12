@@ -6,6 +6,7 @@ import { Container } from "pixi.js";
 import { Interval } from "../interval";
 import { Player } from "../player/player";
 import { Enemy } from "./enemy";
+import { clamp } from "@core/utils";
 
 @injectable
 export class EnemyManager extends Container {
@@ -116,7 +117,7 @@ export class EnemyManager extends Container {
                 const angle = Math.atan2(dy, dx);
 
                 let repulsion = -this.repulsion * Math.log(distance / 100);
-                repulsion = Math.max(0, Math.min(10, repulsion));
+                repulsion = clamp(repulsion, 0, 10);
 
                 force.x -= Math.cos(angle) * repulsion;
                 force.y -= Math.sin(angle) * repulsion;
@@ -130,12 +131,13 @@ export class EnemyManager extends Container {
             enemy.update(force, dt);
 
             // Check distance from the player
+            const minDistance = enemy.radius + this.player.radius;
             const distance = enemy.distanceTo(this.player);
 
-            if (distance < this.player.radius) {
+            if (distance < minDistance) {
                 const angle = enemy.angleTo(this.player);
-                enemy.x = this.player.x - Math.cos(angle) * this.player.radius;
-                enemy.y = this.player.y - Math.sin(angle) * this.player.radius;
+                enemy.x = this.player.x - Math.cos(angle) * minDistance;
+                enemy.y = this.player.y - Math.sin(angle) * minDistance;
             }
 
             // Check Z index

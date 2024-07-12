@@ -71,3 +71,10 @@ export function rectSprite({ width = 2, height = 2, color = 0, alpha = 1, rounde
     sprite.height = height;
     return sprite;
 }
+
+export function circleSprite({ radius = 50, color = 0, alpha = 1 } = {}) {
+    const sprite = new Sprite(circleTexture(radius, { color, alpha }));
+    sprite.width = sprite.height = radius * 2;
+    sprite.anchor.set(0.5);
+    return sprite;
+}

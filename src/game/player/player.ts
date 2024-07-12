@@ -14,7 +14,7 @@ export class Player extends withHp(withXp(Container)) {
     private readonly controls = inject(Controls);
     private readonly time = inject(GameTime);
 
-    readonly radius = 30;
+    readonly radius = 20;
     private readonly movementSpeed = 3;
     private readonly constitution = 2;
 
@@ -93,7 +93,7 @@ export class Player extends withHp(withXp(Container)) {
         }
 
         const { x } = this.spine.scale;
-        this.spine.scale.x = Math.abs(x) * dx;
+        this.spine.scale.x = Math.abs(x) * Math.sign(dx);
         this.moving = true;
     };
 }

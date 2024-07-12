@@ -48,8 +48,13 @@ export class GameUI extends Container implements IResizeObservable {
     }
 
     set paused(value: boolean) {
+        if (value) this.addChildAt(this.overlay, 0);
         this.overlay.interactive = value;
-        for (const element of [this.overlay, this.buttonsContainer])
-            gsap.to(element, { alpha: value ? 1 : 0, duration: 0.5 });
+
+        void gsap.to(this.overlay, { alpha: value ? 1 : 0, duration: 0.5 }).then(() => {
+            if (!value) this.removeChild(this.overlay);
+        });
+        gsap.to(this.buttonsContainer, { alpha: value ? 1 : 0, duration: 0.5 });
+        this.startButton.disabled = !value;
     }
 }

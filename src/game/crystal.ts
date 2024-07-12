@@ -4,6 +4,7 @@ import { Player } from "./player/player";
 import { all, EventEmitter } from "@elumixor/frontils";
 import { gsap } from "gsap";
 import { responsive } from "@core/responsive";
+import { GameTime } from "./game-time";
 
 @responsive
 export class Crystal extends Container {
@@ -14,6 +15,7 @@ export class Crystal extends Container {
     @responsive({ anchor: [0.5, 0] })
     private readonly shadow = Sprite.from("shadow");
     private readonly player = inject(Player);
+    private readonly time = inject(GameTime);
 
     pickupDistance = 50;
     radius = 0;
@@ -37,12 +39,16 @@ export class Crystal extends Container {
 
     async animateShow() {
         await all(
-            gsap.fromTo(this.sprite, { y: 20 }, { y: 0, duration: 0.2, ease: "expo.out" }),
-            gsap.fromTo(this.shadow.scale, { x: 0.1, y: 0.1 }, { x: 0.3, y: 0.3, duration: 0.2, ease: "expo.out" }),
+            this.time.fromTo(this.sprite, { y: 20 }, { y: 0, duration: 0.2, ease: "expo.out" }),
+            this.time.fromTo(
+                this.shadow.scale,
+                { x: 0.1, y: 0.1 },
+                { x: 0.3, y: 0.3, duration: 0.2, ease: "expo.out" },
+            ),
         );
 
-        gsap.to(this.sprite, { y: -20, duration: 0.5, repeat: -1, yoyo: true, ease: "sine.inOut" });
-        gsap.to(this.shadow.scale, { x: 0.2, y: 0.2, duration: 0.5, repeat: -1, yoyo: true, ease: "sine.inOut" });
+        this.time.to(this.sprite, { y: -20, duration: 0.5, repeat: -1, yoyo: true, ease: "sine.inOut" });
+        this.time.to(this.shadow.scale, { x: 0.2, y: 0.2, duration: 0.5, repeat: -1, yoyo: true, ease: "sine.inOut" });
     }
 
     private get triggerDistance() {

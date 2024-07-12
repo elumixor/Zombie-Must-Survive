@@ -22,6 +22,7 @@ export class App {
     });
     readonly renderer = this.pixiApp.renderer;
     readonly stage = this.pixiApp.stage;
+    readonly view = this.pixiApp.view as HTMLCanvasElement;
     readonly maxFPS;
 
     constructor({ scales, maxFPS = 60 }: { scales: RequiredScales; maxFPS?: number }) {
@@ -36,13 +37,12 @@ export class App {
         Ticker.shared.maxFPS = maxFPS;
         gsap.ticker.fps(maxFPS);
 
-        const { stage, ticker, view } = this.pixiApp;
-        const canvas = view as HTMLCanvasElement;
+        const { stage, ticker } = this.pixiApp;
 
         stage.interactive = true;
         ticker.maxFPS = maxFPS;
 
-        this.canvasContainer.appendChild(canvas);
-        canvas.addEventListener("contextmenu", (e) => e.preventDefault());
+        this.canvasContainer.appendChild(this.view);
+        this.view.addEventListener("contextmenu", (e) => e.preventDefault());
     }
 }

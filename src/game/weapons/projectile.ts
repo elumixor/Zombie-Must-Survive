@@ -3,6 +3,7 @@ import { GameTime } from "game/game-time";
 import { Container, type IPointData, Sprite } from "pixi.js";
 import type { ICharacter } from "../systems/character";
 import type { ITransitionConfig } from "./transition-config";
+import { clamp01 } from "@core/utils";
 export interface IProjectileConfig {
     texture: string;
     radius: number;
@@ -96,8 +97,7 @@ export class Projectile extends Container {
 
         if (this.distanceTraveled >= distance || this.elapsed >= lifetime) {
             this.elapsedFadeOut += deltaMS;
-            const p = (fadeDuration - this.elapsedFadeOut) / fadeDuration;
-            this.alpha = Math.max(0, Math.min(1, p));
+            this.alpha = clamp01((fadeDuration - this.elapsedFadeOut) / fadeDuration);
         }
 
         // Check collisions

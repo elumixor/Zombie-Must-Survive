@@ -26,6 +26,10 @@ export function tweenNumber(
     });
 }
 
+export function tween01(duration: number, callback: (t: number) => void, vars = {} as gsap.TweenVars) {
+    return tweenNumber(0, 1, duration, callback, vars);
+}
+
 export function tweenHEX(
     start: number,
     end: number,

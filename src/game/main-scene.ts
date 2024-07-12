@@ -57,24 +57,6 @@ export class MainScene extends Container {
             rate: 0.3,
             spread: 30,
         });
-
-        // Spawn crystals on zombie death
-        // this.zombieManager.enemyDied.subscribe((zombie) => {
-
-        // });
-
-        // Start weapon
-        // this.weapon.particleSpawned.subscribe((particle) => this.foreground.addChild(particle));
-
-        // Player events
-        // this.player.hpChanged.subscribe((damage) => (this.playerUI.hp -= damage));
-        // this.player.died.subscribe(() => {
-        //     this.weapon.stop();
-        //     this.zombieManager.stop();
-
-        //     Ticker.shared.remove(this.followPlayer);
-        //     gsap.to(this.centered.scale, { x: 2, y: 2, duration: 5, ease: "expo.out" });
-        // });
     }
 
     restart() {
@@ -88,7 +70,5 @@ export class MainScene extends Container {
         this.player.appear();
 
         this.zombieManager.restart();
-
-        // this.weapon.start();
     }
 }

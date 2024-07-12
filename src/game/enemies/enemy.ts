@@ -12,7 +12,7 @@ import { Text } from "../text";
 export class Enemy extends withHp(Container) {
     private readonly world = inject(World);
 
-    readonly radius = 30;
+    readonly radius = 10;
     readonly speed = new Point();
 
     @responsive({ scale: [-0.3, 0.3], anchor: 0.5 })

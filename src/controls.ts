@@ -26,6 +26,12 @@ export class Controls {
 
             this.movementChanged.emit([...this._currentSpeed]);
         });
+
+        window.addEventListener("blur", () => {
+            this._currentSpeed[0] = 0;
+            this._currentSpeed[1] = 0;
+            this.movementChanged.emit([0, 0]);
+        });
     }
 
     set disabled(value: boolean) {
@@ -38,6 +44,10 @@ export class Controls {
             window.addEventListener("keydownonce", this.onKeyDown);
             window.addEventListener("keyup", this.onKeyUp);
         }
+    }
+
+    get currentSpeed() {
+        return [...this._currentSpeed];
     }
 
     onMove(callback: (dx: number, dy: number, dt: number) => void, ticker: Ticker) {
@@ -64,8 +74,10 @@ export class Controls {
         };
     }
 
-    get currentSpeed() {
-        return [...this._currentSpeed];
+    move(dx: number, dy: number) {
+        this._currentSpeed[0] = dx;
+        this._currentSpeed[1] = dy;
+        this.movementChanged.emit([dx, dy]);
     }
 
     private readonly onKeyDown = (e: Event) => {
