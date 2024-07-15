@@ -3,6 +3,7 @@ import { EventEmitter, type Constructor } from "@elumixor/frontils";
 export function withXp<T extends Constructor>(Base: T) {
     return class extends Base {
         readonly levelChanged = new EventEmitter<number>();
+        readonly levelUp = new EventEmitter<number>();
         readonly xpChanged = new EventEmitter<number>();
 
         private _xp = 0;
@@ -32,6 +33,7 @@ export function withXp<T extends Constructor>(Base: T) {
 
             const level = this.level;
             if (previousLevel !== level) this.levelChanged.emit(level);
+            if (level > previousLevel) this.levelUp.emit(level);
 
             this.xpChanged.emit(value);
         }

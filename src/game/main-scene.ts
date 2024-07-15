@@ -2,19 +2,22 @@ import { responsive } from "@core/responsive";
 import { Container } from "pixi.js";
 import { EnemyManager } from "./enemies/enemy-manager";
 import { Player } from "./player/player";
-// import { Crystal } from "./crystal";
-// import { gsap } from "gsap";
 import { PlayerUI } from "./ui/player-ui";
 import { World } from "./world";
-import { RangedAttack } from "./weapons";
+import { inject } from "@core/di";
+import { GameTime } from "./game-time";
+import { SkillPool } from "./skills";
 
 @responsive
 export class MainScene extends Container {
+    private readonly time = inject(GameTime);
+
     readonly playerDied;
+
+    private readonly skillPool = new SkillPool();
 
     @responsive({ pin: 0.5 })
     private readonly world = new World();
-
     private readonly player = new Player();
     private readonly zombieManager = new EnemyManager();
 
@@ -27,39 +30,19 @@ export class MainScene extends Container {
 
         this.addChild(this.world, this.playerUI);
 
-        this.player.weapon = new RangedAttack({
-            projectile: {
-                texture: "shuriken",
-                radius: 5,
-                movement: {
-                    speed: 10,
-                    acceleration: -0.3,
-                    max: 10,
-                    min: 0,
-                },
-                rotation: {
-                    speed: 0,
-                    acceleration: 2,
-                    max: 5,
-                },
-                distance: 100,
-                lifetime: 1,
-                fadeDuration: 0.3,
-                fadeDeadly: true,
-                destroyOnCollision: false,
-                damageInterval: 0.2,
-            },
-            range: 300,
-            carrier: this.player,
-            targetType: "enemy",
-            damage: 1,
-            numProjectiles: 3,
-            rate: 0.3,
-            spread: 30,
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        this.player.levelUp.subscribe(async () => {
+            this.time.paused = true;
+            const skill = await this.playerUI.showLevelUp();
+            this.skillPool.learn(skill, this.player);
+            this.time.paused = false;
         });
     }
 
     restart() {
+        this.skillPool.reset();
+        this.skillPool.auraSkill.applyTo(this.player);
+
         this.world.reset();
         this.player.reset();
 

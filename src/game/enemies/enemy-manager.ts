@@ -6,7 +6,6 @@ import { Container } from "pixi.js";
 import { Interval } from "../interval";
 import { Player } from "../player/player";
 import { Enemy } from "./enemy";
-import { clamp } from "@core/utils";
 
 @injectable
 export class EnemyManager extends Container {

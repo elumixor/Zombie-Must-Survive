@@ -1,5 +1,5 @@
-import { filters, Graphics, RenderTexture, SCALE_MODES, Sprite } from "pixi.js";
-import type { IRenderer } from "pixi.js";
+import { BlurFilter, Graphics, RenderTexture, SCALE_MODES, Sprite } from "pixi.js";
+import type { ColorSource, IRenderer } from "pixi.js";
 import { inject } from "@core/di";
 import { App } from "@core/app";
 
@@ -19,7 +19,7 @@ export function generateTexture(
     return r().generateTexture(graphics, { scaleMode, resolution });
 }
 
-export function rectGraphics({ width = 2, height = 2, color = 0, alpha = 1, roundedRadius = 0 } = {}) {
+export function rectGraphics({ width = 2, height = 2, color = 0 as ColorSource, alpha = 1, roundedRadius = 0 } = {}) {
     const graphics = new Graphics();
     graphics.beginFill(color, alpha);
     if (roundedRadius) graphics.drawRoundedRect(0, 0, width, height, roundedRadius);
@@ -28,11 +28,11 @@ export function rectGraphics({ width = 2, height = 2, color = 0, alpha = 1, roun
     return graphics;
 }
 
-export function rectTexture({ width = 2, height = 2, color = 0, alpha = 1, roundedRadius = 0 } = {}) {
+export function rectTexture({ width = 2, height = 2, color = 0 as ColorSource, alpha = 1, roundedRadius = 0 } = {}) {
     return generateTexture(rectGraphics({ width, height, color, alpha, roundedRadius }));
 }
 
-export function ellipseTexture(width: number, height: number, { color = 0, alpha = 1 } = {}) {
+export function ellipseTexture(width: number, height: number, { color = 0 as ColorSource, alpha = 1 } = {}) {
     const graphics = new Graphics();
     graphics.beginFill(color, alpha);
     graphics.drawEllipse(width / 2, height / 2, width, height);
@@ -40,15 +40,18 @@ export function ellipseTexture(width: number, height: number, { color = 0, alpha
     return generateTexture(graphics);
 }
 
-export function circleTexture(radius: number, { color = 0, alpha = 1 } = {}) {
+export function circleTexture({ radius = 50, color = 0 as ColorSource, alpha = 1 } = {}) {
     return ellipseTexture(radius * 2, radius * 2, { color, alpha });
 }
 
-export function blurredCircle(radius: number, { color = 0xffffff, alpha = 1, blurStrength = 10, padding = 5 } = {}) {
+export function blurredCircle(
+    radius: number,
+    { color = 0xffffff as ColorSource, alpha = 1, blurStrength = 10, padding = 5 } = {},
+) {
     const gfx = new Graphics();
     gfx.beginFill(color, alpha);
     gfx.drawCircle(0, 0, radius);
-    gfx.filters = [new filters.BlurFilter(blurStrength)];
+    gfx.filters = [new BlurFilter(blurStrength)];
 
     const center = radius + blurStrength + padding;
     gfx.position.set(center);
@@ -72,8 +75,8 @@ export function rectSprite({ width = 2, height = 2, color = 0, alpha = 1, rounde
     return sprite;
 }
 
-export function circleSprite({ radius = 50, color = 0, alpha = 1 } = {}) {
-    const sprite = new Sprite(circleTexture(radius, { color, alpha }));
+export function circleSprite({ radius = 50, color = 0 as ColorSource, alpha = 1 } = {}) {
+    const sprite = new Sprite(circleTexture({ radius, color, alpha }));
     sprite.width = sprite.height = radius * 2;
     sprite.anchor.set(0.5);
     return sprite;

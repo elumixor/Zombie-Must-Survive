@@ -1,6 +1,6 @@
-import type { ICharacter } from "../systems";
-import { Weapon } from "./weapon";
+import type { ICircleContainer } from "game/circle-container";
 import { Projectile, type IProjectileConfig } from "./projectile";
+import { Weapon } from "./weapon";
 
 export class RangedAttack extends Weapon {
     protected readonly numProjectiles;
@@ -14,19 +14,19 @@ export class RangedAttack extends Weapon {
         numProjectiles = 1,
         spread = 0,
         projectile,
-        range = projectile.distance * 2,
+        triggerRange = projectile.distance * 2,
         rate,
     }: {
-        carrier: ICharacter;
+        carrier: ICircleContainer;
         targetType: "enemy" | "player";
         damage: number;
-        range?: number;
+        triggerRange?: number;
         rate: number;
         projectile: IProjectileConfig;
         numProjectiles?: number;
         spread?: number;
     }) {
-        super(carrier, targetType, damage, range, rate);
+        super(carrier, targetType, damage, triggerRange, rate);
 
         if ((spread === 0) !== (numProjectiles === 1))
             throw new Error("spread and numProjectiles must be either both 0 or both > 1");
@@ -51,13 +51,12 @@ export class RangedAttack extends Weapon {
             const dx = Math.cos(angle);
             const dy = Math.sin(angle);
 
-            // Spawn particles (this can be refactored into a separate class)
             const projectile = new Projectile({
                 ...this.projectile,
                 damage: this.damage,
                 position: { x: x + dx * radius, y: y + dy * radius },
                 direction: { x: dx, y: dy },
-                affects: this.targets, // this is not dynamic...
+                affects: this.targets,
             });
 
             this.world.spawn(projectile);

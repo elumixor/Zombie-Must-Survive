@@ -1,6 +1,7 @@
 import { inject } from "@core/di";
-import { World } from "../world";
+import type { ICircleContainer } from "game/circle-container";
 import type { ICharacter } from "../systems/character";
+import { World } from "../world";
 
 export abstract class Weapon {
     protected readonly world = inject(World);
@@ -8,13 +9,17 @@ export abstract class Weapon {
     protected readonly targets;
 
     constructor(
-        protected readonly carrier: ICharacter,
+        protected readonly carrier: ICircleContainer,
         protected readonly targetTag: string,
         protected readonly damage: number,
-        protected readonly range: number,
+        protected readonly triggerRange: number,
         protected readonly fireInterval: number,
     ) {
         this.targets = this.world.getTargets(targetTag) as Set<ICharacter>;
+    }
+
+    protected get targetsInRange() {
+        return [...this.targets].filter((target) => this.distanceTo(target) < this.triggerRange);
     }
 
     protected get closestTarget() {
@@ -22,8 +27,8 @@ export abstract class Weapon {
         let minDistance = Infinity;
 
         for (const target of this.targets) {
-            const distance = this.carrier.distanceTo(target) - target.radius - this.carrier.radius;
-            if (distance < this.range && distance < minDistance) {
+            const distance = this.distanceTo(target);
+            if (distance < this.triggerRange && distance < minDistance) {
                 closest = target;
                 minDistance = distance;
             }
@@ -33,13 +38,17 @@ export abstract class Weapon {
     }
 
     tryUse() {
-        if (this.canUse()) {
+        if (this.canUse) {
             this.use();
             this.lastUsed = Date.now();
         }
     }
 
-    protected canUse() {
+    protected distanceTo(target: ICharacter) {
+        return this.carrier.distanceTo(target) - target.radius - this.carrier.radius;
+    }
+
+    protected get canUse() {
         return Date.now() - this.lastUsed > this.fireInterval * 1000;
     }
 

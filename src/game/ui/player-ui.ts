@@ -7,6 +7,7 @@ import { Text } from "../text";
 import { inject } from "@core/di";
 import { Player } from "../player/player";
 import { Controls } from "./controls";
+import { LevelUpPopup } from "./level-up-popup";
 
 @responsive
 export class PlayerUI extends Container implements IResizeObservable {
@@ -46,6 +47,8 @@ export class PlayerUI extends Container implements IResizeObservable {
 
     @responsive({ pin: [0, 1] })
     private readonly controls = new Controls(30);
+    private readonly levelUpPopup = new LevelUpPopup();
+
     constructor() {
         super();
 
@@ -82,10 +85,6 @@ export class PlayerUI extends Container implements IResizeObservable {
         });
     }
 
-    resize({ scale }: IDimensions) {
-        this.controls.scale.set(1 / scale); // Controls should have the same size (?)
-    }
-
     set hidden(value: boolean) {
         if (!value) {
             // Show
@@ -105,5 +104,14 @@ export class PlayerUI extends Container implements IResizeObservable {
             gsap.to(this.controls, { alpha: 0, duration: 0.5 });
             gsap.to(this.controls.scale, { x: 0, y: 0, duration: 0.5 });
         }
+    }
+
+    resize({ scale }: IDimensions) {
+        this.controls.scale.set(1 / scale); // Controls should have the same size (?)
+    }
+
+    showLevelUp() {
+        this.addChild(this.levelUpPopup);
+        return this.levelUpPopup.show();
     }
 }

@@ -3,7 +3,6 @@ import { inject, injectable } from "@core/di";
 import { Ticker as PixiTicker } from "pixi.js";
 import { gsap } from "gsap";
 import { tween01 } from "@core/pixi-utils";
-import { lerp } from "@core/utils";
 
 @injectable
 export class GameTime {

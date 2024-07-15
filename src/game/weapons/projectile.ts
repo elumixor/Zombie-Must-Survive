@@ -3,7 +3,7 @@ import { GameTime } from "game/game-time";
 import { Container, type IPointData, Sprite } from "pixi.js";
 import type { ICharacter } from "../systems/character";
 import type { ITransitionConfig } from "./transition-config";
-import { clamp01 } from "@core/utils";
+
 export interface IProjectileConfig {
     texture: string;
     radius: number;
@@ -12,8 +12,7 @@ export interface IProjectileConfig {
     lifetime: number;
     distance: number;
     fadeDuration: number;
-    fadeDeadly?: true;
-    destroyOnCollision?: false;
+    pierce?: number;
     damageInterval?: number;
 }
 export class Projectile extends Container {
@@ -24,7 +23,7 @@ export class Projectile extends Container {
     private distanceTraveled = 0;
     private elapsed = 0;
     private elapsedFadeOut = 0;
-    private potent = true;
+    private collisions = 0;
 
     private readonly lastDamaged = new Map<ICharacter, number>();
 
@@ -60,8 +59,7 @@ export class Projectile extends Container {
             fadeDuration,
             radius,
             damage,
-            fadeDeadly = false,
-            destroyOnCollision = true,
+            pierce = 0,
             affects,
             damageInterval = 0,
         } = this.config;
@@ -98,10 +96,16 @@ export class Projectile extends Container {
         if (this.distanceTraveled >= distance || this.elapsed >= lifetime) {
             this.elapsedFadeOut += deltaMS;
             this.alpha = clamp01((fadeDuration - this.elapsedFadeOut) / fadeDuration);
+
+            if (this.alpha <= 0) {
+                this.time.remove(this.update);
+                this.destroy();
+                return;
+            }
         }
 
         // Check collisions
-        if (this.potent) {
+        if (this.collisions < pierce) {
             let collided = false;
             const now = Date.now();
             for (const affected of affects) {
@@ -115,17 +119,9 @@ export class Projectile extends Container {
                         this.lastDamaged.set(affected, now);
                     }
 
-                    if (destroyOnCollision) {
-                        this.time.remove(this.update);
-                        this.destroy();
-                        return;
-                    }
+                    this.collisions++;
 
-                    if (!collided) {
-                        if (fadeDeadly) this.elapsed = Math.max(lifetime, this.elapsed);
-                        else this.potent = false;
-                    }
-
+                    if (!collided) this.elapsed = Math.max(lifetime, this.elapsed);
                     collided = true;
                 }
             }

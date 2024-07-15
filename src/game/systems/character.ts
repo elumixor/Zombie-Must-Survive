@@ -1,6 +1,4 @@
 import type { WithHp } from "./hp";
-import type { Container, IPointData } from "pixi.js";
+import type { ICircleContainer } from "game/circle-container";
 
-export interface ICharacter extends IPointData, Container, WithHp {
-    radius: number;
-}
+export interface ICharacter extends ICircleContainer, WithHp {}

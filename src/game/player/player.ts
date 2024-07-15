@@ -6,19 +6,19 @@ import { withHp } from "../systems/hp";
 import { gsap } from "gsap";
 import { withXp } from "../systems/xp";
 import { GameTime } from "game/game-time";
-import type { Weapon } from "game/weapons";
+import type { ISkilled, Skill } from "game/skills";
 
 @injectable
 @responsive
-export class Player extends withHp(withXp(Container)) {
+export class Player extends withHp(withXp(Container)) implements ISkilled {
+    readonly skills: Skill[] = [];
+
     private readonly controls = inject(Controls);
     private readonly time = inject(GameTime);
 
     readonly radius = 20;
     private readonly movementSpeed = 3;
     private readonly constitution = 2;
-
-    weapon?: Weapon;
 
     @responsive({ scale: 0.3, anchor: 0.5 })
     private readonly spine = Sprite.from("zombie");
@@ -42,8 +42,6 @@ export class Player extends withHp(withXp(Container)) {
         // Subscribe to controls
         this.controls.movementChanged.subscribe(this.onMovementChanged);
         this.controls.onMove(this.move, this.time.ticker);
-
-        this.time.add(() => this.weapon?.tryUse());
     }
 
     appear() {
@@ -54,6 +52,7 @@ export class Player extends withHp(withXp(Container)) {
     reset() {
         this.xp = 0;
         this.levelChanged.emit(1);
+        this.time.add(this.useSkills);
     }
 
     get maxHp() {
@@ -77,6 +76,7 @@ export class Player extends withHp(withXp(Container)) {
     }
 
     private die() {
+        this.time.remove(this.useSkills);
         // this.spine.animate("death");
     }
 
@@ -95,5 +95,9 @@ export class Player extends withHp(withXp(Container)) {
         const { x } = this.spine.scale;
         this.spine.scale.x = Math.abs(x) * Math.sign(dx);
         this.moving = true;
+    };
+
+    private readonly useSkills = () => {
+        for (const skill of this.skills) skill.update();
     };
 }
