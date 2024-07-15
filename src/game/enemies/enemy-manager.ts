@@ -1,9 +1,9 @@
 import { inject, injectable } from "@core/di";
 import { Resizer } from "@core/responsive";
 import { GameTime } from "game/game-time";
+import { Interval } from "game/interval";
 import { World } from "game/world";
 import { Container } from "pixi.js";
-import { Interval } from "../interval";
 import { Player } from "../player/player";
 import { Enemy } from "./enemy";
 
@@ -46,14 +46,14 @@ export class EnemyManager extends Container {
         this.gameTime.add(this.move);
     }
 
-    stop() {
+    pause() {
         this.spawner.pause();
         this.gameTime.remove(this.move);
     }
 
-    pause() {
-        this.spawner.pause();
-        this.gameTime.remove(this.move);
+    resume() {
+        this.spawner.resume();
+        this.gameTime.add(this.move);
     }
 
     private spawn() {

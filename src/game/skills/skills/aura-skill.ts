@@ -10,7 +10,7 @@ export class AuraSkill extends Skill {
     readonly description = "A deadly cloud of stench";
     readonly image = "aura";
     protected readonly rarities = ["common", "common", "common", "rare", "rare"] as SkillRarity[];
-    protected readonly damage = [5, 5, 5, 10, 15];
+    protected readonly damage = [4, 4, 4, 8, 16];
     protected readonly radius = [100, 200, 200, 200, 200];
     protected readonly rate = [0.5, 0.5, 0.3, 0.3, 0.3];
     override readonly maxLevel = 4;

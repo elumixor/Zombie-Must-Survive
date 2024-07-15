@@ -1,34 +1,48 @@
+import { inject } from "@core/di";
+import { GameTime } from "./game-time";
+
+/**
+ * Executes a given callback every given time interval.
+ * @param callback The callback to execute.
+ * @param seconds The time interval in seconds.
+ */
 export class Interval {
-    private started = 0;
-    private paused = 0;
-    private timeoutId = 0;
+    private readonly time = inject(GameTime);
+    private readonly ticker = this.time.ticker;
+    private readonly ms;
+    private elapsedMs = 0;
 
     constructor(
         private readonly callback: () => void,
-        private readonly interval: number,
-    ) {}
-
-    pause() {
-        window.clearInterval(this.timeoutId);
-        this.paused = Date.now();
-    }
-
-    resume() {
-        this.started += Date.now() - this.paused;
-        this.start();
+        seconds: number,
+    ) {
+        this.ms = seconds * 1000;
     }
 
     start() {
-        window.clearInterval(this.timeoutId);
-
-        this.started = Date.now();
-        const elapsed = Date.now() - this.started;
-        const overshoot = elapsed - this.interval * 1000;
-        const adjusted = this.interval * 1000 - overshoot;
-
-        this.timeoutId = window.setTimeout(() => {
-            this.callback();
-            this.start();
-        }, adjusted);
+        this.elapsedMs = 0;
+        this.ticker.add(this.update);
     }
+
+    resume() {
+        this.ticker.add(this.update);
+    }
+
+    pause() {
+        this.ticker.remove(this.update);
+    }
+
+    stop() {
+        this.elapsedMs = 0;
+        this.ticker.remove(this.update);
+    }
+
+    private readonly update = () => {
+        this.elapsedMs += this.ticker.deltaMS;
+
+        while (this.elapsedMs > this.ms) {
+            this.callback();
+            this.elapsedMs -= this.ms;
+        }
+    };
 }

@@ -127,7 +127,7 @@ export class Projectile extends Container {
             }
         }
 
-        if (this.elapsedFadeOut >= fadeDuration) {
+        if (this.elapsedFadeOut >= fadeDuration || this.collisions >= pierce) {
             this.time.remove(this.update);
             this.destroy();
         }

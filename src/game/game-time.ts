@@ -2,44 +2,38 @@ import { App } from "@core/app";
 import { inject, injectable } from "@core/di";
 import { Ticker as PixiTicker } from "pixi.js";
 import { gsap } from "gsap";
-import { tween01 } from "@core/pixi-utils";
 
 @injectable
 export class GameTime {
     readonly ticker = new PixiTicker();
 
     private readonly app = inject(App);
-    private readonly timeline = gsap.timeline();
+    private readonly tweens = new Array<gsap.core.Tween>();
 
     constructor() {
         this.ticker.maxFPS = this.app.maxFPS;
+    }
 
-        this.timeline.play();
+    get speed() {
+        return this.ticker.speed;
+    }
+
+    set speed(value) {
+        this.ticker.speed = value;
+        for (const tween of this.tweens) tween.timeScale(value);
     }
 
     set paused(value: boolean) {
         if (value) {
-            const tickerSpeed = this.ticker.speed;
-            const timelineSpeed = this.timeline.timeScale();
-
-            void tween01(0.5, (p) => {
-                this.ticker.speed = lerp(p, tickerSpeed, 0.1);
-                this.timeline.timeScale(lerp(p, timelineSpeed, 0));
-            }).then(() => {
+            void gsap.to(this, { speed: 0.1, duration: 0.5 }).then(() => {
                 this.ticker.stop();
-                this.timeline.pause();
+                for (const tween of this.tweens) tween.pause();
             });
         } else {
-            const tickerSpeed = this.ticker.speed;
-            const timelineSpeed = this.timeline.timeScale();
-
             this.ticker.start();
-            this.timeline.play();
+            for (const tween of this.tweens) tween.play();
 
-            void tween01(0.5, (p) => {
-                this.ticker.speed = lerp(p, tickerSpeed, 1);
-                this.timeline.timeScale(lerp(p, timelineSpeed, 1));
-            });
+            void gsap.to(this, { speed: 1, duration: 0.5 });
         }
     }
 
@@ -57,19 +51,27 @@ export class GameTime {
 
     start() {
         this.ticker.start();
-        this.timeline.play();
+        for (const tween of this.tweens) tween.play();
     }
 
     stop() {
         this.ticker.stop();
-        this.timeline.pause();
+        for (const tween of this.tweens) tween.pause();
     }
 
     to(target: object, vars: gsap.TweenVars) {
-        return this.timeline.to(target, vars);
+        const tween = gsap.to(target, vars);
+        tween.timeScale(this.speed);
+        this.tweens.push(tween);
+        void tween.then(() => this.tweens.remove(tween));
+        return tween;
     }
 
     fromTo(target: object, fromVars: gsap.TweenVars, toVars: gsap.TweenVars) {
-        return this.timeline.fromTo(target, fromVars, toVars);
+        const tween = gsap.fromTo(target, fromVars, toVars);
+        tween.timeScale(this.speed);
+        this.tweens.push(tween);
+        void tween.then(() => this.tweens.remove(tween));
+        return tween;
     }
 }

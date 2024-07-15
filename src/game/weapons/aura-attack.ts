@@ -2,7 +2,6 @@ import type { ICircleContainer } from "game/circle-container";
 import { Container, type ColorSource } from "pixi.js";
 import { Weapon } from "./weapon";
 import { circleSprite } from "@core/pixi-utils";
-import gsap from "gsap";
 import { inject } from "@core/di";
 import { GameTime } from "game/game-time";
 
@@ -49,10 +48,9 @@ export class AuraAttack extends Weapon {
         const update = () => container.position.copyFrom(this.carrier);
         this.time.add(update);
 
-        const tl = gsap.timeline();
-        tl.fromTo(sprite, { alpha: 0 }, { alpha: 1, duration: 0.1 });
-        tl.fromTo(container.scale, { x: 1, y: 1 }, { x: 1.05, y: 1.05, duration: 0.2 }, "<");
-        void tl.to(sprite, { alpha: 0, duration: 0.2 }, "<+0.1").then(() => {
+        this.time.fromTo(sprite, { alpha: 0 }, { alpha: 1, duration: 0.1 });
+        this.time.fromTo(container.scale, { x: 1, y: 1 }, { x: 1.05, y: 1.05, duration: 0.2 });
+        void this.time.to(sprite, { alpha: 0, duration: 0.2, delay: 0.2 }).then(() => {
             this.time.remove(update);
             this.containers.remove(container);
             container.destroy();
