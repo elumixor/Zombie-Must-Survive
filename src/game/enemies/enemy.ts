@@ -1,7 +1,7 @@
 import { inject } from "@core/di";
 import { responsive } from "@core/responsive";
 import { Crystal } from "game/crystal";
-import { MeleeAttack } from "game/weapons/melee-attack";
+import type { Weapon } from "game/weapons";
 import { World } from "game/world";
 import { gsap } from "gsap";
 import { Container, Point, Sprite, type IPointData } from "pixi.js";
@@ -11,20 +11,38 @@ import { Text } from "../text";
 @responsive
 export class Enemy extends withHp(Container) {
     private readonly world = inject(World);
+    weapon?: Weapon;
 
-    readonly radius = 10;
+    readonly radius;
     readonly speed = new Point();
+    readonly maxSpeed;
 
     @responsive({ scale: [-0.3, 0.3], anchor: 0.5 })
-    private readonly sprite = Sprite.from("worker");
+    private readonly sprite;
 
-    private lastChanged = 0;
-    private readonly maxSpeed = 2;
+    private readonly mass;
 
-    private readonly weapon = new MeleeAttack(this, "player", 1, 0, 0.5);
-
-    constructor(public mass: number) {
+    constructor({
+        mass,
+        sprite,
+        hp,
+        radius,
+        maxSpeed,
+    }: {
+        sprite: string;
+        mass: number;
+        maxSpeed: number;
+        hp: number;
+        radius: number;
+    }) {
         super();
+
+        this.mass = mass;
+        this.hp = hp;
+        this.radius = radius;
+        this.maxSpeed = maxSpeed;
+
+        this.sprite = Sprite.from(sprite);
 
         this.addChild(this.sprite);
         this.tintOnHit(this.sprite);
@@ -59,16 +77,9 @@ export class Enemy extends withHp(Container) {
         this.x += this.speed.x * dt;
         this.y += this.speed.y * dt;
 
-        this.changeScale(Math.sign(this.speed.x));
+        this.scale.x = Math.sign(this.speed.x);
 
-        this.weapon.tryUse();
-    }
-
-    private changeScale(scaleX: number) {
-        if (Date.now() - this.lastChanged > 300) {
-            this.scale.x = scaleX;
-            this.lastChanged = Date.now();
-        }
+        this.weapon?.tryUse();
     }
 
     private spawnDamageText(damage: number) {

@@ -11,6 +11,7 @@ export class Resources extends BaseResources {
         this.mainLoader.add("shuriken", `${this.pathTo("sprites")}/shuriken.png`);
         this.mainLoader.add("crystal", `${this.pathTo("sprites")}/crystal.png`);
         this.mainLoader.add("worker", `${this.pathTo("sprites")}/worker.png`);
+        this.mainLoader.add("policeman", `${this.pathTo("sprites")}/policeman.png`);
         this.mainLoader.add("shadow", `${this.pathTo("sprites")}/shadow.png`);
     }
 }

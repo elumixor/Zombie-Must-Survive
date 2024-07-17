@@ -32,8 +32,9 @@ export class GameUI extends Container implements IResizeObservable {
         this.pausePressed = this.pauseText.pressed.pipe();
     }
 
-    async show(mode: "start" | "restart") {
-        this.startButton.text = mode.toUpperCase();
+    async show(mode: "start" | "restart" | "next") {
+        if (mode === "next") this.startButton.text = "NEXT LEVEL";
+        else this.startButton.text = mode.toUpperCase();
 
         void this.startButton.show();
 

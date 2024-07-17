@@ -31,6 +31,11 @@ export class Game extends Container implements IResizeObservable {
             void this.ui.show("restart").then(() => this.restart());
         });
 
+        this.mainScene.stageCompleted.subscribe(() => {
+            this.paused = true;
+            void this.ui.show("next").then(() => this.restart());
+        });
+
         this.ui.pausePressed.subscribe(() => (this.paused = !this.paused));
     }
 
@@ -52,7 +57,7 @@ export class Game extends Container implements IResizeObservable {
 
         debug(value ? "Paused" : "Resumed");
 
-        // TODO: we will need spines to be subscribed to the game time instead of the global ticker
+        // TODO: we will need Spines to be subscribed to the game time instead of the global ticker
         settings.GLOBAL_AUTO_UPDATE = !value;
         this.gameTime.paused = value;
 

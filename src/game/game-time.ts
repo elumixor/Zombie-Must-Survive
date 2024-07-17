@@ -37,6 +37,10 @@ export class GameTime {
         }
     }
 
+    get deltaMs() {
+        return this.ticker.deltaMS;
+    }
+
     add(callback: (delta: number) => void) {
         this.ticker.add(callback);
     }

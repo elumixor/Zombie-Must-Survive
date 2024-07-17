@@ -3,7 +3,6 @@ import { responsive } from "@core/responsive";
 import { Controls } from "controls";
 import { Container, Sprite } from "pixi.js";
 import { withHp } from "../systems/hp";
-import { gsap } from "gsap";
 import { withXp } from "../systems/xp";
 import { GameTime } from "game/game-time";
 import type { ISkilled, Skill } from "game/skills";
@@ -11,7 +10,7 @@ import type { ISkilled, Skill } from "game/skills";
 @injectable
 @responsive
 export class Player extends withHp(withXp(Container)) implements ISkilled {
-    readonly skills: Skill[] = [];
+    skills: Skill[] = [];
 
     private readonly controls = inject(Controls);
     private readonly time = inject(GameTime);
@@ -45,13 +44,14 @@ export class Player extends withHp(withXp(Container)) implements ISkilled {
     }
 
     appear() {
-        gsap.fromTo(this, { alpha: 0 }, { alpha: 1, duration: 0.5 });
-        gsap.fromTo(this.scale, { x: 0, y: 0 }, { x: 1, y: 1, ease: "bounce", duration: 0.5 });
+        this.time.fromTo(this, { alpha: 0 }, { alpha: 1, duration: 0.5 });
+        this.time.fromTo(this.scale, { x: 0, y: 0 }, { x: 1, y: 1, ease: "bounce", duration: 0.5 });
     }
 
     reset() {
         this.xp = 0;
         this.levelChanged.emit(1);
+        this.skills = [];
         this.time.add(this.useSkills);
     }
 

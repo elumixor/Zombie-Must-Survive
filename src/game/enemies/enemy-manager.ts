@@ -1,66 +1,83 @@
 import { inject, injectable } from "@core/di";
 import { Resizer } from "@core/responsive";
+import { EventEmitter } from "@elumixor/frontils";
 import { GameTime } from "game/game-time";
-import { Interval } from "game/interval";
+import { MeleeAttack } from "game/weapons";
 import { World } from "game/world";
 import { Container } from "pixi.js";
 import { Player } from "../player/player";
 import { Enemy } from "./enemy";
 
+export type EnemyType = "worker" | "soldier";
+
+interface ISpawnLevel {
+    duration: number;
+    enemies: {
+        enemyType: EnemyType;
+        spawnInterval: number;
+        count: number;
+    }[];
+}
+
 @injectable
 export class EnemyManager extends Container {
+    readonly stageCompleted = new EventEmitter();
     private readonly resizer = inject(Resizer);
     private readonly player = inject(Player);
     private readonly world = inject(World);
-    private readonly gameTime = inject(GameTime);
+    private readonly time = inject(GameTime);
 
-    spawnInterval;
-    maxZombies;
-    minZombies;
-    zombieMass;
+    private readonly enemies = [] as Enemy[];
+    private readonly attraction = 1;
+    private readonly repulsion = 0.5;
+    private readonly friction = 0.5;
+    private readonly levelStarts;
+    private readonly levels;
+    private elapsed = 0;
+    private _stageCompleted = false;
 
-    private readonly spawner;
-
-    readonly enemies = [] as Enemy[];
-
-    attraction = 1;
-    repulsion = 0.5;
-    friction = 0.5;
-
-    constructor({ spawnInterval = 0.3, maxZombies = 100, minZombies = 3, zombieMass = 10 } = {}) {
+    constructor(levels: ISpawnLevel[]) {
         super();
 
-        this.spawnInterval = spawnInterval;
-        this.maxZombies = maxZombies;
-        this.minZombies = minZombies;
-        this.zombieMass = zombieMass;
+        let start = 0;
+        this.levelStarts = levels.map((level) => {
+            const end = start + level.duration;
+            start = end;
+            return end;
+        });
+        this.levelStarts.unshift(0);
 
-        this.spawner = new Interval(() => this.spawn(), this.spawnInterval);
+        this.levels = levels.map(
+            (level) => new Map(level.enemies.map((enemy) => [enemy.enemyType, { ...enemy, lastSpawned: 0 }])),
+        );
+    }
+
+    private get currentLevel() {
+        const index = this.levelStarts.findLastIndex((start) => this.elapsed / 1000 > start);
+        const currentLevel = this.levels[index];
+        return currentLevel as typeof currentLevel | undefined;
     }
 
     restart() {
         for (const zombie of this.enemies) zombie.destroy();
         this.enemies.clear();
-        this.spawner.start();
-        this.gameTime.remove(this.move);
-        this.gameTime.add(this.move);
+        this.elapsed = 0;
+        this._stageCompleted = false;
+        this.time.remove(this.update);
+        this.time.add(this.update);
     }
 
     pause() {
-        this.spawner.pause();
-        this.gameTime.remove(this.move);
+        this.time.remove(this.update);
     }
 
     resume() {
-        this.spawner.resume();
-        this.gameTime.add(this.move);
+        this.time.add(this.update);
     }
 
-    private spawn() {
-        if (this.enemies.length >= this.maxZombies) return;
-
+    private spawn(enemyType: EnemyType) {
         // Spawn a zombie
-        const zombie = new Enemy(this.zombieMass);
+        const enemy = this.spawnEnemy(enemyType);
 
         // Position it outside the screen
         const r = Math.random();
@@ -72,24 +89,37 @@ export class EnemyManager extends Container {
         height *= 1.2;
 
         if (vertical) {
-            zombie.y = (Math.sign(r - 0.75) * height) / 2;
-            zombie.x = (Math.random() - 0.5) * width;
+            enemy.y = (Math.sign(r - 0.75) * height) / 2;
+            enemy.x = (Math.random() - 0.5) * width;
         } else {
-            zombie.x = (Math.sign(r - 0.25) * width) / 2;
-            zombie.y = (Math.random() - 0.5) * height;
+            enemy.x = (Math.sign(r - 0.25) * width) / 2;
+            enemy.y = (Math.random() - 0.5) * height;
         }
 
-        this.enemies.push(zombie);
-        this.world.spawn(zombie, { tag: "enemy", relative: true });
+        this.enemies.push(enemy);
+        this.world.spawn(enemy, { tag: "enemy", relative: true });
 
-        zombie.died.subscribe(() => {
-            this.enemies.remove(zombie);
-            if (this.enemies.length < this.minZombies) this.spawn();
-        });
+        enemy.died.subscribe(() => this.onEnemyDied(enemy));
     }
 
     // Boids-like movement
-    private readonly move = (dt: number) => {
+    private readonly update = (dt: number) => {
+        if (this._stageCompleted) return;
+
+        this.elapsed += this.time.ticker.deltaMS;
+
+        const { currentLevel } = this;
+        if (currentLevel)
+            for (const [enemyType, level] of currentLevel)
+                if (level.lastSpawned === 0 || this.elapsed - level.lastSpawned > level.spawnInterval * 1000) {
+                    level.lastSpawned = this.elapsed;
+                    for (let i = 0; i < level.count; i++) this.spawn(enemyType);
+                }
+
+        this.moveEnemies(dt);
+    };
+
+    private moveEnemies(dt: number) {
         for (const enemy of this.enemies) {
             const force = { x: 0, y: 0 };
 
@@ -142,5 +172,39 @@ export class EnemyManager extends Container {
             // Check Z index
             enemy.zIndex = enemy.y > this.player.y ? 1 : -1;
         }
-    };
+    }
+
+    private spawnEnemy(enemyType: EnemyType) {
+        if (enemyType === "worker") {
+            const enemy = new Enemy({
+                sprite: "worker",
+                mass: 1,
+                hp: 1,
+                radius: 10,
+                maxSpeed: 1,
+            });
+
+            enemy.weapon = new MeleeAttack(enemy, "player", 1, 0, 0.5);
+
+            return enemy;
+        } else {
+            const enemy = new Enemy({
+                sprite: "policeman",
+                mass: 2,
+                hp: 2,
+                radius: 10,
+                maxSpeed: 0.8,
+            });
+
+            enemy.weapon = new MeleeAttack(enemy, "player", 2, 0, 0.5);
+
+            return enemy;
+        }
+    }
+
+    private onEnemyDied(enemy: Enemy) {
+        this.enemies.remove(enemy);
+        this._stageCompleted = this.currentLevel === undefined && this.enemies.isEmpty;
+        if (this._stageCompleted) this.stageCompleted.emit();
+    }
 }

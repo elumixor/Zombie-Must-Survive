@@ -8,6 +8,7 @@ import { inject } from "@core/di";
 import { Player } from "../player/player";
 import { Controls } from "./controls";
 import { LevelUpPopup } from "./level-up-popup";
+import { Clock } from "./clock";
 
 @responsive
 export class PlayerUI extends Container implements IResizeObservable {
@@ -49,6 +50,9 @@ export class PlayerUI extends Container implements IResizeObservable {
     private readonly controls = new Controls(30);
     private readonly levelUpPopup = new LevelUpPopup();
 
+    @responsive({ pin: [0.5, 0], y: 30 })
+    private readonly clock = new Clock();
+
     constructor() {
         super();
 
@@ -58,6 +62,7 @@ export class PlayerUI extends Container implements IResizeObservable {
             this.levelBackgroundContainer,
             this.levelForegroundContainer,
             this.levelText,
+            this.clock,
             this.controls,
         );
         this.levelBackgroundContainer.addChild(this.levelBackground);
@@ -104,6 +109,10 @@ export class PlayerUI extends Container implements IResizeObservable {
             gsap.to(this.controls, { alpha: 0, duration: 0.5 });
             gsap.to(this.controls.scale, { x: 0, y: 0, duration: 0.5 });
         }
+    }
+
+    set gameTime(value: number) {
+        this.clock.time = value;
     }
 
     resize({ scale }: IDimensions) {

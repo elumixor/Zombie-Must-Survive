@@ -17,7 +17,7 @@ export class Crystal extends Container {
     @responsive({ anchor: [0.5, 0] })
     private readonly shadow = Sprite.from("shadow");
 
-    private readonly pickupDistance = 50;
+    private readonly pickupDistance = 150;
     private readonly radius = 0;
     private readonly triggerDistance = this.pickupDistance + this.radius + this.player.radius;
     private readonly speed = 100000;
