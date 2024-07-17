@@ -8,6 +8,7 @@ declare global {
     function min(...values: number[]): number;
     function range(min: number, max: number): number[];
     function range(max: number): number[];
+    function norm(x: number, y: number): number;
 }
 
 Reflect.defineProperty(globalThis, "lerp", {
@@ -62,6 +63,15 @@ Reflect.defineProperty(globalThis, "range", {
             min = 0;
         }
         return Array.from({ length: max - min }, (_, i) => i + min);
+    },
+    writable: false,
+    enumerable: false,
+    configurable: false,
+});
+
+Reflect.defineProperty(globalThis, "norm", {
+    value(x: number, y: number) {
+        return Math.hypot(x, y);
     },
     writable: false,
     enumerable: false,

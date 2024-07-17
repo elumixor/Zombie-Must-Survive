@@ -1,17 +1,17 @@
-import { responsive, type IDimensions, type IResizeObservable } from "@core/responsive";
-import { Container } from "pixi.js";
-import { Bar } from "./bar";
-import { rectSprite } from "@core/pixi-utils";
-import { gsap } from "gsap";
-import { Text } from "../text";
 import { inject } from "@core/di";
+import { rectSprite } from "@core/pixi-utils";
+import { responsive } from "@core/responsive";
+import { gsap } from "gsap";
+import { Container } from "pixi.js";
 import { Player } from "../player/player";
+import { Text } from "../text";
+import { Bar } from "./bar";
+import { Clock } from "./clock";
 import { Controls } from "./controls";
 import { LevelUpPopup } from "./level-up-popup";
-import { Clock } from "./clock";
 
 @responsive
-export class PlayerUI extends Container implements IResizeObservable {
+export class PlayerUI extends Container {
     private readonly player = inject(Player);
 
     @responsive({ x: 50, y: 20 })
@@ -46,8 +46,7 @@ export class PlayerUI extends Container implements IResizeObservable {
     @responsive({ x: 45, y: 39 })
     private readonly levelForegroundContainer = new Container();
 
-    @responsive({ pin: [0, 1] })
-    private readonly controls = new Controls(30);
+    private readonly controls = new Controls();
     private readonly levelUpPopup = new LevelUpPopup();
 
     @responsive({ pin: [0.5, 0], y: 30 })
@@ -74,7 +73,8 @@ export class PlayerUI extends Container implements IResizeObservable {
         this.levelText.alpha = 0;
         this.xpBar.alpha = 0;
         this.hpBar.alpha = 0;
-        this.controls.alpha = 0;
+
+        this.controls.hidden = true;
 
         this.player.hpChanged.subscribe((hp) => (this.hpBar.value = hp));
         this.player.xpChanged.subscribe((xp) => (this.xpBar.value = xp - this.player.previousLevelXp));
@@ -91,6 +91,8 @@ export class PlayerUI extends Container implements IResizeObservable {
     }
 
     set hidden(value: boolean) {
+        this.controls.hidden = value;
+
         if (!value) {
             // Show
             gsap.to(this.levelBackgroundContainer.scale, { x: 1, y: 1, duration: 0.5 });
@@ -98,25 +100,17 @@ export class PlayerUI extends Container implements IResizeObservable {
             gsap.to(this.levelText, { alpha: 1, duration: 0.5, delay: 0.3 });
             gsap.to(this.hpBar, { alpha: 1, duration: 1, delay: 0.4 });
             gsap.to(this.xpBar, { alpha: 1, duration: 1, delay: 0.6 });
-            gsap.to(this.controls, { alpha: 1, duration: 0.5 });
-            gsap.to(this.controls.scale, { x: 1, y: 1, duration: 0.5 });
         } else {
             gsap.to(this.levelBackgroundContainer.scale, { x: 0, y: 0, duration: 0.5 });
             gsap.to(this.levelForegroundContainer.scale, { x: 0, y: 0, duration: 0.5, delay: 0.2 });
             gsap.to(this.levelText, { alpha: 0, duration: 0.5, delay: 0.3 });
             gsap.to(this.hpBar, { alpha: 0, duration: 1, delay: 0.4 });
             gsap.to(this.xpBar, { alpha: 0, duration: 1, delay: 0.6 });
-            gsap.to(this.controls, { alpha: 0, duration: 0.5 });
-            gsap.to(this.controls.scale, { x: 0, y: 0, duration: 0.5 });
         }
     }
 
     set gameTime(value: number) {
         this.clock.time = value;
-    }
-
-    resize({ scale }: IDimensions) {
-        this.controls.scale.set(1 / scale); // Controls should have the same size (?)
     }
 
     showLevelUp() {
