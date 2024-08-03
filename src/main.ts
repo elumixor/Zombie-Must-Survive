@@ -1,11 +1,7 @@
-import "@core/extensions";
-import { App } from "@core/app";
-import "@core/logger";
+import { App } from "@core";
+import { GameZombie, ResourcesZombie, SoundsZombie } from "./game-zombie";
+import { Poki } from "./poki";
 import "./style.css";
-import { Resources } from "resources";
-import { Sounds } from "sounds";
-import { Poki } from "poki";
-import { Game } from "game";
 
 void (async () => {
     const poki = new Poki();
@@ -18,19 +14,20 @@ void (async () => {
         },
         maxFPS: 120,
     });
-    debug("App initialized");
 
-    const resources = new Resources();
-    new Sounds();
+    logs("PIXI App initialized");
+
+    const resources = new ResourcesZombie();
+    new SoundsZombie();
 
     await resources.loadMain();
     poki.onLoadingFinished();
-    debug("Resources loaded");
+    logs("Resources loaded");
 
-    const game = new Game();
-    poki.paused.subscribe((paused) => (game.paused = paused));
+    const game = new GameZombie();
+    poki.addStarted.subscribe(() => game.advertisementStarted());
 
     await poki.playCommercialBreak();
 
-    game.start();
+    void game.start();
 })();

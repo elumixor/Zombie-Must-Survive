@@ -62,3 +62,7 @@ export function injectable<TBase extends AnyConstructor>(Base: TBase): TBase {
 
     return Wrapper;
 }
+
+export function uninject(Base: AnyConstructor) {
+    serviceMap.delete(Base);
+}

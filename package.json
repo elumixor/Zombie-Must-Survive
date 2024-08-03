@@ -3,7 +3,7 @@
     "module": "index.ts",
     "type": "module",
     "scripts": {
-        "dev": "bunx --bun vite",
+        "dev": "bunx --bun vite --force",
         "devp": "NODE_ENV='production' bunx --bun vite",
         "lint": "bun run eslint --ext .ts .",
         "build": "vite build",
@@ -25,9 +25,11 @@
         "typescript": "^5.5.2"
     },
     "dependencies": {
-        "@elumixor/eslint": "^0.1.1",
-        "@elumixor/frontils": "^2.2.0",
+        "@elumixor/eslint": "^0.2.0",
+        "@elumixor/frontils": "^2.4.2",
         "@pixi/filter-color-overlay": "^5.1.1",
+        "@pixi/layers": "^2.1.0",
+        "@pixi/text-html": "^7.4.2",
         "gsap": "^3.12.5",
         "howler": "^2.2.4",
         "pixi-spine": "^4.0.4",

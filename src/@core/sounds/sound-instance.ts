@@ -1,6 +1,6 @@
 import { Howl, type HowlOptions } from "howler";
 import { EventEmitter } from "@elumixor/frontils";
-import { tweenNumber } from "@core/pixi-utils";
+import { tweenNumber } from "@core/utils";
 
 export interface ISoundInstanceParameters extends HowlOptions {
     volume: number;

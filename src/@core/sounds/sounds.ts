@@ -1,5 +1,5 @@
 import { Howler } from "howler";
-import { locallyStored } from "../utils";
+import { locallyStored } from "@core/utils";
 import { injectable } from "@core/di";
 
 @injectable

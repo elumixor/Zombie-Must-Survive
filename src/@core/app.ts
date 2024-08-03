@@ -1,8 +1,9 @@
-import { injectable } from "@core/di";
-import { Resizer, type RequiredScales } from "@core/responsive";
+import { injectable } from "./di";
+import { Resizer, type RequiredScales } from "./responsive";
 import { getElementOrThrow } from "@elumixor/frontils";
+import { Stage } from "@pixi/layers";
 import { gsap } from "gsap";
-import { Application, Ticker } from "pixi.js";
+import { Application, Container, isMobile, Ticker } from "pixi.js";
 
 declare global {
     interface Window {
@@ -21,11 +22,18 @@ export class App {
         // forceCanvas: true, // we need to add legacy plugin for this if we want
     });
     readonly renderer = this.pixiApp.renderer;
-    readonly stage = this.pixiApp.stage;
+    // readonly stage = this.pixiApp.stage;
+    readonly stage = new Stage();
     readonly view = this.pixiApp.view as HTMLCanvasElement;
     readonly maxFPS;
 
+    readonly isMobile = isMobile.any;
+    readonly isDesktop = !this.isMobile;
+
     constructor({ scales, maxFPS = 60 }: { scales: RequiredScales; maxFPS?: number }) {
+        this.pixiApp.stage = this.stage;
+        this.stage.group.enableSort = true;
+
         new Resizer(this.renderer, scales);
 
         this.maxFPS = maxFPS;
@@ -37,12 +45,17 @@ export class App {
         Ticker.shared.maxFPS = maxFPS;
         gsap.ticker.fps(maxFPS);
 
-        const { stage, ticker } = this.pixiApp;
-
-        stage.interactive = true;
-        ticker.maxFPS = maxFPS;
+        this.pixiApp.ticker.maxFPS = maxFPS;
 
         this.canvasContainer.appendChild(this.view);
         this.view.addEventListener("contextmenu", (e) => e.preventDefault());
+    }
+
+    addChild(child: Container) {
+        this.stage.addChild(child);
+    }
+
+    removeChild(child: Container) {
+        this.stage.removeChild(child);
     }
 }
