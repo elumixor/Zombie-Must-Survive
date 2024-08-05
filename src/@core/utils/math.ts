@@ -43,13 +43,13 @@ declare global {
 
 Reflect.defineProperty(globalThis, "lerp", {
     value(from: number | Vec2, to: number | Vec2, p: number) {
-        if (from instanceof Vec2) {
-            assert(to instanceof Vec2, 'Both interpolated "from" and "to" should be Vec2');
-            return from.add(to.sub(from).mul(p));
+        if (typeof from === "number") {
+            assert(typeof to === "number", 'Both interpolated "from" and "to" should be numbers');
+            return from + (to - from) * p;
         }
 
-        assert(typeof to === "number", 'Both interpolated "from" and "to" should be numbers');
-        return from + (to - from) * p;
+        assert(to instanceof Vec2, 'Both interpolated "from" and "to" should be Vec2');
+        return from.add(to.sub(from).mul(p));
     },
     writable: false,
     enumerable: false,

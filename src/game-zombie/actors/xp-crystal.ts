@@ -1,10 +1,8 @@
 import { Actor, CircleColliderComponent, inject, PhysicsComponent, TrackerComponent } from "@core";
-import { responsive } from "@core/responsive";
 import { all, EventEmitter } from "@elumixor/frontils";
 import { GameState } from "game-zombie/game-state";
 import { Sprite } from "pixi.js";
 
-@responsive
 export class XpCrystal extends Actor {
     private readonly playerState = inject(GameState).player;
 
@@ -14,10 +12,7 @@ export class XpCrystal extends Actor {
     attractionRadius = 200;
     collectRadius = 5;
 
-    @responsive({ scale: 0.3, anchor: [0.5, 1] })
     private readonly sprite = this.addChild(Sprite.from("crystal"));
-
-    @responsive({ anchor: [0.5, 0] })
     private readonly shadow = this.addChild(Sprite.from("shadow"));
 
     private readonly collider = this.addComponent(new CircleColliderComponent(this));
@@ -28,6 +23,10 @@ export class XpCrystal extends Actor {
         super();
 
         this.layer = "foreground";
+
+        this.sprite.scale.set(0.3);
+        this.sprite.anchor.set(0.5, 1);
+        this.shadow.anchor.set(0.5, 0);
 
         this.collider.isTrigger = true;
         this.collider.targetTags.add("player");

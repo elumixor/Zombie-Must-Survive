@@ -1,12 +1,9 @@
 import { Actor, CircleColliderComponent, PhysicsComponent, TrackerComponent } from "@core";
-import { responsive } from "@core/responsive";
 import { HealthComponent, HitEffectComponent, MeleeAttackComponent } from "game-zombie/components";
 import { Sprite } from "pixi.js";
 import { XpCrystal } from "../xp-crystal";
 
-@responsive
 export class Enemy extends Actor {
-    @responsive({ scale: [-0.3, 0.3], anchor: 0.5 })
     readonly sprite = this.addChild(Sprite.from("worker"));
 
     readonly tracker = this.addComponent(new TrackerComponent(this));
@@ -21,6 +18,9 @@ export class Enemy extends Actor {
 
         this.name = "Enemy";
         this.layer = "foreground";
+
+        this.sprite.scale.set(0.3);
+        this.sprite.anchor.set(0.5);
 
         this.tracker.forceRequested.subscribe((v) => {
             this.sprite.scale.x = -sign(v.x, 1) * abs(this.sprite.scale.x);

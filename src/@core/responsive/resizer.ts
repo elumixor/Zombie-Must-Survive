@@ -1,6 +1,6 @@
 import { injectable } from "@core/di";
 import type { IPoint } from "@core/utils";
-import { EventEmitter, getElementOrThrow } from "@elumixor/frontils";
+import { EventEmitter, getElementOrThrow, type ISubscription } from "@elumixor/frontils";
 import type { IRenderer } from "pixi.js";
 
 export interface RequiredScales {
@@ -14,6 +14,11 @@ export class Resizer {
     protected readonly resized = new EventEmitter<IDimensions>();
     protected readonly rotated = new EventEmitter<IDimensions>();
     protected readonly canvasContainer = getElementOrThrow("canvas-container");
+    /** In case we want to unsubscribe */
+    protected readonly boundMap = new WeakMap<
+        IResizeObservable | IRotateObservable,
+        { resize?: ISubscription<unknown>; rotate?: ISubscription<unknown> }
+    >();
     protected resizeTimeoutID = 0;
     protected _dimensions;
 
@@ -67,11 +72,31 @@ export class Resizer {
         const isResizeObservable = "resize" in observable;
         const isRotateObservable = "changeOrientation" in observable;
 
-        if (isResizeObservable) this.resized.subscribe(observable.resize.bind(observable));
-        if (isRotateObservable) this.rotated.subscribe(observable.changeOrientation.bind(observable));
+        const bound = {
+            resize: undefined as ISubscription<unknown> | undefined,
+            rotate: undefined as ISubscription<unknown> | undefined,
+        };
+
+        if (isResizeObservable)
+            bound.resize = this.resized.subscribe(observable.resize.bind(observable)) as ISubscription<unknown>;
+        if (isRotateObservable)
+            bound.rotate = this.rotated.subscribe(
+                observable.changeOrientation.bind(observable),
+            ) as ISubscription<unknown>;
+
+        this.boundMap.set(observable, bound);
 
         if (isResizeObservable) observable.resize(this.dimensions);
         if (isRotateObservable) observable.changeOrientation(this.dimensions);
+    }
+
+    unsubscribe(observable: IResizeObservable | IRotateObservable) {
+        const found = this.boundMap.get(observable);
+        if (!found) return;
+        this.boundMap.delete(observable);
+
+        found.resize?.unsubscribe();
+        found.rotate?.unsubscribe();
     }
 
     update() {

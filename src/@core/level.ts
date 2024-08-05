@@ -4,9 +4,10 @@ import { Camera } from "./camera";
 import { CollisionManager } from "./colliders";
 import { Vec2 } from "./extensions";
 import { Layers } from "./layers";
-import { responsive, type IDimensions, type IResizeObservable } from "./responsive";
+import { Resizer, responsive, type IDimensions, type IResizeObservable } from "./responsive";
 import type { Constructor } from "@elumixor/frontils";
 import { Group } from "@pixi/layers";
+import { inject } from "./di";
 
 /**
  * Levels is an actor that has loading and unloading logic,
@@ -14,7 +15,7 @@ import { Group } from "@pixi/layers";
  */
 @responsive
 export class Level extends Actor implements IResizeObservable {
-    // Do we need this here???
+    private readonly resizer = inject(Resizer);
     readonly collisionManager = this.addComponent(new CollisionManager(this));
 
     // We can implement a simple camera system using a camera position
@@ -88,7 +89,12 @@ export class Level extends Actor implements IResizeObservable {
         // To emulate the camera effect, we move the level container
         // to the opposite direction of the cameraPoint
         // We should also not forget to scale the position
+        const { scale } = this.resizer;
+        this.scale.copyFrom(this.camera.scale.mul(scale));
         this.position.copyFrom(this.basePosition).isub(this.camera.position.mul(this.scale));
+
+        // We should keep UI invariant to the camera position and scale
+        this.ui.scale.set((1 / this.scale.x) * scale, (1 / this.scale.y) * scale);
         this.ui.x = -this.position.x / this.scale.x;
         this.ui.y = -this.position.y / this.scale.y;
     }

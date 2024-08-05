@@ -24,6 +24,11 @@ export class Player extends Actor {
 
     private readonly ui = this.addChild(new PlayerUI());
 
+    private readonly followScaleMaxDistance = 30;
+    private readonly followScaleMaxScale = 1.2;
+    private readonly followScaleSpeed = 0.1;
+    private readonly followDistanceFactor = 0.1;
+
     constructor() {
         super();
 
@@ -97,8 +102,19 @@ export class Player extends Actor {
     override update(dt: number) {
         super.update(dt);
 
+        // Pass the current velocity to the physics component
         this.physics.velocity.copyFrom(this.controls.currentSpeed.normalized.mul(this.speed));
-        this.level.camera.position.copyFrom(this.position);
+
+        // Make the camera follow the player slowly
+        const { camera } = this.level;
+        const difference = this.position.sub(camera);
+
+        camera.position.iadd(difference.mul(this.followDistanceFactor * dt));
+
+        const targetScale = lerp(this.followScaleMaxScale, 1, clamp01(difference.length / this.followScaleMaxDistance));
+        const diff = targetScale - camera.scale.x;
+
+        camera.scale.iadd(diff * this.followScaleSpeed * dt);
     }
 
     private updateSkills() {

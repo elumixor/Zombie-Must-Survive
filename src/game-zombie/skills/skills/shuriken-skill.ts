@@ -15,7 +15,9 @@ export class ShurikenSkill extends Skill {
 
     private readonly damage = this.addProperty(new NumProperty("Damage", (level) => 5 + (level - 1) * 2));
     private readonly cooldown = this.addProperty(new NumProperty("Cooldown", (level) => 0.5 * 0.99 ** level));
-    private readonly pierce = this.addProperty(new NumProperty("Pierce", (level) => clamp(floor(level - 1), 0, 5)));
+    private readonly pierce = this.addProperty(
+        new NumProperty("Pierce", (level) => clamp(floor(level - 1), 0, 5), { hideZero: true }),
+    );
 
     private readonly distance = 500;
     private readonly rotation = new TransitionConfig({ speed: 30, acceleration: -0.25 });

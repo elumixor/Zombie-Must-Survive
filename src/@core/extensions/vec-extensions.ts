@@ -1,4 +1,4 @@
-import { ObservablePoint, Point } from "pixi.js";
+import { ObservablePoint, Point, type IPointData } from "pixi.js";
 
 declare module "pixi.js" {
     interface Extensions {
@@ -53,7 +53,7 @@ declare module "pixi.js" {
     interface ObservablePoint extends Extensions {}
 
     type Vec2Out = Point;
-    type Vec2In = ObservablePoint | Point;
+    type Vec2In = IPointData;
 }
 
 type Vec2In = ObservablePoint | Point;

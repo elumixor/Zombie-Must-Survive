@@ -1,8 +1,16 @@
 export abstract class SkillProperty<T = void> {
-    constructor(readonly name: string) {}
+    constructor(
+        readonly name: string,
+        protected readonly options: { hideZero?: boolean } = {},
+    ) {}
 
     diff(levelBefore: number, levelAfter?: number) {
-        if (levelAfter === undefined) return `${this.name}: ${this.highlighted(this.str(levelBefore))}`;
+        if (levelAfter === undefined) {
+            const str = this.str(levelBefore);
+            if (this.options.hideZero && str === "0") return "";
+            return `${this.name}: ${this.highlighted(str)}`;
+        }
+
         const strBefore = this.str(levelBefore);
         const strAfter = this.str(levelAfter);
         if (strBefore === strAfter) return "";
@@ -24,8 +32,9 @@ export class NumProperty extends SkillProperty<number> {
     constructor(
         name: string,
         private readonly getValue: (level: number) => number,
+        options: { hideZero?: boolean } = {},
     ) {
-        super(name);
+        super(name, options);
     }
 
     value(level: number) {

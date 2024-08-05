@@ -4,7 +4,7 @@ import { ObservablePoint } from "pixi.js";
 export class Camera {
     readonly updated = new EventEmitter();
     readonly position = new ObservablePoint(() => this.updated.emit(), this);
-    readonly scale = new ObservablePoint(() => this.updated.emit(), this);
+    readonly scale = new ObservablePoint(() => this.updated.emit(), this, 1, 1);
 
     get x() {
         return this.position.x;
