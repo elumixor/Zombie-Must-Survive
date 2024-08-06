@@ -16,20 +16,22 @@ export class MainLevel extends Level implements IResizeObservable {
     private readonly player = this.addChild(new Player());
 
     private readonly enemyManager = this.addChild(
-        new EnemyManager([
-            // {
-            //     duration: 15,
-            //     enemies: [{ enemyType: "worker", spawnInterval: 1, count: 5 }],
-            // },
-            {
-                duration: 15,
-                enemies: [
-                    { enemyType: "worker", spawnInterval: 1, count: 5 },
-                    { enemyType: "soldier", spawnInterval: 2, count: 3 },
-                    { enemyType: "doctor", spawnInterval: 2, count: 3 },
-                ],
-            },
-        ]),
+        new EnemyManager(
+            range(100).flatMap(() => [
+                {
+                    duration: 15,
+                    enemies: [{ enemyType: "worker", spawnInterval: 1, count: 5 }],
+                },
+                {
+                    duration: 15,
+                    enemies: [
+                        { enemyType: "worker", spawnInterval: 1, count: 5 },
+                        { enemyType: "soldier", spawnInterval: 2, count: 3 },
+                        { enemyType: "doctor", spawnInterval: 2, count: 3 },
+                    ],
+                },
+            ]),
+        ),
     );
 
     @responsive({ pin: [0.5, 0], y: 30 })

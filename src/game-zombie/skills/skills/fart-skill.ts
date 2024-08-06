@@ -2,10 +2,12 @@ import { Actor } from "@core";
 import { AuraWeaponComponent } from "game-zombie/components";
 import { Skill } from "../skill";
 import { NumProperty } from "../skill-property";
+import { Texture } from "pixi.js";
 
-export class AuraSkill extends Skill {
+export class FartSkill extends Skill {
     readonly name = "Stinky Aura";
-    readonly description = "A deadly cloud of stench";
+    readonly description = "Releases a stinky cloud that damages enemies.";
+    readonly texture = Texture.from("cloud");
 
     protected readonly damage = this.addProperty(new NumProperty("Damage", (level) => 3 + (level - 1) * 0.2));
     protected readonly radius = this.addProperty(

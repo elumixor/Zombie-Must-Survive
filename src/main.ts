@@ -9,8 +9,8 @@ void (async () => {
 
     new App({
         scales: {
-            portrait: [640, 960],
-            landscape: [960, 640],
+            portrait: [1000, 1000],
+            landscape: [1000, 1000],
         },
         maxFPS: 120,
     });
