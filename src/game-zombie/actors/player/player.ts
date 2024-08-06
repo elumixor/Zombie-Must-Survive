@@ -1,13 +1,14 @@
-import { Actor, CircleColliderComponent, inject, PhysicsComponent } from "@core";
+import { Actor, CircleColliderComponent, inject, PhysicsComponent, Vec2 } from "@core";
 import { EventEmitter } from "@elumixor/frontils";
 import { HealthComponent, HitEffectComponent } from "game-zombie/components";
 import { Controls } from "game-zombie/controls";
 import { GameState } from "game-zombie/game-state";
+import { ResourcesZombie } from "game-zombie/resources-zombie";
 import { PlayerUI } from "game-zombie/ui";
-import { Sprite, type IPointData } from "pixi.js";
 
 export class Player extends Actor {
     private readonly playerState = inject(GameState).player;
+    private readonly resources = inject(ResourcesZombie);
 
     readonly died = new EventEmitter();
 
@@ -15,7 +16,7 @@ export class Player extends Actor {
 
     private readonly speed = 5;
 
-    readonly sprite = this.addChild(Sprite.from("zombie"));
+    readonly spine = this.addChild(this.resources.zombie.copy());
 
     readonly collider = this.addComponent(new CircleColliderComponent(this));
     readonly physics = this.addComponent(new PhysicsComponent(this));
@@ -25,7 +26,7 @@ export class Player extends Actor {
     private readonly ui = this.addChild(new PlayerUI());
 
     private readonly followScaleMaxDistance = 30;
-    private readonly followScaleMaxScale = 1.2;
+    private readonly followScaleMinScale = 0.8;
     private readonly followScaleSpeed = 0.1;
     private readonly followDistanceFactor = 0.1;
 
@@ -35,13 +36,10 @@ export class Player extends Actor {
         this.name = "Player";
         this.layer = "foreground";
 
-        this.sprite.scale.set(0.3);
-        this.sprite.anchor.set(0.5);
-
-        this.health.health = this.playerState.hp;
         this.health.maxHealth = this.playerState.maxHp;
+        this.health.health = this.playerState.hp;
 
-        this.ui.y = -55;
+        this.ui.y = -85;
 
         this.collider.selfTags.add("player");
         this.collider.targetTags.add("enemy");
@@ -52,7 +50,7 @@ export class Player extends Actor {
 
         // Animate on hit - tween to red
         this.health.damaged.subscribe((damage) => {
-            this.hitEffect.tintSprite(this.sprite);
+            this.hitEffect.tintSprite(this.spine);
             this.hitEffect.showText(damage);
         });
         this.health.changed.subscribe((health) => (this.playerState.hp = health));
@@ -63,6 +61,10 @@ export class Player extends Actor {
 
         // Animate on death
         this.health.died.subscribe(() => this.die());
+
+        // Otherwise, the animation spawns as a detached rotated head. Hard to tell why, but spine is strange...
+        this.spine.animate("idle");
+        this.spine.update(0);
     }
 
     override beginPlay() {
@@ -87,11 +89,11 @@ export class Player extends Actor {
     }
 
     private run() {
-        // this.spine.animate("run", { loop: true });
+        this.spine.animate("run", { loop: true });
     }
 
     private idle() {
-        // this.spine.animate("idle", { loop: true });
+        this.spine.animate("idle", { loop: true });
     }
 
     private die() {
@@ -111,7 +113,7 @@ export class Player extends Actor {
 
         camera.position.iadd(difference.mul(this.followDistanceFactor * dt));
 
-        const targetScale = lerp(this.followScaleMaxScale, 1, clamp01(difference.length / this.followScaleMaxDistance));
+        const targetScale = lerp(1, this.followScaleMinScale, clamp01(difference.length / this.followScaleMaxDistance));
         const diff = targetScale - camera.scale.x;
 
         camera.scale.iadd(diff * this.followScaleSpeed * dt);
@@ -121,15 +123,15 @@ export class Player extends Actor {
         for (const skill of this.playerState.skills) skill.applyTo(this);
     }
 
-    private readonly onMovementChanged = ({ x: dx, y: dy }: IPointData) => {
+    private readonly onMovementChanged = ({ x: dx, y: dy }: Vec2) => {
         if (dx === 0) {
             if (dy === 0) this.moving = false;
             else this.moving = true;
             return;
         }
 
-        const { x } = this.sprite.scale;
-        this.sprite.scale.x = abs(x) * sign(dx);
+        const { x } = this.spine.scale;
+        this.spine.scale.x = abs(x) * sign(dx);
         this.moving = true;
     };
 }

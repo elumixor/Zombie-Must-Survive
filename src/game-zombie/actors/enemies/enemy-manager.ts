@@ -5,9 +5,7 @@ import { EventEmitter } from "@elumixor/frontils";
 import { Texture } from "pixi.js";
 import { Player } from "../player";
 import { Enemy } from "./enemy";
-// import { World } from "../world";
-
-export type EnemyType = "worker" | "soldier";
+import type { EnemyType } from "./enemy-type";
 
 interface IStage {
     duration: number;
@@ -88,8 +86,16 @@ export class EnemyManager extends Actor {
 
         enemy.tracker.target = this.player;
 
+        if (enemyType === "worker") {
+            enemy.sprite.texture = Texture.from("doctor");
+            enemy.tracker.speed = 1;
+            enemy.weapon.damage = 5;
+            enemy.health.maxHealth = 10;
+            enemy.health.health = enemy.health.maxHealth;
+        }
+
         if (enemyType === "soldier") {
-            enemy.sprite.texture = Texture.from("policeman");
+            enemy.sprite.texture = Texture.from("soldier");
             enemy.tracker.speed = 4;
             enemy.weapon.damage = 3;
             enemy.health.maxHealth = 20;

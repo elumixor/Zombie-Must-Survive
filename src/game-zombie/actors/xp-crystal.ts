@@ -24,7 +24,6 @@ export class XpCrystal extends Actor {
 
         this.layer = "foreground";
 
-        this.sprite.scale.set(0.3);
         this.sprite.anchor.set(0.5, 1);
         this.shadow.anchor.set(0.5, 0);
 
@@ -50,11 +49,11 @@ export class XpCrystal extends Actor {
         this.sprite.y = 20;
         await all(
             this.time.to(this.sprite, { y: 0, duration: 0.2 }),
-            this.time.fromTo(this.shadow.scale, { x: 0.1, y: 0.1 }, { x: 0.3, y: 0.3, duration: 0.2 }),
+            this.time.fromTo(this.shadow.scale, { x: 0, y: 0 }, { x: 1, y: 1, duration: 0.2 }),
         );
 
         this.time.to(this.sprite, { y: -20, duration: 0.5, repeat: -1, yoyo: true, ease: "sine.inOut" });
-        this.time.to(this.shadow.scale, { x: 0.2, y: 0.2, duration: 0.5, repeat: -1, yoyo: true, ease: "sine.inOut" });
+        this.time.to(this.shadow.scale, { x: 0.7, y: 0.7, duration: 0.5, repeat: -1, yoyo: true, ease: "sine.inOut" });
 
         this.collider.currentCollisions.clear();
         this.collider.collisionEntered.subscribeOnce((colliders) => this.flyToPlayer(colliders.first.actor));
@@ -77,7 +76,7 @@ export class XpCrystal extends Actor {
         this.collider.destroy();
         await all(
             this.time.to(this.sprite, { alpha: 0, duration: 0.5, ease: "expo.out", overwrite: true }),
-            this.time.to(this.sprite.scale, { x: 0.4, y: 0.4, duration: 0.5, overwrite: true }),
+            this.time.to(this.sprite.scale, { x: 1.2, y: 1.2, duration: 0.5, overwrite: true }),
         );
         this.removeComponent(this.tracker, this.physics);
         this.destroy();

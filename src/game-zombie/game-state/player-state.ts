@@ -12,7 +12,8 @@ export class PlayerState {
     readonly skills = new Set<Skill>();
 
     private readonly levelXpFactor = 10;
-    private readonly constitution = 2;
+    private readonly constitution = 5;
+    private readonly baseHp = 100;
 
     private _xp = 0;
     private _hp = this.maxHp;
@@ -42,7 +43,7 @@ export class PlayerState {
     }
 
     get maxHp() {
-        return 10 + this.level * this.constitution;
+        return this.baseHp + this.level * this.constitution;
     }
 
     get level() {

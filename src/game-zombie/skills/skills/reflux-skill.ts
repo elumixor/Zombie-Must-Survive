@@ -1,13 +1,13 @@
 import type { Actor } from "@core";
-import { ProjectileWeaponComponent, TransitionConfig } from "game-zombie/components";
+import { ProjectileWeaponComponent } from "game-zombie/components";
 import { Texture } from "pixi.js";
 import { Skill } from "../skill";
 import { NumProperty } from "../skill-property";
 
-export class ShurikenSkill extends Skill {
-    readonly name = "Shuriken";
-    readonly description = "A deadly weapon of the ninja";
-    readonly texture = Texture.from("shuriken");
+export class RefluxSkill extends Skill {
+    readonly name = "Reflux";
+    readonly description = "Spit toxic projectiles at enemies.";
+    readonly texture = Texture.from("spit");
 
     private readonly numProjectiles = this.addProperty(
         new NumProperty("Projectiles", (level) => clamp(round(level * 0.5 + (level >= 2 ? 1 : 0)), 1, 5)),
@@ -20,7 +20,6 @@ export class ShurikenSkill extends Skill {
     );
 
     private readonly distance = 500;
-    private readonly rotation = new TransitionConfig({ speed: 30, acceleration: -0.25 });
 
     private component?: ProjectileWeaponComponent;
 
@@ -39,7 +38,7 @@ export class ShurikenSkill extends Skill {
 
         this.component.projectileConfig.texture = this.texture;
         this.component.projectileConfig.distance = this.distance;
-        this.component.projectileConfig.rotation = this.rotation;
+        this.component.projectileConfig.alignToDirection = true;
         this.component.projectileConfig.damage = this.damage.value(level);
         this.component.projectileConfig.pierce = this.pierce.value(level);
     }

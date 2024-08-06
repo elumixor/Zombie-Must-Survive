@@ -3,8 +3,8 @@ import { Game } from "@core/game";
 import type { Constructor } from "@elumixor/frontils";
 import { Container, DisplayObject } from "pixi.js";
 import { Component } from "./components";
-import { Time } from "./time";
 import { Resizer } from "./responsive";
+import { Time } from "./time";
 
 /**
  * Actor is a container for {@link Component}s that can be updated every frame ({@link Actor.update})

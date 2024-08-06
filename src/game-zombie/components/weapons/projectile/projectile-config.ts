@@ -10,6 +10,8 @@ export class ProjectileConfig {
     distance;
     pierce;
     direction;
+    alignToDirection;
+    scale;
 
     constructor({
         damage = 1,
@@ -20,6 +22,8 @@ export class ProjectileConfig {
         distance = 100,
         pierce = 0,
         direction = Vec2.zero,
+        alignToDirection = false,
+        scale = Vec2.one,
     } = {}) {
         this.damage = damage;
         this.texture = texture;
@@ -29,6 +33,8 @@ export class ProjectileConfig {
         this.distance = distance;
         this.pierce = pierce;
         this.direction = direction;
+        this.alignToDirection = alignToDirection;
+        this.scale = scale;
     }
 }
 

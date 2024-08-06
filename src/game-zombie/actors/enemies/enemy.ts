@@ -19,11 +19,10 @@ export class Enemy extends Actor {
         this.name = "Enemy";
         this.layer = "foreground";
 
-        this.sprite.scale.set(0.3);
         this.sprite.anchor.set(0.5);
 
         this.tracker.forceRequested.subscribe((v) => {
-            this.sprite.scale.x = -sign(v.x, 1) * abs(this.sprite.scale.x);
+            this.sprite.scale.x = sign(v.x, 1) * abs(this.sprite.scale.x);
             this.physics.addForce(v);
         });
         this.tracker.lag = 0.5;
@@ -33,7 +32,7 @@ export class Enemy extends Actor {
         this.collider.targetTags.add("player");
 
         this.collider.forceRequested.subscribe((v) => this.physics.addForce(v.mul(0.1)));
-        this.collider.radius = 20;
+        this.collider.radius = 50;
 
         this.physics.drag = 0.5;
 

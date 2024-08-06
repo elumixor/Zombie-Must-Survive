@@ -52,13 +52,17 @@ export class Projectile extends Actor {
     override beginPlay() {
         super.beginPlay();
 
+        const { movement, scale } = this.config;
+
         {
-            const { drag, startSpeed, minSpeed, maxSpeed } = this.config.movement;
+            const { drag, startSpeed, minSpeed, maxSpeed } = movement;
             this.physics.drag = drag;
             this.physics.maxSpeed = maxSpeed;
             this.physics.minSpeed = minSpeed;
             this.physics.addVelocity(this.direction.mul(startSpeed));
         }
+
+        this.scale.copyFrom(scale);
 
         this.rotationSpeed = this.config.rotation?.startSpeed ?? 0;
     }
@@ -75,6 +79,8 @@ export class Projectile extends Actor {
             this.rotationSpeed = clamp(this.rotationSpeed, minSpeed, maxSpeed);
             this.angle += this.rotationSpeed * dt;
         }
+
+        if (this.config.alignToDirection) this.rotation = this.direction.angle;
 
         if (this.distanceTraveled >= this.config.distance) this.die();
     }

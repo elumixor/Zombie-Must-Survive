@@ -7,10 +7,9 @@ export class ProgressBarWidget extends Container {
     private _max;
     private _value;
 
+    private readonly border;
     private readonly background;
     private readonly foreground;
-
-    private readonly fullWidth;
 
     private readonly textElement = new TextWidget("", {
         fontSize: 20,
@@ -18,43 +17,46 @@ export class ProgressBarWidget extends Container {
     });
 
     constructor({
-        max,
-        value,
-        color,
+        max = 100,
+        value = 100,
+        color: {
+            fill = "green" as ColorSource,
+            background = "grey" as ColorSource,
+            border = "black" as ColorSource,
+        } = {},
+        border: { radius: roundedRadius = 0, size: borderSize = 0 } = {},
         width = 100,
         height = 50,
-    }: {
-        max: number;
-        value: number;
-        color: ColorSource;
-        width?: number;
-        height?: number;
-    }) {
+    } = {}) {
         super();
 
         this._max = max;
         this._value = value;
 
-        const padding = min(width, height) * 0.1;
+        this.border = this.addChild(
+            rectSprite({
+                width: width + borderSize * 2,
+                height: height + borderSize * 2,
+                color: border,
+                roundedRadius,
+            }),
+        );
+        this.background = this.addChild(rectSprite({ width, height, color: background, roundedRadius }));
+        this.foreground = this.addChild(rectSprite({ width, height, color: fill, roundedRadius }));
 
-        this.background = rectSprite({ width, height, color: 0x000000 });
-        this.fullWidth = width - padding * 2;
-        this.foreground = rectSprite({ width: this.fullWidth, height: height - padding * 2, color });
+        this.foreground.x = borderSize;
+        this.background.x = borderSize;
 
-        this.foreground.x = padding;
-        this.foreground.y = padding;
+        for (const el of [this.border, this.background, this.foreground]) el.anchor.set(0, 0.5);
 
-        this.textElement.anchor.set(1, 0.5);
-        this.textElement.resolution = 2;
-        this.textElement.x = width - padding * 2;
-        this.textElement.y = height / 2;
-
-        this.addChild(this.background, this.foreground, this.textElement);
+        this.addChild(this.textElement);
 
         // Update instantly
-        this.foreground.width = this.fullWidth * (this._value / this._max);
+        this.foreground.width = width * (this._value / this._max);
         this.textElement.text = `${this._value} / ${this._max}`;
-        this.textElement.uniformHeight = this.background.height * 2;
+        this.textElement.uniformHeight = this.border.height * 2 + 20;
+        this.textElement.anchor.set(1, 0.5);
+        this.textElement.x = width - borderSize;
     }
 
     get value() {
@@ -74,7 +76,7 @@ export class ProgressBarWidget extends Container {
     }
 
     private update() {
-        const target = this.fullWidth * (this._value / this._max);
+        const target = this.background.width * (this._value / this._max);
 
         this.textElement.text = `${this._value} / ${this._max}`;
 

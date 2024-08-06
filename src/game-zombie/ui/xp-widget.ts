@@ -1,31 +1,48 @@
 import { inject, rectSprite } from "@core";
 import { GameState } from "game-zombie/game-state";
 import { gsap } from "gsap";
-import { Container } from "pixi.js";
+import { Container, type ColorSource } from "pixi.js";
 import { TextWidget } from "./text-widget";
 
 export class XpWidget extends Container {
     private readonly gameState = inject(GameState);
 
-    private readonly background = this.addChild(rectSprite({ width: 23, height: 23 }));
-    private readonly foregroundDark = this.addChild(rectSprite({ width: 20, height: 20, color: "rgb(53, 41, 63)" }));
-    private readonly foreground = this.addChild(rectSprite({ width: 20, height: 20, color: "rgb(171, 97, 231)" }));
-    private readonly levelText = this.addChild(new TextWidget("1", { fontSize: 18 }));
+    private readonly border;
+    private readonly background;
+    private readonly foreground;
+    private readonly levelText;
 
     private readonly levelMask;
-    private readonly size = this.foreground.height * sqrt(2);
+    private readonly size;
 
-    constructor() {
+    constructor({
+        size = 26,
+        borderSize = 2,
+        fontSize = 30,
+        color: {
+            border = "black" as ColorSource,
+            background = "rgb(53, 41, 63)" as ColorSource,
+            foreground = "rgb(171, 97, 231)" as ColorSource,
+        } = {},
+    } = {}) {
         super();
 
+        this.border = this.addChild(
+            rectSprite({ width: size + borderSize * 2, height: size + borderSize * 2, color: border }),
+        );
+        this.background = this.addChild(rectSprite({ width: size, height: size, color: background }));
+        this.foreground = this.addChild(rectSprite({ width: size, height: size, color: foreground }));
+        this.levelText = this.addChild(new TextWidget("1", { fontSize, fill: "white" }));
+        this.size = this.foreground.height * sqrt(2);
+
+        this.border.anchor.set(0.5);
         this.background.anchor.set(0.5);
-        this.foregroundDark.anchor.set(0.5);
         this.foreground.anchor.set(0.5);
         this.levelText.anchor.set(0.5);
         this.levelText.x = 1;
 
+        this.border.angle = 45;
         this.background.angle = 45;
-        this.foregroundDark.angle = 45;
         this.foreground.angle = 45;
 
         this.levelMask = this.addChild(rectSprite({ width: this.size, height: this.size, color: "white" }));

@@ -17,15 +17,16 @@ export class MainLevel extends Level implements IResizeObservable {
 
     private readonly enemyManager = this.addChild(
         new EnemyManager([
-            {
-                duration: 15,
-                enemies: [{ enemyType: "worker", spawnInterval: 1, count: 5 }],
-            },
+            // {
+            //     duration: 15,
+            //     enemies: [{ enemyType: "worker", spawnInterval: 1, count: 5 }],
+            // },
             {
                 duration: 15,
                 enemies: [
                     { enemyType: "worker", spawnInterval: 1, count: 5 },
                     { enemyType: "soldier", spawnInterval: 2, count: 3 },
+                    { enemyType: "doctor", spawnInterval: 2, count: 3 },
                 ],
             },
         ]),

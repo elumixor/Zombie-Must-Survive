@@ -90,10 +90,10 @@ export class Resizer {
         if (isRotateObservable) observable.changeOrientation(this.dimensions);
     }
 
-    unsubscribe(observable: IResizeObservable | IRotateObservable) {
-        const found = this.boundMap.get(observable);
+    unsubscribe(observable: object) {
+        const found = this.boundMap.get(observable as IResizeObservable | IRotateObservable);
         if (!found) return;
-        this.boundMap.delete(observable);
+        this.boundMap.delete(observable as IResizeObservable | IRotateObservable);
 
         found.resize?.unsubscribe();
         found.rotate?.unsubscribe();

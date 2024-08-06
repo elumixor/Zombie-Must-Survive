@@ -10,9 +10,15 @@ export class PlayerUI extends Actor {
         new ProgressBarWidget({
             max: this.playerState.hp,
             value: this.playerState.maxHp,
-            color: "rgb(11, 145, 28)",
-            width: 100,
-            height: 16,
+            color: {
+                fill: "rgb(41, 163, 41)",
+                background: "rgb(53, 41, 63)",
+            },
+            width: 150,
+            height: 17,
+            border: {
+                size: 2,
+            },
         }),
     );
 
@@ -23,10 +29,6 @@ export class PlayerUI extends Actor {
 
         this.hpBar.x = -this.hpBar.width / 2;
         this.xpWidget.x = -this.hpBar.width / 2;
-        this.xpWidget.y = this.hpBar.height / 2;
-
-        this.hpBar.x += 10;
-        this.xpWidget.x += 10;
 
         this.layer = "playerUI";
 

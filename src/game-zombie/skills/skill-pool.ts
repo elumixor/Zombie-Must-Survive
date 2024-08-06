@@ -1,10 +1,10 @@
 import { Skill } from "./skill";
 import { AuraSkill } from "./skills";
-import { ShurikenSkill } from "./skills/shuriken-skill";
+import { RefluxSkill } from "./skills/reflux-skill";
 
 export class SkillPool {
-    readonly defaultSkills = new Set<Skill>([new AuraSkill()]);
-    readonly allSkills = new Set<Skill>([new ShurikenSkill(), ...this.defaultSkills]);
+    readonly defaultSkills = new Set<Skill>([new AuraSkill(), new RefluxSkill()]);
+    readonly allSkills = new Set<Skill>([...this.defaultSkills]);
 
     readonly maxSkillsOnLevelUp = 4;
 

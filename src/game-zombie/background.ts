@@ -19,8 +19,8 @@ export class Background extends Actor implements IResizeObservable {
     }
 
     resize({ width, height }: IDimensions) {
-        this.sprite.width = width;
-        this.sprite.height = height;
+        this.sprite.width = width * 2;
+        this.sprite.height = height * 2;
     }
 
     updatePosition() {

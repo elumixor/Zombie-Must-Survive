@@ -1,2 +1,2 @@
-export * from "./shuriken-skill";
+export * from "./reflux-skill";
 export * from "./aura-skill";
