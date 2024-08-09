@@ -1,4 +1,4 @@
-import { inject } from "@core/di";
+import { di } from "@elumixor/di";
 import { Time } from "./time";
 
 /**
@@ -13,7 +13,7 @@ export class Interval {
     constructor(
         private readonly callback: () => void,
         seconds: number,
-        private readonly time = inject(Time),
+        private readonly time = di.inject(Time),
     ) {
         this.ms = seconds * 1000;
     }

@@ -1,8 +1,8 @@
-import { Howler } from "howler";
 import { locallyStored } from "@core/utils";
-import { injectable } from "@core/di";
+import { di } from "@elumixor/di";
+import { Howler } from "howler";
 
-@injectable
+@di.injectable
 export abstract class BaseSounds {
     protected readonly settings = locallyStored(
         {

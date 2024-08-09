@@ -1,4 +1,5 @@
-import { BaseSounds, injectable } from "@core";
+import { BaseSounds } from "@core";
+import { di } from "@elumixor/di";
 
-@injectable
+@di.injectable
 export class SoundsZombie extends BaseSounds {}

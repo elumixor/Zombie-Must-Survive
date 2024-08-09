@@ -2,7 +2,6 @@ export * from "./actor";
 export * from "./app";
 export * from "./assert";
 export * from "./components";
-export * from "./di";
 export * from "./env";
 export * from "./extensions";
 export * from "./game";

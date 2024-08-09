@@ -1,7 +1,6 @@
 import { Actor, Resizer, Vec2 } from "@core";
-import { inject } from "@core/di";
+import { di } from "@elumixor/di";
 import { EventEmitter } from "@elumixor/frontils";
-// import { MeleeAttack } from "game-zombie/components/weapons";
 import { Texture } from "pixi.js";
 import { Player } from "../player";
 import { Enemy } from "./enemy";
@@ -20,7 +19,7 @@ export class EnemyManager extends Actor {
     player?: Player;
 
     readonly stageCompleted = new EventEmitter();
-    private readonly resizer = inject(Resizer);
+    private readonly resizer = di.inject(Resizer);
 
     private readonly enemies = [] as Enemy[];
     private readonly stageStarts;
@@ -86,7 +85,7 @@ export class EnemyManager extends Actor {
 
         enemy.tracker.target = this.player;
 
-        if (enemyType === "worker") {
+        if (enemyType === "doctor") {
             enemy.sprite.texture = Texture.from("doctor");
             enemy.tracker.speed = 1;
             enemy.weapon.damage = 5;

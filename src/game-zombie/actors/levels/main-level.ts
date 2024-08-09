@@ -1,16 +1,16 @@
-import { App, inject, Level, uninject, Vec2 } from "@core";
+import { App, Level, Vec2 } from "@core";
 import { responsive, type IResizeObservable } from "@core/responsive";
+import { di } from "@elumixor/di";
 import { Group } from "@pixi/layers";
 import { EnemyManager, Player, XpCrystal } from "game-zombie/actors";
 import { Background } from "game-zombie/background";
 import { GameState } from "game-zombie/game-state";
-import { ControlsWidget, GameOverPopup, LevelUpPopup } from "game-zombie/ui";
-import { Clock } from "game-zombie/ui";
+import { Clock, ControlsWidget, GameOverPopup, LevelUpPopup } from "game-zombie/ui";
 
 @responsive
 export class MainLevel extends Level implements IResizeObservable {
     // private readonly skillPool = new SkillPool();
-    private readonly app = inject(App);
+    private readonly app = di.inject(App);
     private readonly gameState = new GameState();
     private readonly background = this.addChild(new Background());
     private readonly player = this.addChild(new Player());
@@ -81,7 +81,7 @@ export class MainLevel extends Level implements IResizeObservable {
     }
 
     private reset() {
-        uninject(GameState);
+        di.uninject(GameState);
         this.destroy();
         this.time.reset();
         void this.game.changeLevel(new MainLevel());

@@ -1,5 +1,5 @@
-import { inject } from "@core/di";
 import { Time } from "@core/time";
+import { di } from "@elumixor/di";
 import { Color } from "pixi.js";
 
 /**
@@ -17,7 +17,7 @@ export function tweenNumber(
     vars = {} as gsap.TweenVars,
 ) {
     const target = { value: start };
-    const time = inject(Time);
+    const time = di.inject(Time);
 
     return time.to(target, {
         value: end,

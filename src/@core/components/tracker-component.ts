@@ -1,5 +1,5 @@
 import { Actor } from "@core/actor";
-import { inject } from "@core/di";
+import { di } from "@elumixor/di";
 import { Vec2 } from "@core/extensions";
 import { Time } from "@core/time";
 import { Component } from "./component";
@@ -11,7 +11,7 @@ import { EventEmitter } from "@elumixor/frontils";
  */
 export class TrackerComponent extends Component {
     readonly forceRequested = new EventEmitter<Vec2>();
-    private readonly time = inject(Time);
+    private readonly time = di.inject(Time);
 
     /** Maximum speed that an object will be moving at */
     speed = 3;

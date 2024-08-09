@@ -1,10 +1,10 @@
 import { Vec2 } from "@core/extensions";
 import { Component } from "./component";
-import { inject } from "@core/di";
+import { di } from "@elumixor/di";
 import { Time } from "@core/time";
 
 export class PhysicsComponent extends Component {
-    private readonly time = inject(Time);
+    private readonly time = di.inject(Time);
 
     mass = 1;
     drag = 0.9;

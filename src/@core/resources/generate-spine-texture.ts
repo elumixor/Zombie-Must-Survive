@@ -1,7 +1,7 @@
 import { RenderTexture, Texture } from "pixi.js";
 import { Spine } from "@core/spine";
 import { App } from "@core/app";
-import { inject } from "@core/di";
+import { di } from "@elumixor/di";
 
 export interface IGenerationContext {
     /**
@@ -105,7 +105,7 @@ export function generateSpineTexture(
         resolution, // I don't know if this is really good or not
     });
     renderTexture.defaultAnchor.set(0.5);
-    inject(App).renderer.render(spine, { renderTexture });
+    di.inject(App).renderer.render(spine, { renderTexture });
 
     // Determine the name
     const textureName = typeof texture === "string" ? texture : texture({ ...context, options });

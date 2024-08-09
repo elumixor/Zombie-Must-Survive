@@ -1,5 +1,5 @@
-import { inject } from "@core";
 import { responsive } from "@core/responsive";
+import { di } from "@elumixor/di";
 import { all, EventEmitter } from "@elumixor/frontils";
 import { GameState } from "game-zombie/game-state";
 import { Skill } from "game-zombie/skills";
@@ -11,7 +11,7 @@ import { SkillCard } from "./skill-card";
 
 @responsive
 export class LevelUpPopup extends Popup {
-    private readonly gameState = inject(GameState);
+    private readonly gameState = di.inject(GameState);
 
     @responsive({ anchor: 0.5, y: -200 })
     private readonly levelUpText = this.container.addChild(

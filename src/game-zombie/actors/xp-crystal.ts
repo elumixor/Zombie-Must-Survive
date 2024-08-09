@@ -1,10 +1,11 @@
-import { Actor, CircleColliderComponent, inject, PhysicsComponent, TrackerComponent } from "@core";
+import { Actor, CircleColliderComponent, PhysicsComponent, TrackerComponent } from "@core";
+import { di } from "@elumixor/di";
 import { all, EventEmitter } from "@elumixor/frontils";
 import { GameState } from "game-zombie/game-state";
 import { Sprite } from "pixi.js";
 
 export class XpCrystal extends Actor {
-    private readonly playerState = inject(GameState).player;
+    private readonly playerState = di.inject(GameState).player;
 
     readonly collected = new EventEmitter();
 

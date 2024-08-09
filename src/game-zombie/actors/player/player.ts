@@ -1,4 +1,5 @@
-import { Actor, CircleColliderComponent, inject, PhysicsComponent, Vec2 } from "@core";
+import { Actor, CircleColliderComponent, PhysicsComponent, Vec2 } from "@core";
+import { di } from "@elumixor/di";
 import { EventEmitter } from "@elumixor/frontils";
 import { HealthComponent, HitEffectComponent } from "game-zombie/components";
 import { Controls } from "game-zombie/controls";
@@ -7,12 +8,12 @@ import { ResourcesZombie } from "game-zombie/resources-zombie";
 import { PlayerUI } from "game-zombie/ui";
 
 export class Player extends Actor {
-    private readonly playerState = inject(GameState).player;
-    private readonly resources = inject(ResourcesZombie);
+    private readonly playerState = di.inject(GameState).player;
+    private readonly resources = di.inject(ResourcesZombie);
 
     readonly died = new EventEmitter();
 
-    private readonly controls = inject(Controls);
+    private readonly controls = di.inject(Controls);
 
     private readonly speed = 5;
 

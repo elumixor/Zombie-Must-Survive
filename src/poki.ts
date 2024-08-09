@@ -1,4 +1,4 @@
-import { injectable } from "@core/di";
+import { di } from "@elumixor/di";
 import { EventEmitter } from "@elumixor/frontils";
 
 interface PokiSDK {
@@ -14,7 +14,7 @@ interface PokiSDK {
 // This object is globally provided by Poki SDK
 declare const PokiSDK: PokiSDK;
 
-@injectable
+@di.injectable
 export class Poki {
     readonly addStarted = new EventEmitter();
 

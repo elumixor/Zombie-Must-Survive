@@ -1,5 +1,5 @@
 import { App } from "@core/app";
-import { inject, injectable } from "@core/di";
+import { di } from "@elumixor/di";
 import { EventEmitter } from "@elumixor/frontils";
 import { gsap } from "gsap";
 import { settings as SpineSettings } from "pixi-spine";
@@ -7,10 +7,10 @@ import { Ticker } from "pixi.js";
 
 export type TickFn = (dt: number) => void;
 
-@injectable
+@di.injectable
 export class Time {
     readonly pausedChanged = new EventEmitter<boolean>();
-    private readonly app = inject(App);
+    private readonly app = di.inject(App);
     private readonly tweens = new Array<gsap.core.Tween>();
     private readonly uniqueTickCallbacks = new Set<TickFn>();
     private readonly ticker = new Ticker();

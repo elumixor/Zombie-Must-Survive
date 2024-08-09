@@ -1,9 +1,9 @@
-import { injectable } from "./di";
-import { Resizer, type RequiredScales } from "./responsive";
+import { di } from "@elumixor/di";
 import { getElementOrThrow } from "@elumixor/frontils";
 import { Stage } from "@pixi/layers";
 import { gsap } from "gsap";
 import { Application, Container, isMobile, Ticker } from "pixi.js";
+import { Resizer, type RequiredScales } from "./responsive";
 
 declare global {
     interface Window {
@@ -11,7 +11,7 @@ declare global {
     }
 }
 
-@injectable
+@di.injectable
 export class App {
     readonly canvasContainer = getElementOrThrow("canvas-container");
     readonly resolution = window.resolution !== 1 ? window.devicePixelRatio : 1;

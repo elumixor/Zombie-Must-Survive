@@ -5,7 +5,7 @@ import type { Spine } from "@core/spine";
 import { SpineMetadata } from "./spine-decorator";
 import { SpinePool } from "./spine-pool";
 import { type IGenerationOptions, generateSpineTexture } from "./generate-spine-texture";
-import { injectable } from "@core/di";
+import { di } from "@elumixor/di";
 import { BehaviorSubject } from "rxjs";
 import { Loader } from "./loader";
 
@@ -18,7 +18,7 @@ export interface IIconSymbolData {
     spine: Spine;
 }
 
-@injectable
+@di.injectable
 export class BaseResources {
     /**
      * When the spines are loaded, pools are created for each spine. We can access them using this property.
@@ -40,11 +40,6 @@ export class BaseResources {
      * Name of the fonts' folder.
      */
     readonly fontsFolder = "fonts";
-
-    // protected readonly app = inject(App);
-    // protected readonly errorsManager = Services.get(BaseErrorsManager);
-    // protected readonly resizeObserver = Services.get(ResizeObserver);
-    // protected readonly model = Services.get(BaseModel);
 
     // Provide events for when the resources are received
     protected readonly additionalResourcesLoaded = new EventEmitter();

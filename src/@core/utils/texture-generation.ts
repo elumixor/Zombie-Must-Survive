@@ -1,15 +1,15 @@
 import { App } from "@core/app";
-import { inject } from "@core/di";
+import { di } from "@elumixor/di";
 import type { ColorSource, IRenderer } from "pixi.js";
 import { Graphics, SCALE_MODES, Sprite } from "pixi.js";
 
 function getResolution() {
-    return inject(App).resolution;
+    return di.inject(App).resolution;
 }
 
 let renderer: IRenderer | undefined;
 function r() {
-    if (!renderer) renderer = inject(App).renderer;
+    if (!renderer) renderer = di.inject(App).renderer;
     return renderer;
 }
 

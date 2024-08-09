@@ -1,14 +1,14 @@
-import { injectable } from "@core/di";
+import { di } from "@elumixor/di";
 import type { IPoint } from "@core/utils";
 import { EventEmitter, getElementOrThrow, type ISubscription } from "@elumixor/frontils";
-import type { IRenderer } from "pixi.js";
+import { Container, type IRenderer } from "pixi.js";
 
 export interface RequiredScales {
     landscape: IPoint;
     portrait: IPoint;
 }
 
-@injectable
+@di.injectable
 export class Resizer {
     readonly requiredScales;
     protected readonly resized = new EventEmitter<IDimensions>();
@@ -76,6 +76,8 @@ export class Resizer {
             resize: undefined as ISubscription<unknown> | undefined,
             rotate: undefined as ISubscription<unknown> | undefined,
         };
+
+        if (observable instanceof Container) observable.on("destroyed", () => this.unsubscribe(observable));
 
         if (isResizeObservable)
             bound.resize = this.resized.subscribe(observable.resize.bind(observable)) as ISubscription<unknown>;

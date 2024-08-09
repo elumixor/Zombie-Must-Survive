@@ -1,10 +1,11 @@
-import { Actor, inject } from "@core";
+import { Actor } from "@core";
+import { di } from "@elumixor/di";
 import { GameState } from "game-zombie/game-state";
 import { ProgressBarWidget } from "./progress-bar-widget";
 import { XpWidget } from "./xp-widget";
 
 export class PlayerUI extends Actor {
-    private readonly playerState = inject(GameState).player;
+    private readonly playerState = di.inject(GameState).player;
 
     private readonly hpBar = this.addChild(
         new ProgressBarWidget({

@@ -1,11 +1,12 @@
-import { inject, rectSprite } from "@core";
+import { rectSprite } from "@core";
+import { di } from "@elumixor/di";
 import { GameState } from "game-zombie/game-state";
 import { gsap } from "gsap";
 import { Container, type ColorSource } from "pixi.js";
 import { TextWidget } from "./text-widget";
 
 export class XpWidget extends Container {
-    private readonly gameState = inject(GameState);
+    private readonly gameState = di.inject(GameState);
 
     private readonly border;
     private readonly background;

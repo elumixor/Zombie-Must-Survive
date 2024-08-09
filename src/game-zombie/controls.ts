@@ -1,11 +1,12 @@
-import { Vec2, injectable } from "@core";
+import { Vec2 } from "@core";
+import { di } from "@elumixor/di";
 import { EventEmitter } from "@elumixor/frontils";
 
 export interface Subscription {
     unsubscribe: () => void;
 }
 
-@injectable
+@di.injectable
 export class Controls {
     readonly movementChanged = new EventEmitter<Vec2>();
 

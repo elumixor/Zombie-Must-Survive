@@ -1,12 +1,12 @@
 import { App } from "@core/app";
-import { inject, injectable } from "@core/di";
+import { di } from "@elumixor/di";
 import { Time } from "./time";
 import type { Level } from "./level";
 
 /** Game class is responsible for creating all the game classes and managing the levels */
-@injectable
+@di.injectable
 export class Game {
-    private readonly app = inject(App);
+    private readonly app = di.inject(App);
 
     /** Instantiate game-wide time manager */
     protected readonly time = new Time();

@@ -1,4 +1,5 @@
-import { Component, inject, Time, tweenNumber } from "@core";
+import { Component, Time, tweenNumber } from "@core";
+import { di } from "@elumixor/di";
 import { all } from "@elumixor/frontils";
 import { ColorOverlayFilter } from "@pixi/filter-color-overlay";
 import { TextWidget } from "game-zombie/ui";
@@ -9,7 +10,7 @@ export class HitEffectComponent extends Component {
         fontSize: 30,
     } as ITextStyle;
 
-    private readonly time = inject(Time);
+    private readonly time = di.inject(Time);
     private readonly filter = new ColorOverlayFilter(0xff0000);
     private tween?: gsap.core.Tween;
     private destroyed = false;

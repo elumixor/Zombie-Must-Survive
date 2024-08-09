@@ -1,9 +1,9 @@
 import { Group, Layer } from "@pixi/layers";
 import { App } from "./app";
-import { inject } from "./di";
+import { di } from "@elumixor/di";
 
 export class Layers {
-    private readonly app = inject(App);
+    private readonly app = di.inject(App);
     private readonly layers = new Map<string, Layer>();
 
     constructor() {

@@ -1,4 +1,4 @@
-import { inject } from "@core/di";
+import { di } from "@elumixor/di";
 import { gsap } from "gsap";
 import { BaseResources } from "../resources";
 import type { ISoundParameters } from "./isound-parameters";
@@ -13,7 +13,7 @@ interface IPlaySoundOptions extends Omit<ISoundOptions, "sprite"> {
 export class Sound {
     readonly name;
 
-    protected readonly resources = inject(BaseResources);
+    protected readonly resources = di.inject(BaseResources);
 
     protected readonly properties;
     protected readonly soundsPlaying: SoundInstance[] = [];

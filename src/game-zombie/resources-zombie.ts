@@ -1,6 +1,7 @@
-import { BaseResources, injectable, Spine, spine } from "@core";
+import { BaseResources, Spine, spine } from "@core";
+import { di } from "@elumixor/di";
 
-@injectable
+@di.injectable
 export class ResourcesZombie extends BaseResources {
     @spine("zombie")
     declare readonly zombie: Spine<"animation" | "idle" | "run">;

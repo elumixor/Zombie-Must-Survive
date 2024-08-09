@@ -1,13 +1,5 @@
-import {
-    Actor,
-    App,
-    circleSprite,
-    inject,
-    rectSprite,
-    responsive,
-    type IDimensions,
-    type IResizeObservable,
-} from "@core";
+import { Actor, App, circleSprite, rectSprite, responsive, type IDimensions, type IResizeObservable } from "@core";
+import { di } from "@elumixor/di";
 import { Controls as GameControls } from "game-zombie/controls";
 import { Container, FederatedPointerEvent } from "pixi.js";
 
@@ -15,8 +7,8 @@ import { Container, FederatedPointerEvent } from "pixi.js";
 export class ControlsWidget extends Actor implements IResizeObservable {
     tickEnabled = false;
 
-    private readonly app = inject(App);
-    private readonly controls = inject(GameControls);
+    private readonly app = di.inject(App);
+    private readonly controls = di.inject(GameControls);
 
     private readonly radius = 70;
     private readonly thumbRadius = this.radius * 0.6;

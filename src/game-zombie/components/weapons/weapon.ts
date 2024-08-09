@@ -1,7 +1,8 @@
-import { Component, inject, PhysicsComponent, Time, Vec2, type Actor } from "@core";
+import { Component, PhysicsComponent, Time, Vec2, type Actor } from "@core";
+import { di } from "@elumixor/di";
 
 export class WeaponComponent extends Component {
-    protected readonly time = inject(Time);
+    protected readonly time = di.inject(Time);
 
     /** Actor tags that this weapon affects/targets  */
     readonly tags = new Set<string>();

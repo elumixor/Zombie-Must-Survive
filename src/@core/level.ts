@@ -1,3 +1,6 @@
+import { di } from "@elumixor/di";
+import type { Constructor } from "@elumixor/frontils";
+import { Group } from "@pixi/layers";
 import { Container } from "pixi.js";
 import { Actor } from "./actor";
 import { Camera } from "./camera";
@@ -5,9 +8,6 @@ import { CollisionManager } from "./colliders";
 import { Vec2 } from "./extensions";
 import { Layers } from "./layers";
 import { Resizer, responsive, type IDimensions, type IResizeObservable } from "./responsive";
-import type { Constructor } from "@elumixor/frontils";
-import { Group } from "@pixi/layers";
-import { inject } from "./di";
 
 /**
  * Levels is an actor that has loading and unloading logic,
@@ -15,7 +15,7 @@ import { inject } from "./di";
  */
 @responsive
 export class Level extends Actor implements IResizeObservable {
-    private readonly resizer = inject(Resizer);
+    private readonly resizer = di.inject(Resizer);
     readonly collisionManager = this.addComponent(new CollisionManager(this));
 
     // We can implement a simple camera system using a camera position

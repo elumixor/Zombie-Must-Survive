@@ -1,9 +1,8 @@
-import { inject } from "@core/di";
 import { Game } from "@core/game";
+import { di } from "@elumixor/di";
 import type { Constructor } from "@elumixor/frontils";
 import { Container, DisplayObject } from "pixi.js";
 import { Component } from "./components";
-import { Resizer } from "./responsive";
 import { Time } from "./time";
 
 /**
@@ -19,10 +18,10 @@ export class Actor extends Container {
     tickEnabled = true;
 
     /** Quick reference to the {@link Game} class */
-    protected readonly game = inject(Game);
+    protected readonly game = di.inject(Game);
 
     /** Quick reference to the game {@link Time} */
-    protected readonly time = inject(Time);
+    protected readonly time = di.inject(Time);
 
     /** List of the currently added components */
     protected readonly components = new Set<Component>();
@@ -96,7 +95,6 @@ export class Actor extends Container {
 
     /** Destroys the actor and all its children and components and removes it from the parent */
     override destroy() {
-        inject(Resizer).unsubscribe(this);
         this.parent.removeChild(this);
         for (const component of [...this.components]) component.destroy();
         for (const child of this.children) child.destroy();

@@ -1,8 +1,8 @@
-import { injectable } from "@core";
+import { di } from "@elumixor/di";
 import { SkillPool } from "game-zombie/skills";
 import { PlayerState } from "./player-state";
 
-@injectable
+@di.injectable
 export class GameState {
     readonly skillPool = new SkillPool();
     readonly player = new PlayerState();

@@ -25,8 +25,9 @@
         "typescript": "^5.5.2"
     },
     "dependencies": {
+        "@elumixor/di": "^0.2.1",
         "@elumixor/eslint": "^0.2.0",
-        "@elumixor/frontils": "^2.4.2",
+        "@elumixor/frontils": "^2.7.1",
         "@pixi/filter-color-overlay": "^5.1.1",
         "@pixi/layers": "^2.1.0",
         "@pixi/text-html": "^7.4.2",
