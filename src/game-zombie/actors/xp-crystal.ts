@@ -11,7 +11,7 @@ export class XpCrystal extends Actor {
 
     xp = 1;
     attractionRadius = 200;
-    collectRadius = 5;
+    collectRadius = 20;
 
     private readonly sprite = this.addChild(Sprite.from("crystal"));
     private readonly shadow = this.addChild(Sprite.from("shadow"));
@@ -31,10 +31,11 @@ export class XpCrystal extends Actor {
         this.collider.isTrigger = true;
         this.collider.targetTags.add("player");
 
+        this.tracker.force = 7;
         this.tracker.acceptanceDistance = 0;
         this.tracker.forceRequested.subscribe((force) => this.physics.addForce(force));
 
-        this.physics.drag = 0.8;
+        this.physics.drag = 0.75;
 
         this.collected.subscribe(() => (this.playerState.xp += this.xp));
     }

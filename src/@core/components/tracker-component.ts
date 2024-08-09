@@ -14,7 +14,7 @@ export class TrackerComponent extends Component {
     private readonly time = di.inject(Time);
 
     /** Maximum speed that an object will be moving at */
-    speed = 3;
+    force = 3;
     /** Minimum distance that should be reached */
     acceptanceDistance = 20;
     /** At this distance, the object will start to slow down to the speed 0 */
@@ -53,6 +53,6 @@ export class TrackerComponent extends Component {
             (distance - this.acceptanceDistance) / (this.slowdownDistance - this.acceptanceDistance),
         );
 
-        this.forceRequested.emit(direction.withLength(this.speed * strength));
+        this.forceRequested.emit(direction.withLength(this.force * strength));
     }
 }

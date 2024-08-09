@@ -15,7 +15,7 @@ export class Player extends Actor {
 
     private readonly controls = di.inject(Controls);
 
-    private readonly speed = 5;
+    private readonly speed = 10;
 
     readonly spine = this.addChild(this.resources.zombie.copy());
 

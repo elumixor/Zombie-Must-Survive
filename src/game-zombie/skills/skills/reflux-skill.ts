@@ -7,7 +7,7 @@ import { NumProperty } from "../skill-property";
 export class RefluxSkill extends Skill {
     readonly name = "Reflux";
     readonly description = "Spit toxic projectiles at enemies.";
-    readonly texture = Texture.from("spit");
+    readonly texture = Texture.from("reflux");
 
     private readonly numProjectiles = this.addProperty(
         new NumProperty("Projectiles", (level) => clamp(round(level * 0.5 + (level >= 2 ? 1 : 0)), 1, 5)),
@@ -20,6 +20,7 @@ export class RefluxSkill extends Skill {
     );
 
     private readonly distance = 500;
+    private readonly projectileTexture = Texture.from("spit");
 
     private component?: ProjectileWeaponComponent;
 
@@ -36,7 +37,7 @@ export class RefluxSkill extends Skill {
         this.component.spread = this.component.numProjectiles * 10;
         this.component.cooldown = this.cooldown.value(level);
 
-        this.component.projectileConfig.texture = this.texture;
+        this.component.projectileConfig.texture = this.projectileTexture;
         this.component.projectileConfig.distance = this.distance;
         this.component.projectileConfig.alignToDirection = true;
         this.component.projectileConfig.damage = this.damage.value(level);

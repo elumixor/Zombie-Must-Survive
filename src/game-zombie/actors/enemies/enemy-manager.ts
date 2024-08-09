@@ -85,9 +85,13 @@ export class EnemyManager extends Actor {
 
         enemy.tracker.target = this.player;
 
+        if (enemyType === "worker") {
+            enemy.tracker.force = 5;
+        }
+
         if (enemyType === "doctor") {
             enemy.sprite.texture = Texture.from("doctor");
-            enemy.tracker.speed = 1;
+            enemy.tracker.force = 3;
             enemy.weapon.damage = 5;
             enemy.health.maxHealth = 10;
             enemy.health.health = enemy.health.maxHealth;
@@ -95,7 +99,8 @@ export class EnemyManager extends Actor {
 
         if (enemyType === "soldier") {
             enemy.sprite.texture = Texture.from("soldier");
-            enemy.tracker.speed = 4;
+            enemy.tracker.force = 7;
+            enemy.tracker.lag = 1;
             enemy.weapon.damage = 3;
             enemy.health.maxHealth = 20;
             enemy.health.health = enemy.health.maxHealth;
