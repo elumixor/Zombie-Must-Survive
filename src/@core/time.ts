@@ -102,22 +102,37 @@ export class Time {
 
     /** Like {@link gsap.to} but respects the current speed of the game */
     to(target: object, vars: gsap.TweenVars) {
-        const tween: gsap.core.Tween = gsap.to(target, { ...vars, onInterrupt: () => this.tweens.remove(tween) });
+        const tween: gsap.core.Tween = gsap.to(target, {
+            ...vars,
+            onInterrupt: () => {
+                vars.onInterrupt?.();
+                this.tweens.remove(tween);
+            },
+            onComplete: () => {
+                vars.onComplete?.();
+                this.tweens.remove(tween);
+            },
+        });
         tween.timeScale(this.speed);
         this.tweens.push(tween);
-        void tween.then(() => this.tweens.remove(tween));
         return tween;
     }
 
     /** Like {@link gsap.fromTo} but respects the current speed of the game */
-    fromTo(target: object, fromVars: gsap.TweenVars, toVars: gsap.TweenVars) {
+    fromTo(target: object, fromVars: gsap.TweenVars, vars: gsap.TweenVars) {
         const tween: gsap.core.Tween = gsap.fromTo(target, fromVars, {
-            ...toVars,
-            onInterrupt: () => this.tweens.remove(tween),
+            ...vars,
+            onInterrupt: () => {
+                vars.onInterrupt?.();
+                this.tweens.remove(tween);
+            },
+            onComplete: () => {
+                vars.onComplete?.();
+                this.tweens.remove(tween);
+            },
         });
         tween.timeScale(this.speed);
         this.tweens.push(tween);
-        void tween.then(() => this.tweens.remove(tween));
         return tween;
     }
 

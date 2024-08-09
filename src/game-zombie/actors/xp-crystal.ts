@@ -48,9 +48,8 @@ export class XpCrystal extends Actor {
     }
 
     private async animateShow() {
-        this.sprite.y = 20;
         await all(
-            this.time.to(this.sprite, { y: 0, duration: 0.2 }),
+            this.time.fromTo(this.sprite, { y: 20 }, { y: 0, duration: 0.2 }),
             this.time.fromTo(this.shadow.scale, { x: 0, y: 0 }, { x: 1, y: 1, duration: 0.2 }),
         );
 

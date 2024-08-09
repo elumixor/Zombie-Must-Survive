@@ -6,7 +6,7 @@ export * from "./frankenzombie-skill";
 export * from "./spirit-skill";
 export * from "./scream-skill";
 export * from "./zombiecide-skill";
-export * from "./bite-skill";
+export * from "./bite";
 export * from "./beholder";
 export * from "./passive/gold-skill";
 export * from "./passive/magnet-skill";

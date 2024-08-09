@@ -80,6 +80,7 @@ export class Vec2 extends Point {
         return new Vec2(random() - 0.5, random() - 0.5).normalized;
     }
 }
+
 export type ReadonlyVec2 = Omit<Vec2, "x" | "y" | "iadd">;
 
 for (const target of [ObservablePoint, Point]) {
@@ -347,3 +348,57 @@ for (const target of [ObservablePoint, Point]) {
         configurable: true,
     });
 }
+
+function vec2fn(x = 0, y = x) {
+    return new Vec2(x, y);
+}
+
+Reflect.defineProperty(vec2fn, "zero", {
+    get() {
+        return vec2fn();
+    },
+});
+
+Reflect.defineProperty(vec2fn, "one", {
+    get() {
+        return vec2fn(1);
+    },
+});
+
+Reflect.defineProperty(vec2fn, "random", {
+    get() {
+        return vec2fn(random(), random());
+    },
+});
+Reflect.defineProperty(vec2fn, "up", {
+    get() {
+        return vec2fn(0, -1);
+    },
+});
+Reflect.defineProperty(vec2fn, "down", {
+    get() {
+        return vec2fn(0, 1);
+    },
+});
+Reflect.defineProperty(vec2fn, "left", {
+    get() {
+        return vec2fn(-1, 0);
+    },
+});
+Reflect.defineProperty(vec2fn, "right", {
+    get() {
+        return vec2fn(1, 0);
+    },
+});
+
+type V = typeof vec2fn & {
+    zero: Vec2;
+    one: Vec2;
+    up: Vec2;
+    down: Vec2;
+    left: Vec2;
+    right: Vec2;
+    random: Vec2;
+};
+
+export const vec2 = vec2fn as V;

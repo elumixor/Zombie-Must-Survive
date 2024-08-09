@@ -1,5 +1,4 @@
-import { Actor, Resizer, Vec2 } from "@core";
-import { di } from "@elumixor/di";
+import { Actor, Vec2 } from "@core";
 import { EventEmitter } from "@elumixor/frontils";
 import { Texture } from "pixi.js";
 import { Player } from "../player";
@@ -19,7 +18,6 @@ export class EnemyManager extends Actor {
     player?: Player;
 
     readonly stageCompleted = new EventEmitter();
-    private readonly resizer = di.inject(Resizer);
 
     private readonly enemies = [] as Enemy[];
     private readonly stageStarts;
@@ -119,8 +117,8 @@ export class EnemyManager extends Actor {
     }
 
     protected getSpawnPosition() {
-        const { width, height } = this.resizer.dimensions;
-        const center = new Vec2(width / 2, height / 2);
+        const { screenSize } = this.level;
+        const center = screenSize.div(2);
         const maxSize = max(center.x, center.y);
         const offset = Vec2.random().withLength(maxSize * 1.2);
         return this.level.screenToWorld(center.add(offset));
