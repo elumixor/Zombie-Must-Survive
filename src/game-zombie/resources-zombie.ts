@@ -22,12 +22,25 @@ export class ResourcesZombie extends BaseResources {
         // Summons
         this.mainLoader.add("zombie-child", `${this.pathTo("sprites")}/zombiecid.png`);
         this.mainLoader.add("spirit", `${this.pathTo("sprites")}/spirit.png`);
+        this.mainLoader.add("bite", `${this.pathTo("sprites")}/ui_abyss_bite.png`);
+        this.mainLoader.add("beholder", `${this.pathTo("sprites")}/ui_beholder.png`);
 
-        // Weapons and particles
+        // Weapons, abilities, and particles
         this.mainLoader.add("spit", `${this.pathTo("sprites")}/plevok.png`);
         this.mainLoader.add("cloud", `${this.pathTo("sprites")}/cloud.png`);
+        this.mainLoader.add("fart", `${this.pathTo("sprites")}/ui_deadly_fart.png`);
         this.mainLoader.add("lightning", `${this.pathTo("sprites")}/molniya.png`);
-        this.mainLoader.add("acid", `${this.pathTo("sprites")}/luzha.png`);
+        this.mainLoader.add("lake", `${this.pathTo("sprites")}/luzha.png`);
+        this.mainLoader.add("vomit", `${this.pathTo("sprites")}/ui_acid_vomit.png`);
         this.mainLoader.add("boomerang", `${this.pathTo("sprites")}/boomerang_leg.png`);
+        this.mainLoader.add("frankenzombie", `${this.pathTo("sprites")}/ui_frankenzombie.png`);
+        this.mainLoader.add("reflux", `${this.pathTo("sprites")}/ui_reflux.png`);
+
+        // UI
+        this.mainLoader.add("ui-card", `${this.pathTo("sprites")}/ui_ability_card.png`);
+        this.mainLoader.add("ui-card-rare", `${this.pathTo("sprites")}/ui_ability_card_rare.png`);
+        this.mainLoader.add("ui-star", `${this.pathTo("sprites")}/ui_star.png`);
+        this.mainLoader.add("ui-card-label", `${this.pathTo("sprites")}/ui_card_label.png`);
+        this.mainLoader.add("ui-ad", `${this.pathTo("sprites")}/ui_ad.png`);
     }
 }

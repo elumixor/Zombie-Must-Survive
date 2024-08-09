@@ -7,7 +7,7 @@ export * from "./spirit-skill";
 export * from "./scream-skill";
 export * from "./zombiecide-skill";
 export * from "./bite-skill";
-export * from "./beholder-skill";
+export * from "./beholder";
 export * from "./passive/gold-skill";
 export * from "./passive/magnet-skill";
 export * from "./passive/max-hp-skill";

@@ -13,7 +13,9 @@ export class ProjectileWeaponComponent extends WeaponComponent {
     protected override use(targetsInRange: Actor[]) {
         const { carrierVelocity } = this;
 
-        const closestTarget = targetsInRange.sort((a, b) => a.distanceTo(this.actor) - b.distanceTo(this.actor)).first;
+        const closestTarget = this.closest(targetsInRange);
+        assert(closestTarget);
+
         const baseAngle = this.actor.worldPosition.angleTo(closestTarget.worldPosition);
 
         // Spawn projectiles

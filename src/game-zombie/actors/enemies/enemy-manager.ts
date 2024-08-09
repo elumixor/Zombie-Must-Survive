@@ -53,7 +53,7 @@ export class EnemyManager extends Actor {
     }
 
     private spawn(enemyType: EnemyType) {
-        logs(`Spawning enemy ${enemyType}`, { color: "cyan" });
+        logs(`Spawning enemy ${enemyType}`, { duration: 1, color: "cyan" });
 
         // Spawn a zombie
         const enemy = this.getEnemy(enemyType);
@@ -117,7 +117,7 @@ export class EnemyManager extends Actor {
         const { width, height } = this.resizer.dimensions;
         const center = new Vec2(width / 2, height / 2);
         const maxSize = max(center.x, center.y);
-        const offset = Vec2.random.withLength(maxSize * 1.2);
+        const offset = Vec2.random().withLength(maxSize * 1.2);
         return this.level.screenToWorld(center.add(offset));
     }
 }

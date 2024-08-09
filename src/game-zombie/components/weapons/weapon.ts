@@ -46,4 +46,8 @@ export class WeaponComponent extends Component {
     protected use(_targetsInRange?: Actor[]) {
         return;
     }
+
+    protected closest(targets: Actor[]) {
+        return targets.sort((a, b) => a.distanceTo(this.actor) - b.distanceTo(this.actor)).first as Actor | undefined;
+    }
 }

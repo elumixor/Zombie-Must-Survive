@@ -5,7 +5,6 @@ export * from "./components";
 export * from "./env";
 export * from "./extensions";
 export * from "./game";
-export * from "./interval";
 export * from "./level";
 export * from "./logging";
 export * from "./pooling";

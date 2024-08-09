@@ -157,3 +157,6 @@ export class Time {
         return { clear: interval.clear };
     }
 }
+
+export type Interval = ReturnType<Time["interval"]>;
+export type Timeout = ReturnType<Time["timeout"]>;

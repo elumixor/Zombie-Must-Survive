@@ -76,7 +76,7 @@ export class Vec2 extends Point {
     static get right() {
         return new Vec2(1, 0);
     }
-    static get random() {
+    static random() {
         return new Vec2(random() - 0.5, random() - 0.5).normalized;
     }
 }

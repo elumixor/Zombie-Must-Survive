@@ -46,15 +46,16 @@ export class MainLevel extends Level implements IResizeObservable {
 
         // Create some layers
         this.layers.add("foreground", new Group(1, (sprite) => (sprite.zOrder = +sprite.y)));
-        this.layers.add("overlay", new Group(2));
-        this.layers.add("playerUI", new Group(3));
-        this.layers.add("ui", new Group(4));
-        this.layers.add("popup", new Group(5));
+        this.layers.add("projectiles", new Group(2, (sprite) => (sprite.zOrder = +sprite.y)));
+        this.layers.add("overlay", new Group(3));
+        this.layers.add("playerUI", new Group(4));
+        this.layers.add("ui", new Group(5));
+        this.layers.add("popup", new Group(6));
 
         // Spawn some random crystals...?
         for (const x of range(20)) {
             const c = new XpCrystal();
-            c.position = Vec2.random.withLength(random(300, 300 + 25 * x));
+            c.position = Vec2.random().withLength(random(300, 300 + 25 * x));
             this.addChild(c);
         }
 

@@ -106,6 +106,11 @@ export class Actor extends Container {
         return this.worldPosition.distanceTo(other.worldPosition);
     }
 
+    /** Returns the angle to the other actor */
+    angleTo(other: Actor) {
+        return this.worldPosition.angleTo(other.worldPosition);
+    }
+
     /** Called recursively for all children. First triggers in components, then in children, then in the actor itself */
     beginPlay() {
         if (this.beginPlayCalled) return;

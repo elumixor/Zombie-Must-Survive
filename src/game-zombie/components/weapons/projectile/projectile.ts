@@ -1,7 +1,7 @@
 import { Actor, CircleColliderComponent, PhysicsComponent, Vec2 } from "@core";
 import { Sprite } from "pixi.js";
 import type { ProjectileConfig } from "./projectile-config";
-import { HealthComponent } from "game-zombie/components/health";
+import { HealthComponent } from "../../health";
 
 export class Projectile extends Actor {
     direction = Vec2.one;
