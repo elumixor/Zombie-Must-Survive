@@ -18,8 +18,10 @@ export class EnemyManager extends Actor {
     player?: Player;
 
     readonly stageCompleted = new EventEmitter();
+    readonly enemyDied = new EventEmitter<Enemy>();
 
-    private readonly enemies = [] as Enemy[];
+    readonly enemies = [] as Enemy[];
+
     private readonly stageStarts;
     private readonly stages;
     private elapsed = 0;
@@ -108,6 +110,7 @@ export class EnemyManager extends Actor {
     }
 
     private onEnemyDied(enemy: Enemy) {
+        this.enemyDied.emit(enemy);
         this.enemies.remove(enemy);
         this._stageCompleted = this.enemies.isEmpty;
         if (this._stageCompleted) {

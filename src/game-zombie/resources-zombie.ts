@@ -20,7 +20,7 @@ export class ResourcesZombie extends BaseResources {
         this.mainLoader.add("doctor", `${this.pathTo("sprites")}/medic.png`);
 
         // Summons
-        this.mainLoader.add("zombie-child", `${this.pathTo("sprites")}/zombiecid.png`);
+        this.mainLoader.add("zombiecide", `${this.pathTo("sprites")}/zombiecid.png`);
         this.mainLoader.add("spirit", `${this.pathTo("sprites")}/spirit.png`);
         this.mainLoader.add("bite", `${this.pathTo("sprites")}/ui_abyss_bite.png`);
         this.mainLoader.add("beholder", `${this.pathTo("sprites")}/ui_beholder.png`);
