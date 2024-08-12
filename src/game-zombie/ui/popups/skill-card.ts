@@ -1,4 +1,3 @@
-import { rectSprite } from "@core";
 import { EventEmitter } from "@elumixor/frontils";
 import type { Skill } from "game-zombie/skills";
 import { Container, Sprite } from "pixi.js";
@@ -12,23 +11,17 @@ export class SkillCard extends Container {
     private readonly imageHeight = 40;
 
     private readonly padding = 20;
-    private readonly borderWidth = 5;
 
     constructor(readonly skill: Skill) {
         super();
 
         const options = {
             wordWrap: true,
-            wordWrapWidth: this.totalWidth - (this.padding + this.borderWidth) * 2,
+            wordWrapWidth: this.totalWidth - this.padding * 2,
         };
 
-        const bg = rectSprite({ width: this.totalWidth, height: this.totalHeight, roundedRadius: 5 });
-        const fg = rectSprite({
-            width: this.totalWidth - this.borderWidth * 2,
-            height: this.totalHeight - this.borderWidth * 2,
-            color: "rgb(60, 24, 102)",
-            roundedRadius: 5,
-        });
+        const bg = Sprite.from("ui-card");
+        const labelBg = Sprite.from("ui-card-label");
 
         const title = new TextWidget(skill.name.toUpperCase(), { fontSize: 20, align: "center", ...options });
 
@@ -47,17 +40,23 @@ export class SkillCard extends Container {
             ...options,
         });
 
-        let y = -this.totalHeight / 2 + title.height / 2 + this.padding * 1.5 + this.borderWidth;
+        let y = -this.totalHeight / 2 + title.height / 2 + this.padding * 1.5;
         title.y = y;
-        y += title.height + 20;
+        labelBg.y = y;
+
+        y += title.height + 20 + this.totalHeight / 2 - this.padding;
+        bg.y = y;
+
+        y -= 50;
+
         image.y = y;
         y += this.imageHeight + 20;
         description.y = y;
         y += description.height + 20;
         diff.y = y;
-        diff.x = -this.totalWidth / 2 + this.padding + this.borderWidth;
+        diff.x = -this.totalWidth / 2 + this.padding;
 
-        const elements = [bg, fg, image, title, description];
+        const elements = [bg, labelBg, image, title, description];
 
         for (const el of elements) el.anchor.set(0.5);
         this.addChild(...elements, diff);
