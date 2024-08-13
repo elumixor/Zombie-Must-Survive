@@ -64,4 +64,14 @@ export class Enemy extends Actor {
         this.weapon.tags.add("player");
         this.weapon.delay = 0.1;
     }
+
+    freeze(seconds: number) {
+        this.tracker.tickEnabled = false;
+        this.weapon.tickEnabled = false;
+
+        void this.time.delay(seconds).then(() => {
+            this.tracker.tickEnabled = true;
+            this.weapon.tickEnabled = true;
+        });
+    }
 }

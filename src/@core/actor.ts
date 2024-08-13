@@ -28,7 +28,7 @@ export class Actor extends Container {
 
     // This exists in order to correctly trigger beginPlay when the actor is added to the scene
     // and not just when it is added before parent actor beginPlay is called
-    private beginPlayCalled = false;
+    protected beginPlayCalled = false;
 
     /** Returns all actor children */
     get childActors() {

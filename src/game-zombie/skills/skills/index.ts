@@ -10,6 +10,6 @@ export * from "./passive/movement-skill";
 export * from "./passive/regeneration-skill";
 export * from "./pool";
 export * from "./reflux-skill";
-export * from "./scream-skill";
+export * from "./scream";
 export * from "./spirit";
 export * from "./zombiecide";
