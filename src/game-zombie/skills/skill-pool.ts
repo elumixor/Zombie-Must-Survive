@@ -26,7 +26,7 @@ export class SkillPool {
     readonly spirit = new SpiritSkill();
     readonly scream = new ScreamSkill();
     readonly zombiecide = new ZombiecideSkill();
-    readonly bide = new BiteSkill();
+    readonly bite = new BiteSkill();
     readonly beholder = new BeholderSkill();
     readonly gold = new GoldSkill();
     readonly magnet = new MagnetSkill();
@@ -34,23 +34,22 @@ export class SkillPool {
     readonly movement = new MovementSkill();
     readonly regeneration = new RegenerationSkill();
 
-    readonly defaultSkills = new Set<Skill>([this.fart, this.reflux]);
     readonly allSkills = new Set<Skill>([
-        this.reflux,
-        this.fart,
+        // this.reflux,
+        // this.fart,
         this.boomerang,
-        this.acidPool,
-        this.frankenzombie,
-        this.spirit,
-        this.scream,
-        this.zombiecide,
-        this.bide,
-        this.beholder,
-        this.gold,
-        this.magnet,
-        this.maxHp,
-        this.movement,
-        this.regeneration,
+        // this.acidPool,
+        // this.frankenzombie,
+        // this.spirit,
+        // this.scream,
+        // this.zombiecide,
+        // this.bite,
+        // this.beholder,
+        // this.gold,
+        // this.magnet,
+        // this.maxHp,
+        // this.movement,
+        // this.regeneration,
     ]);
 
     readonly maxSkillsOnLevelUp = 4;

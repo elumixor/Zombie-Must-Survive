@@ -20,7 +20,7 @@ export class MainLevel extends Level implements IResizeObservable {
             range(100).flatMap(() => [
                 {
                     duration: 15,
-                    enemies: [{ enemyType: "worker", spawnInterval: 2, count: 5 }],
+                    enemies: [{ enemyType: "worker", spawnInterval: 1, count: 5 }],
                 },
                 {
                     duration: 15,

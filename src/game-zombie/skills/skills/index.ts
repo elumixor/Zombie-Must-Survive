@@ -1,6 +1,6 @@
 export * from "./reflux-skill";
 export * from "./fart-skill";
-export * from "./boomerang-skill";
+export * from "./boomerang";
 export * from "./acid-pool-skill";
 export * from "./frankenzombie-skill";
 export * from "./spirit";
