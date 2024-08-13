@@ -38,7 +38,7 @@ export class SkillPool {
         // this.reflux,
         // this.fart,
         // this.boomerang,
-        this.acidPool,
+        this.frankenzombie,
         // this.frankenzombie,
         // this.spirit,
         // this.scream,

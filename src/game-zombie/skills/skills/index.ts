@@ -2,7 +2,7 @@ export * from "./beholder";
 export * from "./bite";
 export * from "./boomerang";
 export * from "./fart-skill";
-export * from "./frankenzombie-skill";
+export * from "./frankenzombie";
 export * from "./passive/gold-skill";
 export * from "./passive/magnet-skill";
 export * from "./passive/max-hp-skill";
