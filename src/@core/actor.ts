@@ -73,6 +73,8 @@ export class Actor extends Container {
     /** Adds a component to the actor */
     addComponent<T extends Component[]>(...components: T) {
         for (const component of components) this.components.add(component);
+        if (this.beginPlayCalled) for (const component of components) component.beginPlay();
+
         return components.first as T[0];
     }
 

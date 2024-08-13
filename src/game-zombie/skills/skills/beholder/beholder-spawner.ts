@@ -15,7 +15,7 @@ export class BeholderSpawnerComponent extends Component {
     lifetime = 2;
     fireDistance = 1000;
 
-    spawnRadius = 50;
+    spawnRadius = 200;
 
     private interval?: ReturnType<Time["interval"]>;
     private readonly instances = new Array<BeholderTurret>();

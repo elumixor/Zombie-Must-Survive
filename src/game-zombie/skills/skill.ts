@@ -27,6 +27,8 @@ export class Skill {
     }
 
     applyTo(actor: Actor) {
+        logs(`Applying skill ${this.name}`);
+
         if (this.actor !== actor) {
             this.actor = actor;
             this.addToActor(actor);

@@ -6,7 +6,7 @@ export class ScreamActor extends Actor {
     duration = 1;
     radius = 1;
 
-    private readonly sprite = this.addChild(circleSprite({ radius: 50, color: "rgb(10, 162, 200)" }));
+    private readonly sprite = this.addChild(circleSprite({ radius: 50, color: "rgb(10, 162, 200)", alpha: 0.5 }));
     private readonly collider = this.addComponent(new CircleColliderComponent(this));
 
     constructor() {

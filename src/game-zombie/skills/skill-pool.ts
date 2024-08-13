@@ -28,6 +28,9 @@ export class SkillPool {
     readonly zombiecide = new ZombiecideSkill();
     readonly bite = new BiteSkill();
     readonly beholder = new BeholderSkill();
+
+    /* Passive skills */
+
     readonly gold = new GoldSkill();
     readonly magnet = new MagnetSkill();
     readonly maxHp = new MaxHpSkill();
@@ -35,16 +38,18 @@ export class SkillPool {
     readonly regeneration = new RegenerationSkill();
 
     readonly allSkills = new Set<Skill>([
-        // this.reflux,
-        // this.fart,
-        // this.boomerang,
+        this.reflux,
+        this.fart,
+        this.boomerang,
         this.frankenzombie,
-        // this.frankenzombie,
-        // this.spirit,
-        // this.scream,
-        // this.zombiecide,
-        // this.bite,
-        // this.beholder,
+        this.spirit,
+        this.scream,
+        this.zombiecide,
+        this.bite,
+        this.beholder,
+
+        /* Passive skills */
+
         // this.gold,
         // this.magnet,
         // this.maxHp,

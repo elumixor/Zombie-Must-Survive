@@ -11,7 +11,7 @@ export class SpiritSkill extends Skill {
 
     private readonly numSpirits = this.addProperty(new NumProperty("Number of spirits", (level) => level));
     private readonly damage = this.addProperty(new NumProperty("Damage", (level) => 5 + (level - 1) * 2));
-    private readonly chance = this.addProperty(new NumProperty("Chance", (level) => 0.5 * 1.1 ** level));
+    private readonly chance = this.addProperty(new NumProperty("Chance", (level) => 0.2 * 1.1 ** level));
     private readonly speed = this.addProperty(new NumProperty("Speed", (level) => 10 + level));
 
     private component?: SpiritComponent;
