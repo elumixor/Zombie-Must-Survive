@@ -367,7 +367,7 @@ Reflect.defineProperty(vec2fn, "one", {
 
 Reflect.defineProperty(vec2fn, "random", {
     get() {
-        return vec2fn(random(), random());
+        return vec2fn(random() - 0.5, random() - 0.5).normalized;
     },
 });
 Reflect.defineProperty(vec2fn, "up", {

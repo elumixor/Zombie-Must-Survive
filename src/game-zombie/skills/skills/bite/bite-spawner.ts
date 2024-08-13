@@ -48,9 +48,9 @@ export class BiteSpawnerComponent extends Component {
             const randomScreenPoint = screenSize.mul(vec2(random(), random()));
             spawnPosition = this.level.screenToWorld(randomScreenPoint);
         } else {
+            // Otherwise, set the position to the enemy with the most enemies around
             const enemiesAround = enemies.map((enemy) => this.enemiesAround(enemy, enemies));
             const enemyIndex = enemiesAround.map((group) => group.length).argmax;
-
             const enemy = enemies[enemyIndex];
             spawnPosition = enemy.position;
 

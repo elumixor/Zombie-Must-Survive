@@ -1,6 +1,6 @@
 import { Skill } from "./skill";
 import {
-    AcidPoolSkill,
+    PoolSkill,
     BeholderSkill,
     BiteSkill,
     BoomerangSkill,
@@ -21,7 +21,7 @@ export class SkillPool {
     readonly reflux = new RefluxSkill();
     readonly fart = new FartSkill();
     readonly boomerang = new BoomerangSkill();
-    readonly acidPool = new AcidPoolSkill();
+    readonly acidPool = new PoolSkill();
     readonly frankenzombie = new FrankenzombieSkill();
     readonly spirit = new SpiritSkill();
     readonly scream = new ScreamSkill();
@@ -37,8 +37,8 @@ export class SkillPool {
     readonly allSkills = new Set<Skill>([
         // this.reflux,
         // this.fart,
-        this.boomerang,
-        // this.acidPool,
+        // this.boomerang,
+        this.acidPool,
         // this.frankenzombie,
         // this.spirit,
         // this.scream,

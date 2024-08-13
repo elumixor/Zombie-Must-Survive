@@ -30,7 +30,7 @@ export class ResourcesZombie extends BaseResources {
         this.mainLoader.add("cloud", `${this.pathTo("sprites")}/cloud.png`);
         this.mainLoader.add("fart", `${this.pathTo("sprites")}/ui_deadly_fart.png`);
         this.mainLoader.add("lightning", `${this.pathTo("sprites")}/molniya.png`);
-        this.mainLoader.add("lake", `${this.pathTo("sprites")}/luzha.png`);
+        this.mainLoader.add("pool", `${this.pathTo("sprites")}/luzha.png`);
         this.mainLoader.add("vomit", `${this.pathTo("sprites")}/ui_acid_vomit.png`);
         this.mainLoader.add("boomerang", `${this.pathTo("sprites")}/boomerang_leg.png`);
         this.mainLoader.add("frankenzombie", `${this.pathTo("sprites")}/ui_frankenzombie.png`);
