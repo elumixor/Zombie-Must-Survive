@@ -50,11 +50,11 @@ export class SkillPool {
 
         /* Passive skills */
 
-        // this.gold,
-        // this.magnet,
-        // this.maxHp,
-        // this.movement,
-        // this.regeneration,
+        this.gold,
+        this.magnet,
+        this.maxHp,
+        this.movement,
+        this.regeneration,
     ]);
 
     readonly maxSkillsOnLevelUp = 4;

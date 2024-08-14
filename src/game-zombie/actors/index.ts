@@ -1,4 +1,4 @@
 export * from "./player";
-export * from "./xp-crystal";
+export * from "./pick-ups";
 export * from "./enemies";
 export * from "./levels";

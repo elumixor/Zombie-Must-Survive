@@ -16,6 +16,7 @@ export class PlayerState {
     private readonly baseHp = 100;
 
     private _xp = 0;
+    private _bonusHealth = 0;
     private _hp = this.maxHp;
 
     constructor() {
@@ -43,7 +44,13 @@ export class PlayerState {
     }
 
     get maxHp() {
-        return this.baseHp + this.level * this.constitution;
+        return this.baseHp + this.level * this.constitution + this._bonusHealth;
+    }
+
+    set bonusHealth(value: number) {
+        const diff = value - this._bonusHealth;
+        this._bonusHealth = value;
+        this.hp += diff;
     }
 
     get level() {

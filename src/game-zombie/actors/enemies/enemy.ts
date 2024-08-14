@@ -1,7 +1,7 @@
 import { Actor, CircleColliderComponent, PhysicsComponent, TrackerComponent } from "@core";
 import { HealthComponent, HitEffectComponent, MeleeAttackComponent } from "game-zombie/components";
 import { Sprite } from "pixi.js";
-import { XpCrystal } from "../xp-crystal";
+import { XpCrystal } from "../pick-ups/xp-crystal";
 
 export class Enemy extends Actor {
     readonly sprite = this.addChild(Sprite.from("worker"));

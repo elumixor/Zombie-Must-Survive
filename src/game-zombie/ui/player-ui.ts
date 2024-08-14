@@ -34,8 +34,8 @@ export class PlayerUI extends Actor {
         this.layer = "playerUI";
 
         this.playerState.hpChanged.subscribe((hp) => {
-            this.hpBar.value = hp;
-            this.hpBar.max = this.playerState.maxHp;
+            this.hpBar.value = round(hp);
+            this.hpBar.max = round(this.playerState.maxHp);
         });
     }
 }

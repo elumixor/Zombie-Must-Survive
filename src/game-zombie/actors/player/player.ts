@@ -8,18 +8,18 @@ import { ResourcesZombie } from "game-zombie/resources-zombie";
 import { PlayerUI } from "game-zombie/ui";
 
 export class Player extends Actor {
-    private readonly playerState = di.inject(GameState).player;
-    private readonly resources = di.inject(ResourcesZombie);
-
     readonly died = new EventEmitter();
 
+    private readonly playerState = di.inject(GameState).player;
+    private readonly resources = di.inject(ResourcesZombie);
     private readonly controls = di.inject(Controls);
 
-    private readonly speed = 10;
+    gold = 0;
+    speed = 10;
 
     readonly spine = this.addChild(this.resources.zombie.copy());
-
     readonly collider = this.addComponent(new CircleColliderComponent(this));
+    readonly pickupCollider = this.addComponent(new CircleColliderComponent(this));
     readonly physics = this.addComponent(new PhysicsComponent(this));
     readonly health = this.addComponent(new HealthComponent(this));
     readonly hitEffect = this.addComponent(new HitEffectComponent(this));
@@ -46,6 +46,9 @@ export class Player extends Actor {
         this.collider.targetTags.add("enemy");
         this.collider.pushStrength = 100;
 
+        this.pickupCollider.selfTags.add("pickUp");
+        this.pickupCollider.radius = 100;
+
         this.playerState.skillsChanged.subscribe(() => this.updateSkills());
         this.updateSkills();
 
@@ -66,6 +69,10 @@ export class Player extends Actor {
         // Otherwise, the animation spawns as a detached rotated head. Hard to tell why, but spine is strange...
         this.spine.animate("idle");
         this.spine.update(0);
+    }
+
+    set bonusHealth(value: number) {
+        this.playerState.bonusHealth = value;
     }
 
     override beginPlay() {
