@@ -3,17 +3,17 @@ import { AuraWeaponComponent } from "game-zombie/components";
 import { Skill } from "../skill";
 import { NumProperty } from "../skill-property";
 import { Texture } from "pixi.js";
+import { c, numProp } from "game-zombie/config";
 
+@c
 export class FartSkill extends Skill {
     readonly name = "Stinky Aura";
     readonly description = "Releases a stinky cloud that damages enemies.";
     readonly texture = Texture.from("cloud");
 
-    protected readonly damage = this.addProperty(new NumProperty("Damage", (level) => 3 + (level - 1) * 0.2));
-    protected readonly radius = this.addProperty(
-        new NumProperty("Radius", (level) => 100 + (level > 3 ? 10 * level : 0)),
-    );
-    protected readonly cooldown = this.addProperty(new NumProperty("Cooldown", (level) => 0.5 * 0.95 ** level));
+    @c(numProp()) protected readonly damage = this.addProperty(new NumProperty("Damage"));
+    @c(numProp()) protected readonly radius = this.addProperty(new NumProperty("Radius"));
+    @c(numProp()) protected readonly cooldown = this.addProperty(new NumProperty("Cooldown"));
 
     private component?: AuraWeaponComponent;
 

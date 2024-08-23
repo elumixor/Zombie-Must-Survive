@@ -1,0 +1,30 @@
+@import "./variables.scss";
+
+@mixin secondary {
+    font-size: 0.8rem;
+    font-weight: bold;
+    font-style: italic;
+    color: $gray-light;
+}
+
+.secondary {
+    @include secondary;
+}
+
+@mixin action {
+    padding: 0.2rem 0.5rem;
+    background-color: $action-bg;
+    border-radius: 0.5rem;
+    border: none;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    &:hover {
+        background-color: $action-bg-hover;
+    }
+}
+
+.action {
+    @include action;
+}

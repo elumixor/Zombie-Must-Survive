@@ -3,16 +3,18 @@ import { Texture } from "pixi.js";
 import { Skill } from "../../skill";
 import { NumProperty } from "../../skill-property";
 import { SpiritComponent } from "./spirit-component";
+import { c, numProp } from "game-zombie/config";
 
+@c
 export class SpiritSkill extends Skill {
     readonly name = "Angry Spirit";
     readonly description = "Creates angry spirits from dead enemies with some chance.";
     readonly texture = Texture.from("spirit");
 
-    private readonly numSpirits = this.addProperty(new NumProperty("Number of spirits", (level) => level));
-    private readonly damage = this.addProperty(new NumProperty("Damage", (level) => 5 + (level - 1) * 2));
-    private readonly chance = this.addProperty(new NumProperty("Chance", (level) => 0.2 * 1.1 ** level));
-    private readonly speed = this.addProperty(new NumProperty("Speed", (level) => 10 + level));
+    @c(numProp()) private readonly numSpirits = this.addProperty(new NumProperty("Number of spirits"));
+    @c(numProp()) private readonly damage = this.addProperty(new NumProperty("Damage"));
+    @c(numProp()) private readonly chance = this.addProperty(new NumProperty("Chance"));
+    @c(numProp()) private readonly speed = this.addProperty(new NumProperty("Speed"));
 
     private component?: SpiritComponent;
 

@@ -2,17 +2,18 @@ import { circleTexture, type Actor } from "@core";
 import { Skill } from "../../skill";
 import { NumProperty } from "../../skill-property";
 import { ScreamComponent } from "./scream-component";
+import { c, numProp } from "game-zombie/config";
 
+@c
 export class ScreamSkill extends Skill {
     readonly name = "Banshee Scream";
     readonly description = "Creates a deadly sonic wave that freezes all enemies in place.";
     readonly texture = circleTexture({ radius: 50, color: "rgb(10, 162, 200)" });
 
-    private readonly cooldown = this.addProperty(new NumProperty("Cooldown", (level) => 1 * 0.99 ** level));
-    private readonly radius = this.addProperty(new NumProperty("Radius", (level) => 200 + 50 * level));
-    private readonly speed = this.addProperty(new NumProperty("Speed", (level) => level * 200));
-
-    private readonly freezeDuration = this.addProperty(new NumProperty("Freeze Duration", (level) => 2 + level * 0.5));
+    @c(numProp()) private readonly cooldown = this.addProperty(new NumProperty("Cooldown"));
+    @c(numProp()) private readonly radius = this.addProperty(new NumProperty("Radius"));
+    @c(numProp()) private readonly speed = this.addProperty(new NumProperty("Speed"));
+    @c(numProp()) private readonly freezeDuration = this.addProperty(new NumProperty("Freeze Duration"));
 
     private component?: ScreamComponent;
 

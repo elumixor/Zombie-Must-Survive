@@ -1,6 +1,7 @@
 import { Game } from "@core";
 import { di } from "@elumixor/di";
 import { MainLevel } from "./actors/levels";
+import "./config";
 import { Controls } from "./controls";
 
 /** Game class is responsible for creating all the game classes and managing the scenes */

@@ -3,21 +3,19 @@ import { ProjectileWeaponComponent } from "game-zombie/components";
 import { Texture } from "pixi.js";
 import { Skill } from "../skill";
 import { NumProperty } from "../skill-property";
+import { c, numProp } from "game-zombie/config";
 
+@c
 export class RefluxSkill extends Skill {
     readonly name = "Reflux";
     readonly description = "Spit toxic projectiles at enemies.";
     readonly texture = Texture.from("reflux");
 
-    private readonly numProjectiles = this.addProperty(
-        new NumProperty("Projectiles", (level) => clamp(round(level * 0.5 + (level >= 2 ? 1 : 0)), 1, 5)),
-    );
+    private readonly numProjectiles = this.addProperty(new NumProperty("Projectiles", [1]));
 
-    private readonly damage = this.addProperty(new NumProperty("Damage", (level) => 5 + (level - 1) * 2));
-    private readonly cooldown = this.addProperty(new NumProperty("Cooldown", (level) => 0.5 * 0.99 ** level));
-    private readonly pierce = this.addProperty(
-        new NumProperty("Pierce", (level) => clamp(floor(level - 1), 0, 5), { hideZero: true }),
-    );
+    @c(numProp()) private readonly damage = this.addProperty(new NumProperty("Damage", [1]));
+    @c(numProp()) private readonly cooldown = this.addProperty(new NumProperty("Cooldown", [0.5]));
+    @c(numProp()) private readonly pierce = this.addProperty(new NumProperty("Pierce", [0], { hideZero: true }));
 
     private readonly distance = 500;
     private readonly projectileTexture = Texture.from("spit");

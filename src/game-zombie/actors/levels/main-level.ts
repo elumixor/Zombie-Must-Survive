@@ -9,7 +9,6 @@ import { Clock, ControlsWidget, GameOverPopup, LevelUpPopup } from "game-zombie/
 
 @responsive
 export class MainLevel extends Level implements IResizeObservable {
-    // private readonly skillPool = new SkillPool();
     private readonly app = di.inject(App);
     private readonly gameState = new GameState();
     private readonly background = this.addChild(new Background());

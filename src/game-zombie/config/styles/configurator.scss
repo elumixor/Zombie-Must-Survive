@@ -1,0 +1,45 @@
+@import "./variables.scss";
+@import "./mixins.scss";
+
+.noround {
+    border-radius: 0 !important;
+}
+
+.configurator {
+    font-family: Roboto, sans-serif;
+    color: $gray;
+
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    min-width: 200px;
+    background-color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 5px;
+    max-width: 450px;
+    z-index: 10000;
+
+    overflow: hidden;
+}
+
+.c-header {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0.25rem;
+}
+
+.c-title {
+    padding: 0.5rem 0.25rem;
+}
+
+.flex {
+    display: flex;
+}
+
+.flex-grow {
+    flex-grow: 1;
+}
+
+.close-button {
+    width: 30px;
+}

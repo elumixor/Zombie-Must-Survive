@@ -34,7 +34,7 @@ declare global {
     function random(min: number, max: number): number;
     function floor(value: number): number;
     function ceil(value: number): number;
-    function round(value: number): number;
+    function round(value: number, precision?: number): number;
     function abs(value: number): number;
     function pow(value: number, power: number): number;
     function deg2rad(degrees: number): number;
@@ -198,8 +198,11 @@ Reflect.defineProperty(globalThis, "ceil", {
 });
 
 Reflect.defineProperty(globalThis, "round", {
-    value(value: number) {
-        return Math.round(value);
+    value(value: number, precision = 0) {
+        if (precision <= 0) return Math.round(value);
+
+        const factor = 1 / precision;
+        return Math.round(value * factor) / factor;
     },
     writable: false,
     enumerable: false,

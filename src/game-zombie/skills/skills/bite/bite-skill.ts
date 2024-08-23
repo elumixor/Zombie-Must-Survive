@@ -3,17 +3,17 @@ import { Texture } from "pixi.js";
 import { Skill } from "../../skill";
 import { NumProperty } from "../../skill-property";
 import { BiteSpawnerComponent } from "./bite-spawner";
+import { c, numProp } from "game-zombie/config";
 
+@c
 export class BiteSkill extends Skill {
     readonly name = "Bite of the Dead";
     readonly description = "From the ground rises a huge mouth that bites enemies";
     readonly texture = Texture.from("bite");
 
-    private readonly damage = this.addProperty(new NumProperty("Damage", (level) => 10 + (level - 1) * 2));
-    private readonly radius = this.addProperty(new NumProperty("radius", (level) => 100 + (level - 1) * 10));
-    private readonly spawnCooldown = this.addProperty(
-        new NumProperty("Spawn Cooldown", (level) => 2 * 0.98 ** (level - 1)),
-    );
+    @c(numProp()) private readonly damage = this.addProperty(new NumProperty("Damage"));
+    @c(numProp()) private readonly radius = this.addProperty(new NumProperty("radius"));
+    @c(numProp()) private readonly spawnCooldown = this.addProperty(new NumProperty("Spawn Cooldown"));
 
     private component?: BiteSpawnerComponent;
 

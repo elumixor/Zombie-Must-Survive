@@ -31,14 +31,15 @@ export abstract class SkillProperty<T = void> {
 export class NumProperty extends SkillProperty<number> {
     constructor(
         name: string,
-        private readonly getValue: (level: number) => number,
+        public values: number[] = [1],
         options: { hideZero?: boolean } = {},
     ) {
         super(name, options);
     }
 
-    value(level: number) {
-        return this.getValue(level);
+    override value(level: number) {
+        level = clamp(level - 1, 0, this.values.length - 1);
+        return this.values[level];
     }
 
     protected override str(level: number) {

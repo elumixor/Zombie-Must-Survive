@@ -1,0 +1,25 @@
+{
+    "config": {
+        "Reflux Skill": {
+            "General": {
+                "damage": "[1]",
+                "cooldown": "[0.1]",
+                "pierce": "[0]",
+                "level": "0"
+            }
+        },
+        "Fart Skill": {
+            "General": {
+                "damage": "[1]",
+                "radius": "[1]",
+                "cooldown": "[1]",
+                "level": "0"
+            }
+        },
+        "Player": {
+            "General": {
+                "speed": "10"
+            }
+        }
+    }
+}

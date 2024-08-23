@@ -3,16 +3,18 @@ import { Texture } from "pixi.js";
 import { Skill } from "../../skill";
 import { NumProperty } from "../../skill-property";
 import { BoomerangComponent } from "./boomerang-component";
+import { c, numProp } from "game-zombie/config";
 
+@c
 export class BoomerangSkill extends Skill {
     readonly name = "Boomerang";
     readonly description = "Throws a leg boomerang that damages enemies along its path.";
     readonly texture = Texture.from("boomerang");
-    private readonly damage = this.addProperty(new NumProperty("Damage", (level) => 5 + level * 2));
-    private readonly instances = this.addProperty(new NumProperty("Instances", (level) => floor(level / 2 + 2)));
-    private readonly speed = this.addProperty(new NumProperty("Speed", (level) => 0.1 * level * 0.5));
-    private readonly cooldown = this.addProperty(new NumProperty("Cooldown", (level) => 0.99 ** (level - 1)));
-    private readonly lifetime = this.addProperty(new NumProperty("Lifetime", (level) => level * 1.5));
+    @c(numProp()) private readonly damage = this.addProperty(new NumProperty("Damage"));
+    @c(numProp()) private readonly instances = this.addProperty(new NumProperty("Instances"));
+    @c(numProp()) private readonly speed = this.addProperty(new NumProperty("Speed"));
+    @c(numProp()) private readonly cooldown = this.addProperty(new NumProperty("Cooldown"));
+    @c(numProp()) private readonly lifetime = this.addProperty(new NumProperty("Lifetime"));
     private readonly radius = 300;
 
     private component?: BoomerangComponent;

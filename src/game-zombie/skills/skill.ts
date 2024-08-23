@@ -1,6 +1,7 @@
 import type { Actor } from "@core";
 import { Texture } from "pixi.js";
 import { SkillProperty } from "./skill-property";
+import { c } from "game-zombie/config";
 
 export class Skill {
     readonly properties = new Array<SkillProperty>();
@@ -12,6 +13,7 @@ export class Skill {
     protected actor?: Actor;
 
     /** Level 0 means it is not yet learned */
+    @c(c.num())
     get level() {
         return this._level;
     }

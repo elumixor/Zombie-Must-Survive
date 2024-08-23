@@ -18,6 +18,7 @@
         "@poki/cli": "^0.1.15",
         "@types/bun": "latest",
         "@types/howler": "^2.2.11",
+        "sass": "^1.77.8",
         "vite": "^5.3.1",
         "vite-tsconfig-paths": "^4.3.2"
     },

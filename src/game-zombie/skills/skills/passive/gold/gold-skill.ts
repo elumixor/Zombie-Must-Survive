@@ -2,13 +2,15 @@ import { circleTexture, type Actor } from "@core";
 import { Skill } from "../../../skill";
 import { NumProperty } from "../../../skill-property";
 import { GoldComponent } from "./gold-component";
+import { c, numProp } from "game-zombie/config";
 
+@c
 export class GoldSkill extends Skill {
     readonly name = "Gold";
     readonly description = "Gives some gold over time";
     readonly texture = circleTexture({ radius: 50, color: "rgb(201, 161, 30)" });
 
-    private readonly goldPerSecond = this.addProperty(new NumProperty("Gold Per Second", (level) => level * 5));
+    @c(numProp()) private readonly goldPerSecond = this.addProperty(new NumProperty("Gold Per Second"));
 
     private component?: GoldComponent;
 

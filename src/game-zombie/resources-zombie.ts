@@ -42,5 +42,8 @@ export class ResourcesZombie extends BaseResources {
         this.mainLoader.add("ui-star", `${this.pathTo("sprites")}/ui_star.png`);
         this.mainLoader.add("ui-card-label", `${this.pathTo("sprites")}/ui_card_label.png`);
         this.mainLoader.add("ui-ad", `${this.pathTo("sprites")}/ui_ad.png`);
+
+        // Config
+        this.mainLoader.add("config", `${this.rootAssetsFolder}/config.json`);
     }
 }

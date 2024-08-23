@@ -2,11 +2,13 @@ import { Actor, CircleColliderComponent, PhysicsComponent, Vec2 } from "@core";
 import { di } from "@elumixor/di";
 import { EventEmitter } from "@elumixor/frontils";
 import { HealthComponent, HitEffectComponent } from "game-zombie/components";
+import { c } from "game-zombie/config";
 import { Controls } from "game-zombie/controls";
 import { GameState } from "game-zombie/game-state";
 import { ResourcesZombie } from "game-zombie/resources-zombie";
 import { PlayerUI } from "game-zombie/ui";
 
+@c
 export class Player extends Actor {
     readonly died = new EventEmitter();
 
@@ -15,6 +17,8 @@ export class Player extends Actor {
     private readonly controls = di.inject(Controls);
 
     gold = 0;
+
+    @c(c.num())
     speed = 10;
 
     readonly spine = this.addChild(this.resources.zombie.copy());

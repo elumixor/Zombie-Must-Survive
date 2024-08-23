@@ -1,0 +1,23 @@
+@import "./mixins.scss";
+
+.elements-container {
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 0.5rem;
+    border-bottom: 1px solid #00000023;
+    border-left: 1px solid #00000023;
+}
+
+.array-title {
+    width: unset;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.item-container.slider {
+    align-items: center;
+}
+
+.button {
+    @include action;
+}

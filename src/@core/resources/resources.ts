@@ -1,13 +1,13 @@
-import { Texture } from "pixi.js";
-import type { ISkeletonData } from "pixi-spine";
-import { DefaultMap, EventEmitter } from "@elumixor/frontils";
 import type { Spine } from "@core/spine";
+import { di } from "@elumixor/di";
+import { DefaultMap, EventEmitter } from "@elumixor/frontils";
+import type { ISkeletonData } from "pixi-spine";
+import { Texture } from "pixi.js";
+import { BehaviorSubject } from "rxjs";
+import { type IGenerationOptions, generateSpineTexture } from "./generate-spine-texture";
+import { Loader } from "./loader";
 import { SpineMetadata } from "./spine-decorator";
 import { SpinePool } from "./spine-pool";
-import { type IGenerationOptions, generateSpineTexture } from "./generate-spine-texture";
-import { di } from "@elumixor/di";
-import { BehaviorSubject } from "rxjs";
-import { Loader } from "./loader";
 
 export type IBaseFont = "myriad"; // more to be added later maybe
 
@@ -20,29 +20,19 @@ export interface IIconSymbolData {
 
 @di.injectable
 export class BaseResources {
-    /**
-     * When the spines are loaded, pools are created for each spine. We can access them using this property.
-     */
+    /** When the spines are loaded, pools are created for each spine. We can access them using this property */
     readonly spinePools = new DefaultMap(() => new BehaviorSubject<SpinePool | undefined>(undefined));
-    /**
-     * Name of the sounds' folder.
-     */
+    /** Name of the sounds' folder */
     readonly soundsFolder = "sounds";
-    /**
-     * Name of the spine files' folder.
-     */
+    /** Name of the spine files' folder */
     readonly spinesFolder = "spines";
-    /**
-     * Name of the spritesheets' folder.
-     */
+    /** Name of the spritesheets' folder */
     readonly spritesFolder = "sprites";
-    /**
-     * Name of the fonts' folder.
-     */
+    /** Name of the fonts' folder */
     readonly fontsFolder = "fonts";
 
-    // Provide events for when the resources are received
-    protected readonly additionalResourcesLoaded = new EventEmitter();
+    readonly mainLoaded = new EventEmitter();
+    readonly lazyLoaded = new EventEmitter();
 
     // Main resources should be loaded before displaying the splash screen
     protected readonly mainLoader = new Loader("main");
@@ -50,15 +40,9 @@ export class BaseResources {
     // Additional resources can be loaded in the background, they are not required immediately for the game to start
     protected readonly lazyLoader = new Loader("lazy");
 
-    /**
-     * Parses the metadata added using the {@link spine} decorator
-     */
+    /** Parses the metadata added using the {@link spine} decorator */
     protected readonly spineMetadata = new SpineMetadata(this);
-    protected readonly preloaderAnimationDone = new EventEmitter();
     protected readonly generators = [] as (() => void)[];
-
-    protected fontFamilies = new Array<string>();
-    protected fontUrls = new Array<string>();
 
     constructor(
         readonly rootAssetsFolder: string,
@@ -66,37 +50,6 @@ export class BaseResources {
     ) {
         // Remove the trailing slash if it exists
         if (rootAssetsFolder.endsWith("/")) this.rootAssetsFolder = rootAssetsFolder.slice(0, -1);
-
-        // // Once the spines are loaded, add them to the cache
-        // for (const loader of [this.mainResourcesLoader, this.additionalResourcesLoader]) {
-        //     loader.onLoad.add(({ resources }: Loader, { type, metadata, name }: LoaderResource) => {
-        //         if ((type === LoaderResource.TYPE.JSON || type === LoaderResource.TYPE.UNKNOWN) && metadata.isSpine) {
-        //             const skeletonData = resources[name].spineData;
-        //             if (skeletonData) this.loadSpine(name, skeletonData);
-        //         }
-        //     });
-        // }
-
-        // Handle extensions
-        // const allExtensions = ["dds", "png", "jpg", "json", "atlas", "xml", "fnt"];
-        // const extensions = [
-        //     ...range(1, window.resolution + 1).flatMap((i) => allExtensions.map((ext) => `@${i}x.${ext}`)),
-        //     ".dds",
-        // ];
-
-        // this.mainResourcesLoader.pre(extensionChooser(extensions));
-        // this.additionalResourcesLoader.pre(extensionChooser(extensions));
-
-        // Preloader stuff
-        // this.mainResourcesLoader.onProgress.add((loader: { progress: number }) => {
-        //     getWindow().setProgress(loader.progress);
-        //     postMessageSend("loadProgress", loader.progress);
-        // });
-        // window.addEventListener("PreloadComplete", () => {
-        //     postMessageSend("loadProgress", 100);
-        //     postMessageSend("loadCompleted");
-        //     this._preloaderAnimation.resolve();
-        // });
     }
 
     protected get spineNames() {
@@ -111,6 +64,10 @@ export class BaseResources {
         );
     }
 
+    get<T = unknown>(name: string) {
+        return this.mainLoader.get<T>(name) ?? this.lazyLoader.get<T>(name);
+    }
+
     /** Utility to return the full path to a specific resources directory */
     pathTo(to: "sounds" | "spines" | "sprites" | "fonts" | "html") {
         if (to === "html") return this.htmlFolder;
@@ -122,12 +79,16 @@ export class BaseResources {
         this.addSpines();
         await this.mainLoader.load();
         for (const spine of this.spineNames) this.loadSpine(spine);
+
+        this.mainLoaded.emit();
     }
 
     async loadLazy() {
         this.addSpines("lazy");
         await this.lazyLoader.load();
         for (const spine of this.lazySpineNames) this.loadSpine(spine);
+
+        this.lazyLoaded.emit();
     }
 
     protected addSpines(kind?: "lazy") {

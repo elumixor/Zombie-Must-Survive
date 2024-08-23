@@ -3,16 +3,18 @@ import { Texture } from "pixi.js";
 import { Skill } from "../../skill";
 import { NumProperty } from "../../skill-property";
 import { FrankenzombieComponent } from "./frankenzombie-component";
+import { c, numProp } from "game-zombie/config";
 
+@c
 export class FrankenzombieSkill extends Skill {
     readonly name = "Frankenzombie";
     readonly description = "Creates a chain lightning between enemies.";
     readonly texture = Texture.from("lightning");
 
-    private readonly damage = this.addProperty(new NumProperty("Damage", (level) => 5 + (level - 1) * 2));
-    private readonly cooldown = this.addProperty(new NumProperty("Cooldown", (level) => 1 * 0.99 ** level));
-    private readonly radius = this.addProperty(new NumProperty("Radius", (level) => 200 + level * 30));
-    private readonly numBounces = this.addProperty(new NumProperty("Bounces", (level) => 3 + level));
+    @c(numProp()) private readonly damage = this.addProperty(new NumProperty("Damage"));
+    @c(numProp()) private readonly cooldown = this.addProperty(new NumProperty("Cooldown"));
+    @c(numProp()) private readonly radius = this.addProperty(new NumProperty("Radius"));
+    @c(numProp()) private readonly numBounces = this.addProperty(new NumProperty("Bounces"));
 
     private component?: FrankenzombieComponent;
 

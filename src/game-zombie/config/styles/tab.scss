@@ -1,0 +1,15 @@
+@import "./mixins.scss";
+
+.tab-header {
+    padding: 5px;
+    border-right: 1px solid #c9c9c9;
+    margin: 0.1rem;
+    border-radius: 0.5rem !important;
+
+    @include action;
+}
+
+.tab-content {
+    background-color: #cfcfcf;
+    padding: 1rem;
+}

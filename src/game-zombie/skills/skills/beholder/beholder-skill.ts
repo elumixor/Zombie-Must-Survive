@@ -3,20 +3,20 @@ import { Texture } from "pixi.js";
 import { Skill } from "../../skill";
 import { NumProperty } from "../../skill-property";
 import { BeholderSpawnerComponent } from "./beholder-spawner";
+import { c, numProp } from "game-zombie/config";
 
+@c
 export class BeholderSkill extends Skill {
     readonly name = "Eye of the beholder";
     readonly description =
         "Spawns an eye of the beholder that stands in one place and fires a ray towards a random enemy";
     readonly texture = Texture.from("beholder");
 
-    private readonly damage = this.addProperty(new NumProperty("Damage", (level) => 5 + (level - 1) * 2));
-    private readonly fireCooldown = this.addProperty(new NumProperty("Fire Cooldown", (level) => 1 / level));
-    private readonly spawnCooldown = this.addProperty(new NumProperty("Spawn Cooldown", (level) => 5 * 0.99 ** level));
-    private readonly maxInstances = this.addProperty(
-        new NumProperty("Max Instances", (level) => max(1, floor(level * 0.75))),
-    );
-    private readonly lifetime = this.addProperty(new NumProperty("Lifetime", (level) => 10 + level));
+    @c(numProp()) private readonly damage = this.addProperty(new NumProperty("Damage"));
+    @c(numProp()) private readonly fireCooldown = this.addProperty(new NumProperty("Fire Cooldown"));
+    @c(numProp()) private readonly spawnCooldown = this.addProperty(new NumProperty("Spawn Cooldown"));
+    @c(numProp()) private readonly maxInstances = this.addProperty(new NumProperty("Max Instances"));
+    @c(numProp()) private readonly lifetime = this.addProperty(new NumProperty("Lifetime"));
 
     private readonly fireDistance = 1000;
 

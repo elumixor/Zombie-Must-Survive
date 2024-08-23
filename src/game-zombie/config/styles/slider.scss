@@ -1,0 +1,16 @@
+.slider-input {
+    min-width: 200px;
+    flex-grow: 1;
+}
+
+.slider-input-regular {
+    margin: 0 5px;
+    max-width: 2.5rem;
+    border-radius: 5px;
+    border: none;
+}
+
+.slider-container {
+    display: flex;
+    flex-grow: 1;
+}
