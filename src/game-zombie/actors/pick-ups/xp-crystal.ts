@@ -10,16 +10,18 @@ export class XpCrystal extends PickUp {
 
     xp = 1;
 
-    private readonly sprite = this.addChild(Sprite.from("crystal"));
     private readonly shadow = this.addChild(Sprite.from("shadow"));
+    private readonly sprite = this.addChild(Sprite.from("crystal"));
 
     constructor() {
         super();
 
         this.layer = "foreground";
 
-        this.sprite.anchor.set(0.5, 1);
+        this.sprite.anchor.set(0.5, 0.5);
         this.shadow.anchor.set(0.5, 0);
+
+        this.shadow.y = 5;
 
         this.collected.subscribe(() => (this.playerState.xp += this.xp));
     }
@@ -32,11 +34,10 @@ export class XpCrystal extends PickUp {
     protected override async animateShow() {
         await all(
             this.time.fromTo(this.sprite, { y: 20 }, { y: 0, duration: 0.2 }),
-            this.time.fromTo(this.shadow.scale, { x: 0, y: 0 }, { x: 1, y: 1, duration: 0.2 }),
+            this.time.fromTo(this.shadow.scale, { x: 0, y: 0 }, { x: 0.9, y: 0.9, duration: 0.2 }),
         );
 
-        this.time.to(this.sprite, { y: -20, duration: 0.5, repeat: -1, yoyo: true, ease: "sine.inOut" });
-        this.time.to(this.shadow.scale, { x: 0.7, y: 0.7, duration: 0.5, repeat: -1, yoyo: true, ease: "sine.inOut" });
+        this.time.to(this.sprite, { angle: -5, duration: 0.5, repeat: -1, yoyo: true, ease: "sine.inOut" });
     }
 
     protected override async animateHide() {

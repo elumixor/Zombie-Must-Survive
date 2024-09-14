@@ -7,7 +7,8 @@ export class GameState {
     readonly skillPool = new SkillPool();
     readonly player = new PlayerState();
 
-    readonly defaultSkills = new Set<Skill>([this.skillPool.fart, this.skillPool.reflux]);
+    // readonly defaultSkills = new Set<Skill>([this.skillPool.fart, this.skillPool.reflux]);
+    readonly defaultSkills = new Set<Skill>([this.skillPool.zombiecide, this.skillPool.reflux]);
 
     constructor() {
         for (const skill of this.defaultSkills) {

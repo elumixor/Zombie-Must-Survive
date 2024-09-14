@@ -1,0 +1,41 @@
+Spirit.png
+size:201,80
+filter:Linear,Linear
+pma:true
+spirit-arm копия
+bounds:141,15,24,29
+offsets:2,1,27,31
+rotate:90
+spirit-arm
+bounds:141,15,24,29
+offsets:2,1,27,31
+rotate:90
+spirit-body
+bounds:2,2,137,76
+offsets:3,1,141,78
+spirit-finger копия 2
+bounds:172,26,16,13
+offsets:1,1,18,15
+spirit-finger копия 3
+bounds:172,26,16,13
+offsets:1,1,18,15
+spirit-finger копия 4
+bounds:172,4,20,8
+offsets:1,2,22,11
+rotate:90
+spirit-finger копия
+bounds:172,4,20,8
+offsets:1,2,22,11
+rotate:90
+spirit-finger копия 5
+bounds:190,21,18,9
+offsets:1,1,20,11
+rotate:90
+spirit-finger
+bounds:190,21,18,9
+offsets:1,1,20,11
+rotate:90
+spirit-head
+bounds:141,41,37,55
+offsets:1,1,39,57
+rotate:90

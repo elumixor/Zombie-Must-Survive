@@ -1,0 +1,13 @@
+Jaw.png
+size:206,156
+filter:Linear,Linear
+pma:true
+jaw
+bounds:104,40,100,114
+offsets:1,1,102,116
+jaw копия
+bounds:2,40,100,114
+offsets:1,1,102,116
+jaw-ground
+bounds:2,2,144,36
+offsets:1,1,146,38

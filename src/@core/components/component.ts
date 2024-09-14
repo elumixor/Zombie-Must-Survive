@@ -21,6 +21,6 @@ export class Component {
     }
 
     destroy() {
-        return;
+        this.actor.removeComponent(this);
     }
 }

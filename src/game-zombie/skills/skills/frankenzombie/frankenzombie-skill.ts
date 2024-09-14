@@ -9,7 +9,7 @@ import { c, numProp } from "game-zombie/config";
 export class FrankenzombieSkill extends Skill {
     readonly name = "Frankenzombie";
     readonly description = "Creates a chain lightning between enemies.";
-    readonly texture = Texture.from("lightning");
+    readonly texture = Texture.from("frankenzombie");
 
     @c(numProp()) private readonly damage = this.addProperty(new NumProperty("Damage"));
     @c(numProp()) private readonly cooldown = this.addProperty(new NumProperty("Cooldown"));

@@ -9,7 +9,7 @@ import { c, numProp } from "game-zombie/config";
 export class FartSkill extends Skill {
     readonly name = "Stinky Aura";
     readonly description = "Releases a stinky cloud that damages enemies.";
-    readonly texture = Texture.from("cloud");
+    readonly texture = Texture.from("fart");
 
     @c(numProp()) protected readonly damage = this.addProperty(new NumProperty("Damage"));
     @c(numProp()) protected readonly radius = this.addProperty(new NumProperty("Radius"));

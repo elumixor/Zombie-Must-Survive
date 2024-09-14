@@ -1,12 +1,15 @@
 import { Actor, CircleColliderComponent, vec2 } from "@core";
-import { Sprite } from "pixi.js";
-import { MotionPathPlugin } from "gsap/MotionPathPlugin";
-import { gsap } from "gsap";
+import { di } from "@elumixor/di";
 import { HealthComponent } from "game-zombie/components";
+import { ResourcesZombie } from "game-zombie/resources-zombie";
+import { gsap } from "gsap";
+import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 
 gsap.registerPlugin(MotionPathPlugin);
 
 export class PoolActor extends Actor {
+    private readonly resources = di.inject(ResourcesZombie);
+
     lifetime = 1;
     damageRate = 1;
     damage = 1;
@@ -16,7 +19,7 @@ export class PoolActor extends Actor {
 
     private elapsed = 0;
     private readonly collider = this.addComponent(new CircleColliderComponent(this));
-    private readonly sprite = this.addChild(Sprite.from("pool"));
+    private readonly spine = this.addChild(this.resources.pool.copy());
 
     private readonly damagingActors = new Set<Actor>();
 
@@ -24,7 +27,6 @@ export class PoolActor extends Actor {
         super();
 
         this.layer = "foreground";
-        this.sprite.anchor.set(0.5);
         this.collider.isTrigger = true;
 
         this.collider.targetTags.add("enemy");
@@ -38,12 +40,13 @@ export class PoolActor extends Actor {
 
     startAnimation() {
         this.collider.radius = this.radius;
-        this.sprite.uniformHeight = this.radius * 3;
+        // this.spine.uniformHeight = this.radius * 3;
         this.elapsed = this.damageRate; // to start damaging immediately
+        this.spine.animate("attack", { loop: true });
 
         const duration = 0.5;
 
-        const scale = this.sprite.scale.x;
+        const scale = this.spine.scale.x;
         void this.time.fromTo(this.scale, { x: 0, y: 0 }, { x: scale, y: scale, duration });
 
         const p = { x: 0, y: 0 };
@@ -72,7 +75,7 @@ export class PoolActor extends Actor {
         this.lifetime -= ds;
         if (this.lifetime <= 0) {
             this.tickEnabled = false;
-            void this.time.to(this.sprite.scale, { x: 0, y: 0, duration: 0.2 }).then(() => {
+            void this.time.to(this.spine.scale, { x: 0, y: 0, duration: 0.2 }).then(() => {
                 this.destroy();
             });
         }

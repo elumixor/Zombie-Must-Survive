@@ -1,16 +1,19 @@
 import { Actor, CircleColliderComponent, PhysicsComponent, TrackerComponent, vec2 } from "@core";
+import { di } from "@elumixor/di";
 import { all, EventEmitter, type ISubscription } from "@elumixor/frontils";
 import { MainLevel } from "game-zombie/actors";
 import { MeleeAttackComponent } from "game-zombie/components";
-import { Sprite } from "pixi.js";
+import { ResourcesZombie } from "game-zombie/resources-zombie";
 
 export class Zombie extends Actor {
+    private readonly resources = di.inject(ResourcesZombie);
+
     readonly died = new EventEmitter();
 
     speed = 10;
     lifetime = 5;
 
-    private readonly sprite = this.addChild(Sprite.from("zombiecide"));
+    private readonly spine = this.addChild(this.resources.zombiecide.copy());
 
     private readonly tracker = this.addComponent(new TrackerComponent(this));
     private readonly physics = this.addComponent(new PhysicsComponent(this));
@@ -23,17 +26,18 @@ export class Zombie extends Actor {
         super();
 
         this.layer = "foreground";
-        this.sprite.anchor.set(0.5);
 
         this.tracker.forceRequested.subscribe((v) => {
-            this.sprite.scale.x = sign(v.x, 1) * abs(this.sprite.scale.x);
+            this.spine.scale.x = sign(v.x, 1) * abs(this.spine.scale.x);
             this.physics.addForce(v);
         });
         this.physics.drag = 0.7;
 
         this.collider.selfTags.add("zombiecide");
         this.collider.targetTags.add("zombiecide");
-        this.collider.forceRequested.subscribe((v) => this.physics.addForce(v.mul(0.1)));
+        this.collider.forceRequested.subscribe((v) => {
+            this.physics.addForce(v.mul(0.1));
+        });
         this.collider.radius = 50;
 
         this.weapon.tags.add("enemy");
@@ -42,6 +46,7 @@ export class Zombie extends Actor {
 
     beginPlay() {
         super.beginPlay();
+        this.spine.animate("run", { loop: true });
 
         void this.spawn().then(async () => {
             this.trackNextEnemy();
@@ -78,19 +83,30 @@ export class Zombie extends Actor {
             this.tracker.target = undefined;
             this.trackNextEnemy();
         });
+
+        this.weapon.onUse.subscribe(async () => {
+            await this.spine.animate("attack", { promise: true });
+            this.spine.animate("run", { loop: true });
+        });
     }
 
     private async die() {
         this.died.emit();
 
         this.currentSubscription?.unsubscribe();
+        this.tracker.destroy();
+        this.collider.destroy();
+        this.physics.destroy();
 
-        await this.time.to(this.sprite, {
-            alpha: 0,
-            angle: sign(this.sprite.scale.x) * 90,
-            duration: 1,
-            ease: "expo.out",
-        });
+        await all(
+            this.spine.animate("die", { promise: true }),
+            this.time.to(this.spine, {
+                alpha: 0,
+                duration: 0.5,
+                delay: 0.5,
+                ease: "expo.out",
+            }),
+        );
 
         this.destroy();
     }

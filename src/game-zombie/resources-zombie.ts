@@ -1,23 +1,55 @@
 import { BaseResources, Spine, spine } from "@core";
 import { di } from "@elumixor/di";
 
+export type EnemyAnimation = "attack" | "die" | "run";
+export type EnemySpine = Spine<EnemyAnimation>;
+
 @di.injectable
 export class ResourcesZombie extends BaseResources {
     @spine("zombie")
     declare readonly zombie: Spine<"animation" | "idle" | "run">;
+
+    /* Enemies */
+
+    @spine("Villager1/villager1")
+    declare readonly worker: EnemySpine;
+
+    @spine("Villager2/villager1")
+    declare readonly soldier: EnemySpine;
+
+    @spine("Villager3/villager1")
+    declare readonly doctor: EnemySpine;
+
+    /* Abilities */
+
+    @spine("Beholder/beholder")
+    declare readonly beholder: Spine<"attack" | "idle">;
+
+    @spine("Fart/fart")
+    declare readonly fart: Spine<"attack">;
+
+    @spine("Jaw/jaw")
+    declare readonly bite: Spine<"attack">;
+
+    @spine("Scream/scream")
+    declare readonly scream: Spine<"attack">;
+
+    @spine("Spirit/spirit")
+    declare readonly spirit: Spine<"fly">;
+
+    @spine("Vomit/vomit")
+    declare readonly pool: Spine<"attack">;
+
+    @spine("Zombiecid/zombiecid")
+    declare readonly zombiecide: EnemySpine;
 
     constructor() {
         super("resources/assets", "resources/html");
 
         // Environment and pickups
         this.mainLoader.add("background", `${this.pathTo("sprites")}/background.png`);
-        this.mainLoader.add("crystal", `${this.pathTo("sprites")}/crystal.png`);
+        this.mainLoader.add("crystal", `${this.pathTo("sprites")}/brain.png`);
         this.mainLoader.add("shadow", `${this.pathTo("sprites")}/shadow.png`);
-
-        // Characters
-        this.mainLoader.add("worker", `${this.pathTo("sprites")}/builder.png`);
-        this.mainLoader.add("soldier", `${this.pathTo("sprites")}/soldier.png`);
-        this.mainLoader.add("doctor", `${this.pathTo("sprites")}/medic.png`);
 
         // Summons
         this.mainLoader.add("zombiecide", `${this.pathTo("sprites")}/zombiecid.png`);
@@ -26,15 +58,16 @@ export class ResourcesZombie extends BaseResources {
         this.mainLoader.add("beholder", `${this.pathTo("sprites")}/ui_beholder.png`);
 
         // Weapons, abilities, and particles
-        this.mainLoader.add("spit", `${this.pathTo("sprites")}/plevok.png`);
         this.mainLoader.add("cloud", `${this.pathTo("sprites")}/cloud.png`);
         this.mainLoader.add("fart", `${this.pathTo("sprites")}/ui_deadly_fart.png`);
         this.mainLoader.add("lightning", `${this.pathTo("sprites")}/molniya.png`);
         this.mainLoader.add("pool", `${this.pathTo("sprites")}/luzha.png`);
         this.mainLoader.add("vomit", `${this.pathTo("sprites")}/ui_acid_vomit.png`);
-        this.mainLoader.add("boomerang", `${this.pathTo("sprites")}/boomerang_leg.png`);
+        this.mainLoader.add("boomerang", `${this.pathTo("sprites")}/legmerang.png`);
         this.mainLoader.add("frankenzombie", `${this.pathTo("sprites")}/ui_frankenzombie.png`);
+
         this.mainLoader.add("reflux", `${this.pathTo("sprites")}/ui_reflux.png`);
+        this.mainLoader.add("spit", `${this.pathTo("sprites")}/reflux.png`);
 
         // UI
         this.mainLoader.add("ui-card", `${this.pathTo("sprites")}/ui_ability_card.png`);

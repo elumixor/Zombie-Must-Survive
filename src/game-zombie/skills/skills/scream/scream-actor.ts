@@ -1,12 +1,16 @@
-import { Actor, circleSprite, CircleColliderComponent } from "@core";
+import { Actor, CircleColliderComponent } from "@core";
+import { di } from "@elumixor/di";
 import { Enemy } from "game-zombie/actors";
+import { ResourcesZombie } from "game-zombie/resources-zombie";
 
 export class ScreamActor extends Actor {
+    private readonly resources = di.inject(ResourcesZombie);
+
     freezeDuration = 1;
     duration = 1;
     radius = 1;
 
-    private readonly sprite = this.addChild(circleSprite({ radius: 50, color: "rgb(10, 162, 200)", alpha: 0.5 }));
+    private readonly sprite = this.addChild(this.resources.scream.copy());
     private readonly collider = this.addComponent(new CircleColliderComponent(this));
 
     constructor() {
@@ -33,12 +37,13 @@ export class ScreamActor extends Actor {
 
     private async animate() {
         const p = { radius: 0 };
+        this.sprite.animate("attack", { loop: true });
         await this.time.to(p, {
             radius: this.radius,
             duration: this.duration * 0.8,
             onUpdate: () => {
                 this.collider.radius = p.radius;
-                this.sprite.uniformHeight = p.radius * 2;
+                // this.sprite.uniformHeight = p.radius * 2;
             },
         });
 

@@ -1,9 +1,12 @@
 import { Actor, vec2 } from "@core";
+import { di } from "@elumixor/di";
 import { EventEmitter, type ISubscription } from "@elumixor/frontils";
 import { Enemy, MainLevel } from "game-zombie/actors";
-import { Sprite } from "pixi.js";
+import { ResourcesZombie } from "game-zombie/resources-zombie";
 
 export class Spirit extends Actor {
+    private readonly resources = di.inject(ResourcesZombie);
+
     readonly died = new EventEmitter();
 
     speed = 10;
@@ -13,7 +16,7 @@ export class Spirit extends Actor {
 
     private velocity = vec2.zero;
 
-    private readonly sprite = this.addChild(Sprite.from("spirit"));
+    private readonly spine = this.addChild(this.resources.spirit.copy());
 
     private target?: Enemy;
     private subscription?: ISubscription;
@@ -22,7 +25,6 @@ export class Spirit extends Actor {
         super();
 
         this.layer = "foreground";
-        this.sprite.anchor.set(0.5);
     }
 
     beginPlay() {
@@ -32,6 +34,7 @@ export class Spirit extends Actor {
         assert(level instanceof MainLevel, "Spirit can only be added to MainLevel");
 
         const enemies = level.enemyManager.enemies;
+        this.spine.animate("fly", { loop: true });
 
         // Handle the case with no enemies on the screen
         if (enemies.isEmpty) {
@@ -52,7 +55,7 @@ export class Spirit extends Actor {
         super.update(dt);
 
         this.position.iadd(this.velocity.withLength(this.speed * dt));
-        this.sprite.rotation = this.velocity.angle + Math.PI / 2;
+        this.spine.rotation = this.velocity.angle;
 
         if (this.target) {
             const direction = this.target.worldPosition.sub(this.worldPosition);
@@ -66,7 +69,7 @@ export class Spirit extends Actor {
     }
 
     private async fadeOut() {
-        await this.time.to(this.sprite, {
+        await this.time.to(this.spine, {
             alpha: 0,
             duration: 0.3,
             ease: "expo.out",

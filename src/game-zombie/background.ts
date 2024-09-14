@@ -3,7 +3,7 @@ import { TilingSprite } from "pixi.js";
 
 @responsive
 export class Background extends Actor implements IResizeObservable {
-    private readonly sprite = this.addChild(TilingSprite.from("background", { width: 500, height: 500 }));
+    private readonly sprite = this.addChild(TilingSprite.from("background", { width: 1280, height: 723 }));
 
     constructor() {
         super();

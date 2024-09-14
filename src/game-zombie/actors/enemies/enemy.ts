@@ -1,10 +1,14 @@
 import { Actor, CircleColliderComponent, PhysicsComponent, TrackerComponent } from "@core";
+import { di } from "@elumixor/di";
 import { HealthComponent, HitEffectComponent, MeleeAttackComponent } from "game-zombie/components";
-import { Sprite } from "pixi.js";
+import { ResourcesZombie } from "game-zombie/resources-zombie";
 import { XpCrystal } from "../pick-ups/xp-crystal";
+import type { EnemyType } from "./enemy-type";
 
 export class Enemy extends Actor {
-    readonly sprite = this.addChild(Sprite.from("worker"));
+    private readonly resources = di.inject(ResourcesZombie);
+
+    readonly spine;
 
     readonly tracker = this.addComponent(new TrackerComponent(this));
     readonly collider = this.addComponent(new CircleColliderComponent(this));
@@ -13,16 +17,17 @@ export class Enemy extends Actor {
     readonly hitEffect = this.addComponent(new HitEffectComponent(this));
     readonly weapon = this.addComponent(new MeleeAttackComponent(this));
 
-    constructor() {
+    constructor(enemyType: EnemyType) {
         super();
+
+        this.spine = this.addChild(this.resources[enemyType].copy());
+        this.spine.y = 50;
 
         this.name = "Enemy";
         this.layer = "foreground";
 
-        this.sprite.anchor.set(0.5);
-
         this.tracker.forceRequested.subscribe((v) => {
-            this.sprite.scale.x = sign(v.x, 1) * abs(this.sprite.scale.x);
+            this.spine.scale.x = sign(v.x, 1) * abs(this.spine.scale.x);
             this.physics.addForce(v);
         });
         this.tracker.lag = 0.5;
@@ -39,7 +44,7 @@ export class Enemy extends Actor {
         this.health.health = 5;
 
         this.health.damaged.subscribe((damage) => {
-            this.hitEffect.tintSprite(this.sprite);
+            this.hitEffect.tintSprite(this.spine);
             this.hitEffect.showText(damage);
         });
 
@@ -51,18 +56,20 @@ export class Enemy extends Actor {
             crystal.position.copyFrom(this);
             this.level.addChild(crystal);
 
-            await this.time.to(this.sprite, {
-                alpha: 0,
-                angle: sign(this.sprite.scale.x) * 90,
-                duration: 1,
-                ease: "expo.out",
-            });
+            await this.spine.animate("die", { promise: true });
 
             this.destroy();
         });
 
         this.weapon.tags.add("player");
         this.weapon.delay = 0.1;
+        this.weapon.onUse.subscribe(() => this.attack());
+    }
+
+    override beginPlay() {
+        super.beginPlay();
+
+        this.spine.animate("run", { loop: true });
     }
 
     freeze(seconds: number) {
@@ -73,5 +80,10 @@ export class Enemy extends Actor {
             this.tracker.tickEnabled = true;
             this.weapon.tickEnabled = true;
         });
+    }
+
+    private async attack() {
+        await this.spine.animate("attack", { promise: true });
+        this.spine.animate("run", { loop: true });
     }
 }

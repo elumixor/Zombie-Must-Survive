@@ -3,10 +3,12 @@ import { di } from "@elumixor/di";
 import { all } from "@elumixor/frontils";
 import { Enemy } from "game-zombie/actors";
 import { HealthComponent } from "game-zombie/components";
-import { Sprite } from "pixi.js";
+import { ResourcesZombie } from "game-zombie/resources-zombie";
 
 export class BiteSpawnerComponent extends Component {
     private readonly time = di.inject(Time);
+    private readonly resources = di.inject(ResourcesZombie);
+
     tickEnabled = false;
 
     damage = 1;
@@ -31,11 +33,10 @@ export class BiteSpawnerComponent extends Component {
     }
 
     private async spawn() {
-        const sprite = Sprite.from("bite");
-        sprite.anchor.set(0.5, 1);
-        sprite.parentLayer = this.level.layers.get("foreground");
-        this.level.addChild(sprite);
-        sprite.width = sprite.height = this.radius * 2;
+        const spine = this.resources.bite.copy();
+        spine.parentLayer = this.level.layers.get("foreground");
+        this.level.addChild(spine);
+        // spine.width = spine.height = this.radius * 2;
 
         let spawnPosition;
 
@@ -61,22 +62,23 @@ export class BiteSpawnerComponent extends Component {
             }
         }
 
-        this.level.setWorldPosition(sprite, spawnPosition);
-        sprite.y += this.radius;
+        this.level.setWorldPosition(spine, spawnPosition);
+        spine.y += this.radius;
 
         // Animate the bite
-        const { x, y } = sprite.scale;
+        const { x, y } = spine.scale;
         await all(
-            this.time.fromTo(sprite, { y: sprite.y + this.radius }, { y: sprite.y, duration: 0.5 }),
+            spine.animate("attack", { promise: true }),
+            this.time.fromTo(spine, { y: spine.y + this.radius }, { y: spine.y, duration: 0.5 }),
             this.time.fromTo(
-                sprite.scale,
+                spine.scale,
                 { x: x * 0.8, y: 0 },
                 { y: y * 1.5, x: x * 1.5, duration: 0.5, ease: "expo.out" },
             ),
         );
 
-        await this.time.to(sprite.scale, { x: 0, y: 0, duration: 0.2 });
-        sprite.destroy();
+        await this.time.to(spine.scale, { x: 0, y: 0, duration: 0.2 });
+        spine.destroy();
     }
 
     private enemiesAround(enemy: Actor, enemies: Actor[]) {

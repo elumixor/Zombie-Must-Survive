@@ -1,6 +1,5 @@
 import { Actor, Vec2 } from "@core";
 import { EventEmitter } from "@elumixor/frontils";
-import { Texture } from "pixi.js";
 import { Player } from "../player";
 import { Enemy } from "./enemy";
 import type { EnemyType } from "./enemy-type";
@@ -81,7 +80,7 @@ export class EnemyManager extends Actor {
     }
 
     private getEnemy(enemyType: EnemyType) {
-        const enemy = new Enemy();
+        const enemy = new Enemy(enemyType);
 
         enemy.tracker.target = this.player;
 
@@ -90,7 +89,6 @@ export class EnemyManager extends Actor {
         }
 
         if (enemyType === "doctor") {
-            enemy.sprite.texture = Texture.from("doctor");
             enemy.tracker.force = 3;
             enemy.weapon.damage = 5;
             enemy.health.maxHealth = 10;
@@ -98,7 +96,6 @@ export class EnemyManager extends Actor {
         }
 
         if (enemyType === "soldier") {
-            enemy.sprite.texture = Texture.from("soldier");
             enemy.tracker.force = 7;
             enemy.tracker.lag = 1;
             enemy.weapon.damage = 3;

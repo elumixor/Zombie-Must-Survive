@@ -1,8 +1,11 @@
 import { Component, PhysicsComponent, Time, Vec2, type Actor } from "@core";
 import { di } from "@elumixor/di";
+import { EventEmitter } from "@elumixor/frontils";
 
 export class WeaponComponent extends Component {
     protected readonly time = di.inject(Time);
+
+    readonly onUse = new EventEmitter();
 
     /** Actor tags that this weapon affects/targets  */
     readonly tags = new Set<string>();
@@ -38,6 +41,7 @@ export class WeaponComponent extends Component {
         // Otherwise, check if there are any enemies in range
         if (!this.attackWithTargetInRange || targetsInRange.nonEmpty) {
             this.cooldownFinished = false;
+            this.onUse.emit();
             this.use(targetsInRange);
             void this.time.delay(this.cooldown).then(() => (this.cooldownFinished = true));
         }
