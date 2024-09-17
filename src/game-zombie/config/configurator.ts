@@ -29,7 +29,7 @@ export class Configurator {
         textContent: "export",
     });
     private readonly header = createElement("div", { className: "c-header", parent: this.container });
-    private readonly view = createElement("div", { className: "view", parent: this.container });
+    private readonly view = createElement("div", { className: "c-view", parent: this.container });
 
     private readonly tabs = new Map<string, Tab>();
     private readonly sections = new Map<string, HTMLElement>();
@@ -64,7 +64,7 @@ export class Configurator {
     protected set visible(value: boolean) {
         if (value === this.visible) return;
 
-        this.container.style.display = value ? "block" : "none";
+        this.container.style.display = value ? "flex" : "none";
         this.visibilityChanged.emit(value);
     }
 
