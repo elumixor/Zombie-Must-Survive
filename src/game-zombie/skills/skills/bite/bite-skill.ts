@@ -1,9 +1,10 @@
 import { Actor } from "@core";
+import { c } from "game-zombie/config";
+import { cskill } from "game-zombie/skills/skill.editors";
 import { Texture } from "pixi.js";
 import { Skill } from "../../skill";
 import { NumProperty } from "../../skill-property";
 import { BiteSpawnerComponent } from "./bite-spawner";
-import { c, numProp } from "game-zombie/config";
 
 @c
 export class BiteSkill extends Skill {
@@ -11,9 +12,9 @@ export class BiteSkill extends Skill {
     readonly description = "From the ground rises a huge mouth that bites enemies";
     readonly texture = Texture.from("bite");
 
-    @c(numProp()) private readonly damage = this.addProperty(new NumProperty("Damage"));
-    @c(numProp()) private readonly radius = this.addProperty(new NumProperty("radius"));
-    @c(numProp()) private readonly spawnCooldown = this.addProperty(new NumProperty("Spawn Cooldown"));
+    @cskill private readonly damage = this.addProperty(new NumProperty("Damage"));
+    @cskill private readonly radius = this.addProperty(new NumProperty("radius"));
+    @cskill private readonly spawnCooldown = this.addProperty(new NumProperty("Spawn Cooldown"));
 
     private component?: BiteSpawnerComponent;
 
@@ -22,7 +23,12 @@ export class BiteSkill extends Skill {
         actor.addComponent(this.component);
     }
 
-    protected override update(_actor: Actor, level: number) {
+    protected override removeFromActor() {
+        this.component?.destroy();
+        this.component = undefined;
+    }
+
+    override update(_actor: Actor, level: number) {
         assert(this.component);
 
         this.component.damage = this.damage.value(level);

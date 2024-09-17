@@ -22,6 +22,13 @@ export class BoomerangComponent extends Component {
         this.updateParams();
     }
 
+    override destroy() {
+        super.destroy();
+
+        this.destroyCurrent();
+        this.timeout?.clear();
+    }
+
     updateParams() {
         if (!this.beginPlayCalled) return;
 

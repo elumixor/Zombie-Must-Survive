@@ -53,9 +53,6 @@ export class Player extends Actor {
         this.pickupCollider.selfTags.add("pickUp");
         this.pickupCollider.radius = 100;
 
-        this.playerState.skillsChanged.subscribe(() => this.updateSkills());
-        this.updateSkills();
-
         // Animate on hit - tween to red
         this.health.damaged.subscribe((damage) => {
             this.hitEffect.tintSprite(this.spine);
@@ -88,6 +85,9 @@ export class Player extends Actor {
         // Play appear animation
         this.time.fromTo(this, { alpha: 0 }, { alpha: 1, duration: 0.5 });
         this.time.fromTo(this.scale, { x: 0, y: 0 }, { x: 1, y: 1, ease: "bounce", duration: 0.5 });
+
+        // Apply skills
+        for (const skill of this.playerState.skills) skill.applyTo(this);
     }
 
     override destroy() {
@@ -129,10 +129,6 @@ export class Player extends Actor {
         const diff = targetScale - camera.scale.x;
 
         camera.scale.iadd(diff * this.followScaleSpeed * dt);
-    }
-
-    private updateSkills() {
-        for (const skill of this.playerState.skills) skill.applyTo(this);
     }
 
     private readonly onMovementChanged = ({ x: dx, y: dy }: Vec2) => {

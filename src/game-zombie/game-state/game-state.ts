@@ -7,13 +7,13 @@ export class GameState {
     readonly skillPool = new SkillPool();
     readonly player = new PlayerState();
 
-    // readonly defaultSkills = new Set<Skill>([this.skillPool.fart, this.skillPool.reflux]);
-    readonly defaultSkills = new Set<Skill>([this.skillPool.zombiecide, this.skillPool.reflux]);
+    readonly defaultSkills = new Set<Skill>([this.skillPool.reflux]);
 
     constructor() {
-        for (const skill of this.defaultSkills) {
-            skill.level++;
-            this.player.skills.add(skill);
-        }
+        // Add all skills
+        for (const skill of this.skillPool.allSkills) this.player.skills.add(skill);
+
+        // Set 1st level (make active)
+        for (const skill of this.defaultSkills) skill.level++;
     }
 }

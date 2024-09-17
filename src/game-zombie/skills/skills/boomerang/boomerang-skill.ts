@@ -1,20 +1,21 @@
 import type { Actor } from "@core";
+import { c } from "game-zombie/config";
+import { cskill } from "game-zombie/skills/skill.editors";
 import { Texture } from "pixi.js";
 import { Skill } from "../../skill";
 import { NumProperty } from "../../skill-property";
 import { BoomerangComponent } from "./boomerang-component";
-import { c, numProp } from "game-zombie/config";
 
 @c
 export class BoomerangSkill extends Skill {
     readonly name = "Boomerang";
     readonly description = "Throws a leg boomerang that damages enemies along its path.";
     readonly texture = Texture.from("boomerang");
-    @c(numProp()) private readonly damage = this.addProperty(new NumProperty("Damage"));
-    @c(numProp()) private readonly instances = this.addProperty(new NumProperty("Instances"));
-    @c(numProp()) private readonly speed = this.addProperty(new NumProperty("Speed"));
-    @c(numProp()) private readonly cooldown = this.addProperty(new NumProperty("Cooldown"));
-    @c(numProp()) private readonly lifetime = this.addProperty(new NumProperty("Lifetime"));
+    @cskill private readonly damage = this.addProperty(new NumProperty("Damage"));
+    @cskill private readonly instances = this.addProperty(new NumProperty("Instances"));
+    @cskill private readonly speed = this.addProperty(new NumProperty("Speed"));
+    @cskill private readonly cooldown = this.addProperty(new NumProperty("Cooldown"));
+    @cskill private readonly lifetime = this.addProperty(new NumProperty("Lifetime"));
     private readonly radius = 300;
 
     private component?: BoomerangComponent;
@@ -24,7 +25,12 @@ export class BoomerangSkill extends Skill {
         actor.addComponent(this.component);
     }
 
-    protected override update(_actor: Actor, level: number) {
+    protected override removeFromActor() {
+        this.component?.destroy();
+        this.component = undefined;
+    }
+
+    override update(_actor: Actor, level: number) {
         assert(this.component);
 
         this.component.radius = this.radius;

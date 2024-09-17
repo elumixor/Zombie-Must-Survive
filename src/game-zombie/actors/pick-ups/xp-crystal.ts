@@ -4,11 +4,14 @@ import { all } from "@elumixor/frontils";
 import { GameState } from "game-zombie/game-state";
 import { Sprite } from "pixi.js";
 import { PickUp } from "./pick-up";
+import { c } from "game-zombie/config";
 
+@c
 export class XpCrystal extends PickUp {
     private readonly playerState = di.inject(GameState).player;
 
-    xp = 1;
+    @c(c.num(), { tabGroup: "Player" })
+    xpGain = 1;
 
     private readonly shadow = this.addChild(Sprite.from("shadow"));
     private readonly sprite = this.addChild(Sprite.from("crystal"));
@@ -23,7 +26,7 @@ export class XpCrystal extends PickUp {
 
         this.shadow.y = 5;
 
-        this.collected.subscribe(() => (this.playerState.xp += this.xp));
+        this.collected.subscribe(() => (this.playerState.xp += this.xpGain));
     }
 
     override beginPlay() {

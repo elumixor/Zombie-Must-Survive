@@ -3,7 +3,7 @@ import { createElement } from "../create-element";
 import type { IHandleView } from "../handles";
 import type { IEditor } from "./editor";
 
-export function standardEditor(view: IHandleView): IEditor<string> {
+export function textEditor(view: IHandleView): IEditor<string> {
     const input = createElement("input", { className: "editor standard" });
 
     const changed = new EventEmitter<string>();

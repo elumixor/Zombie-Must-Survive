@@ -24,8 +24,41 @@
 
 .c-header {
     display: flex;
-    flex-wrap: wrap;
     padding: 0.25rem;
+    align-items: baseline;
+}
+
+.section-content {
+    display: flex;
+    flex-wrap: wrap;
+    border-radius: $border;
+    background-color: #d9dde2;
+    margin-top: 0.2rem;
+    padding: 0.2rem;
+}
+
+.section-header {
+    font-weight: bold;
+    font-style: italic;
+    background-color: #9aaec9 !important;
+}
+
+.c-button {
+    z-index: 10000;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    color: white;
+    background-color: #333;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.2rem;
+    cursor: pointer;
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+
+    &:hover {
+        background-color: #666;
+    }
 }
 
 .c-title {
@@ -38,8 +71,4 @@
 
 .flex-grow {
     flex-grow: 1;
-}
-
-.close-button {
-    width: 30px;
 }

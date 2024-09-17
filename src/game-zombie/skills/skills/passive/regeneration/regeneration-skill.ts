@@ -1,8 +1,9 @@
 import { circleTexture, type Actor } from "@core";
+import { c } from "game-zombie/config";
+import { cskill } from "game-zombie/skills/skill.editors";
 import { Skill } from "../../../skill";
 import { NumProperty } from "../../../skill-property";
 import { RegenerationComponent } from "./regeneration-component";
-import { c, numProp } from "game-zombie/config";
 
 @c
 export class RegenerationSkill extends Skill {
@@ -10,7 +11,7 @@ export class RegenerationSkill extends Skill {
     readonly description = "Slowly restores some health over time";
     readonly texture = circleTexture({ radius: 50, color: "rgb(216, 55, 149)" });
 
-    @c(numProp()) private readonly healthPercentRestored = this.addProperty(new NumProperty("Health Percent Restored"));
+    @cskill private readonly healthPercentRestored = this.addProperty(new NumProperty("Health Percent Restored"));
 
     private component?: RegenerationComponent;
 
@@ -19,7 +20,12 @@ export class RegenerationSkill extends Skill {
         actor.addComponent(this.component);
     }
 
-    protected override update(_actor: Actor, level: number) {
+    protected override removeFromActor() {
+        this.component?.destroy();
+        this.component = undefined;
+    }
+
+    override update(_actor: Actor, level: number) {
         assert(this.component);
 
         this.component.healthPercentRestored = this.healthPercentRestored.value(level);

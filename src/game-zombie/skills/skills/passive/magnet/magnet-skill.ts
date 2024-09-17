@@ -1,8 +1,9 @@
 import { circleTexture, type Actor } from "@core";
 import { Player } from "game-zombie/actors";
+import { c } from "game-zombie/config";
+import { cskill } from "game-zombie/skills/skill.editors";
 import { Skill } from "../../../skill";
 import { NumProperty } from "../../../skill-property";
-import { c, numProp } from "game-zombie/config";
 
 @c
 export class MagnetSkill extends Skill {
@@ -10,9 +11,9 @@ export class MagnetSkill extends Skill {
     readonly description = "Increases the range of XP crystals pick up";
     readonly texture = circleTexture({ radius: 50, color: "rgb(93, 131, 5)" });
 
-    @c(numProp()) private readonly extraRadius = this.addProperty(new NumProperty("Extra Radius"));
+    @cskill private readonly extraRadius = this.addProperty(new NumProperty("Extra Radius"));
 
-    protected override update(actor: Actor, level: number) {
+    override update(actor: Actor, level: number) {
         assert(actor instanceof Player);
 
         const previous = level === 1 ? 0 : this.extraRadius.value(level - 1);

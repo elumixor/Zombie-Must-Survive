@@ -1,9 +1,10 @@
 import { Actor } from "@core";
+import { c } from "game-zombie/config";
+import { cskill } from "game-zombie/skills/skill.editors";
 import { Texture } from "pixi.js";
 import { Skill } from "../../skill";
 import { NumProperty } from "../../skill-property";
 import { BeholderSpawnerComponent } from "./beholder-spawner";
-import { c, numProp } from "game-zombie/config";
 
 @c
 export class BeholderSkill extends Skill {
@@ -12,11 +13,11 @@ export class BeholderSkill extends Skill {
         "Spawns an eye of the beholder that stands in one place and fires a ray towards a random enemy";
     readonly texture = Texture.from("beholder");
 
-    @c(numProp()) private readonly damage = this.addProperty(new NumProperty("Damage"));
-    @c(numProp()) private readonly fireCooldown = this.addProperty(new NumProperty("Fire Cooldown"));
-    @c(numProp()) private readonly spawnCooldown = this.addProperty(new NumProperty("Spawn Cooldown"));
-    @c(numProp()) private readonly maxInstances = this.addProperty(new NumProperty("Max Instances"));
-    @c(numProp()) private readonly lifetime = this.addProperty(new NumProperty("Lifetime"));
+    @cskill private readonly damage = this.addProperty(new NumProperty("Damage"));
+    @cskill private readonly fireCooldown = this.addProperty(new NumProperty("Fire Cooldown"));
+    @cskill private readonly spawnCooldown = this.addProperty(new NumProperty("Spawn Cooldown"));
+    @cskill private readonly maxInstances = this.addProperty(new NumProperty("Max Instances"));
+    @cskill private readonly lifetime = this.addProperty(new NumProperty("Lifetime"));
 
     private readonly fireDistance = 1000;
 
@@ -27,7 +28,12 @@ export class BeholderSkill extends Skill {
         actor.addComponent(this.component);
     }
 
-    protected override update(_actor: Actor, level: number) {
+    protected override removeFromActor() {
+        this.component?.destroy();
+        this.component = undefined;
+    }
+
+    override update(_actor: Actor, level: number) {
         assert(this.component);
 
         this.component.damage = this.damage.value(level);

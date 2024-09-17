@@ -10,17 +10,22 @@ export class Skill {
     readonly texture = Texture.EMPTY;
     readonly maxLevel?: number;
     protected _level = 0;
-    protected actor?: Actor;
+    actor?: Actor;
 
-    /** Level 0 means it is not yet learned */
-    @c(c.num())
+    /** Level 0 means it is not yet learned and should not be active on the actor */
+    @c(c.num({ min: 0, max: 5, slider: true, step: 1 }), { saved: false })
     get level() {
         return this._level;
     }
     set level(value) {
-        if (this._level === value) return;
+        const previous = this._level;
+        if (previous === value) return;
         this._level = value;
-        if (this.actor) this.update(this.actor, value);
+
+        if (previous === 0 && value > 0 && this.actor) this.addToActor(this.actor);
+        else if (previous > 0 && value === 0 && this.actor) this.removeFromActor(this.actor);
+
+        if (this.actor && value > 0) this.update(this.actor, value);
     }
 
     get currentDiff() {
@@ -32,11 +37,12 @@ export class Skill {
         logs(`Applying skill ${this.name}`);
 
         if (this.actor !== actor) {
+            if (this.level > 0 && this.actor) this.removeFromActor(this.actor);
             this.actor = actor;
-            this.addToActor(actor);
+            if (this.level > 0) this.addToActor(actor);
         }
 
-        this.update(actor, this.level);
+        if (this.level > 0) this.update(actor, this.level);
     }
 
     diff(levelBefore: number, levelAfter?: number) {
@@ -55,7 +61,11 @@ export class Skill {
         return;
     }
 
-    protected update(_actor: Actor, _level: number) {
+    protected removeFromActor(_actor: Actor) {
+        return;
+    }
+
+    update(_actor: Actor, _level: number) {
         return;
     }
 }

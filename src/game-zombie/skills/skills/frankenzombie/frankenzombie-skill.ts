@@ -1,9 +1,10 @@
 import type { Actor } from "@core";
+import { c } from "game-zombie/config";
+import { cskill } from "game-zombie/skills/skill.editors";
 import { Texture } from "pixi.js";
 import { Skill } from "../../skill";
 import { NumProperty } from "../../skill-property";
 import { FrankenzombieComponent } from "./frankenzombie-component";
-import { c, numProp } from "game-zombie/config";
 
 @c
 export class FrankenzombieSkill extends Skill {
@@ -11,10 +12,10 @@ export class FrankenzombieSkill extends Skill {
     readonly description = "Creates a chain lightning between enemies.";
     readonly texture = Texture.from("frankenzombie");
 
-    @c(numProp()) private readonly damage = this.addProperty(new NumProperty("Damage"));
-    @c(numProp()) private readonly cooldown = this.addProperty(new NumProperty("Cooldown"));
-    @c(numProp()) private readonly radius = this.addProperty(new NumProperty("Radius"));
-    @c(numProp()) private readonly numBounces = this.addProperty(new NumProperty("Bounces"));
+    @cskill private readonly damage = this.addProperty(new NumProperty("Damage"));
+    @cskill private readonly cooldown = this.addProperty(new NumProperty("Cooldown"));
+    @cskill private readonly radius = this.addProperty(new NumProperty("Radius"));
+    @cskill private readonly numBounces = this.addProperty(new NumProperty("Bounces"));
 
     private component?: FrankenzombieComponent;
 
@@ -23,7 +24,12 @@ export class FrankenzombieSkill extends Skill {
         actor.addComponent(this.component);
     }
 
-    protected override update(_actor: Actor, level: number) {
+    protected override removeFromActor() {
+        this.component?.destroy();
+        this.component = undefined;
+    }
+
+    override update(_actor: Actor, level: number) {
         assert(this.component);
 
         this.component.damage = this.damage.value(level);

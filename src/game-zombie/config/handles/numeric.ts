@@ -1,53 +1,45 @@
-import { EventEmitter } from "@elumixor/frontils";
-import { createElement } from "../create-element";
+import { numberEditor, sliderEditor, type NumericOptions } from "../editors";
 import { Handle, type IHandleView } from "./handle";
 import "./numeric.scss";
 
-interface NumericOptions {
+type ExtendedNumericOptions = NumericOptions & {
     slider?: boolean;
-    min?: number;
-    max?: number;
-    rounding?: number;
-}
+};
 
 export class NumericHandle extends Handle<number> {
-    private input!: HTMLInputElement;
+    private update!: (value: number) => void;
 
-    constructor(protected readonly options: NumericOptions = {}) {
+    constructor(protected readonly options: ExtendedNumericOptions = {}) {
         super();
     }
 
-    protected override set(value: number) {
+    protected override set(value: number, instance: object) {
         const { min = -Infinity, max = Infinity } = this.options;
 
         // Clamp
         value = clamp(value, min, max);
 
         // Round
-        value = round(value, this.options.rounding);
+        value = round(value, this.options.step);
 
-        super.set(value);
+        super.set(value, instance);
     }
 
     override addToView(view: IHandleView) {
-        this.input = createElement("input", { className: "handle numeric" });
-        this.input.type = "number";
-        this.input.step = this.options.rounding?.toString() ?? "any";
-        this.input.value = "0";
+        const { changed, update } = this.options.slider
+            ? sliderEditor(view, this.options)
+            : numberEditor(view, this.options);
 
-        const viewChanged = new EventEmitter<number>();
+        this.update = update;
 
-        view.view.appendChild(this.input);
-        this.input.addEventListener("input", () => viewChanged.emit(parseFloat(this.input.value)));
-
-        return viewChanged;
+        return changed;
     }
 
     override updateView(value: number) {
-        this.input.value = value.toString();
+        this.update(value);
     }
 }
 
-export function num(options?: NumericOptions) {
+export function num(options?: ExtendedNumericOptions) {
     return new NumericHandle(options);
 }

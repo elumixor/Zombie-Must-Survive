@@ -3,8 +3,12 @@ import { createElement } from "../create-element";
 import type { IHandleView } from "../handles";
 import "../styles/slider.scss";
 import type { IEditor } from "./editor";
+import type { NumericOptions } from "./number";
 
-export function sliderEditor(view: IHandleView, min: number, max: number, step: number): IEditor<number> {
+export function sliderEditor(
+    view: IHandleView,
+    { min = -10, max = 10, step = 0.5, defaultValue = 0 }: NumericOptions,
+): IEditor<number> {
     // Create the input element for the slider
     const sliderInput = createElement("input", {
         className: "slider-input",
@@ -29,6 +33,7 @@ export function sliderEditor(view: IHandleView, min: number, max: number, step: 
     regularInput.min = min.toString();
     regularInput.max = max.toString();
     regularInput.step = step.toString();
+    regularInput.value = defaultValue.toString();
 
     // Create an event emitter
     const changed = new EventEmitter<number>();
