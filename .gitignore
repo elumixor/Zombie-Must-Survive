@@ -177,3 +177,6 @@ dist
 
 # Bun
 .nx/
+
+# For assets
+resources/**/*.ini

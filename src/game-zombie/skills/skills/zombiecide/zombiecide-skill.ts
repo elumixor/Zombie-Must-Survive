@@ -10,7 +10,7 @@ import { ZombiecideComponent } from "./zombiecide-component";
 export class ZombiecideSkill extends Skill {
     readonly name = "Zombiecide";
     readonly description = "Whenever enemy dies, it spawns a small zombie that attacks enemies.";
-    readonly texture = Texture.from("zombiecide");
+    readonly texture = Texture.from("ui-zombiecide");
 
     @cskill private readonly damage = this.addProperty(new NumProperty("Damage"));
     @cskill private readonly lifetime = this.addProperty(new NumProperty("Lifetime"));

@@ -10,7 +10,7 @@ import { FrankenzombieComponent } from "./frankenzombie-component";
 export class FrankenzombieSkill extends Skill {
     readonly name = "Frankenzombie";
     readonly description = "Creates a chain lightning between enemies.";
-    readonly texture = Texture.from("frankenzombie");
+    readonly texture = Texture.from("ui-frankenzombie");
 
     @cskill private readonly damage = this.addProperty(new NumProperty("Damage"));
     @cskill private readonly cooldown = this.addProperty(new NumProperty("Cooldown"));

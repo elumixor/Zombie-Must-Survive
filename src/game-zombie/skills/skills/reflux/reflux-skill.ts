@@ -10,7 +10,7 @@ import { NumProperty } from "../../skill-property";
 export class RefluxSkill extends Skill {
     readonly name = "Reflux";
     readonly description = "Spit toxic projectiles at enemies.";
-    readonly texture = Texture.from("reflux");
+    readonly texture = Texture.from("ui-reflux");
 
     private readonly numProjectiles = this.addProperty(new NumProperty("Projectiles", [1]));
 

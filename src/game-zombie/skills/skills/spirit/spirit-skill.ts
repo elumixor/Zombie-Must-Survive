@@ -10,7 +10,7 @@ import { SpiritComponent } from "./spirit-component";
 export class SpiritSkill extends Skill {
     readonly name = "Angry Spirit";
     readonly description = "Creates angry spirits from dead enemies with some chance.";
-    readonly texture = Texture.from("spirit");
+    readonly texture = Texture.from("ui-spirit");
 
     @cskill private readonly numSpirits = this.addProperty(new NumProperty("Number of spirits"));
     @cskill private readonly damage = this.addProperty(new NumProperty("Damage"));

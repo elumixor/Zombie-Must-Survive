@@ -10,7 +10,7 @@ import { PoolSpawnerComponent } from "./pool-spawner";
 export class PoolSkill extends Skill {
     readonly name = "Acid Pool";
     readonly description = "From the ground rises a huge mouth that bites enemies";
-    readonly texture = Texture.from("pool");
+    readonly texture = Texture.from("ui-pool");
 
     @cskill private readonly damage = this.addProperty(new NumProperty("Damage"));
     @cskill private readonly damageRate = this.addProperty(new NumProperty("Damage Rate"));

@@ -6,41 +6,41 @@ export type EnemySpine = Spine<EnemyAnimation>;
 
 @di.injectable
 export class ResourcesZombie extends BaseResources {
-    @spine("Zombie/zombie")
+    @spine("zombie/zombie")
     declare readonly zombie: Spine<"animation" | "idle" | "run">;
 
     /* Enemies */
 
-    @spine("Villager1/villager1")
+    @spine("enemies/villager1/villager1")
     declare readonly worker: EnemySpine;
 
-    @spine("Villager2/villager1")
+    @spine("enemies/villager2/villager2")
     declare readonly soldier: EnemySpine;
 
-    @spine("Villager3/villager1")
+    @spine("enemies/villager3/villager3")
     declare readonly doctor: EnemySpine;
 
     /* Abilities */
 
-    @spine("Beholder/beholder")
+    @spine("abilities/beholder/beholder")
     declare readonly beholder: Spine<"attack" | "idle">;
 
-    @spine("Fart/fart")
+    @spine("abilities/fart/fart")
     declare readonly fart: Spine<"attack">;
 
-    @spine("Jaw/jaw")
+    @spine("abilities/jaw/jaw")
     declare readonly bite: Spine<"attack">;
 
-    @spine("Scream/scream")
+    @spine("abilities/scream/scream")
     declare readonly scream: Spine<"attack">;
 
-    @spine("Spirit/spirit")
+    @spine("abilities/spirit/spirit")
     declare readonly spirit: Spine<"fly">;
 
-    @spine("Vomit/vomit")
+    @spine("abilities/vomit/vomit")
     declare readonly pool: Spine<"attack">;
 
-    @spine("Zombiecid/zombiecid")
+    @spine("abilities/zombiecid/zombiecid")
     declare readonly zombiecide: EnemySpine;
 
     constructor() {
@@ -52,28 +52,29 @@ export class ResourcesZombie extends BaseResources {
         this.mainLoader.add("shadow", `${this.pathTo("sprites")}/shadow.png`);
 
         // Summons
-        this.mainLoader.add("zombiecide", `${this.pathTo("sprites")}/zombiecid.png`);
-        this.mainLoader.add("spirit", `${this.pathTo("sprites")}/spirit.png`);
         this.mainLoader.add("bite", `${this.pathTo("sprites")}/ui_abyss_bite.png`);
         this.mainLoader.add("beholder", `${this.pathTo("sprites")}/ui_beholder.png`);
 
         // Weapons, abilities, and particles
-        this.mainLoader.add("cloud", `${this.pathTo("sprites")}/cloud.png`);
-        this.mainLoader.add("fart", `${this.pathTo("sprites")}/ui_deadly_fart.png`);
-        this.mainLoader.add("lightning", `${this.pathTo("sprites")}/molniya.png`);
-        this.mainLoader.add("pool", `${this.pathTo("sprites")}/luzha.png`);
-        this.mainLoader.add("vomit", `${this.pathTo("sprites")}/ui_acid_vomit.png`);
-        this.mainLoader.add("boomerang", `${this.pathTo("sprites")}/legmerang.png`);
-        this.mainLoader.add("frankenzombie", `${this.pathTo("sprites")}/ui_frankenzombie.png`);
-
-        this.mainLoader.add("reflux", `${this.pathTo("sprites")}/ui_reflux.png`);
+        this.mainLoader.add("lightning", `${this.pathTo("sprites")}/frankenzombie.png`);
         this.mainLoader.add("spit", `${this.pathTo("sprites")}/reflux.png`);
+        this.mainLoader.add("boomerang", `${this.pathTo("sprites")}/legmerang.png`);
+
+        // UI
+        this.mainLoader.add("ui-fart", `${this.pathTo("sprites")}/ui_deadly_fart.png`);
+        this.mainLoader.add("ui-vomit", `${this.pathTo("sprites")}/ui_acid_vomit.png`);
+        this.mainLoader.add("ui-boomerang", `${this.pathTo("sprites")}/legmerang.png`);
+        this.mainLoader.add("ui-frankenzombie", `${this.pathTo("sprites")}/ui_frankenzombie.png`);
+        this.mainLoader.add("ui-reflux", `${this.pathTo("sprites")}/ui_reflux.png`);
+        this.mainLoader.add("ui-spirit", `${this.pathTo("sprites")}/ui_evil_spirit.png`);
+        this.mainLoader.add("ui-pool", `${this.pathTo("sprites")}/ui_acid_vomit.png`);
+        this.mainLoader.add("ui-zombiecide", `${this.pathTo("sprites")}/ui_zombiecide.png`);
 
         // UI
         this.mainLoader.add("ui-card", `${this.pathTo("sprites")}/ui_ability_card.png`);
         this.mainLoader.add("ui-card-rare", `${this.pathTo("sprites")}/ui_ability_card_rare.png`);
-        this.mainLoader.add("ui-star", `${this.pathTo("sprites")}/ui_star.png`);
         this.mainLoader.add("ui-card-label", `${this.pathTo("sprites")}/ui_card_label.png`);
+        this.mainLoader.add("ui-star", `${this.pathTo("sprites")}/ui_star.png`);
         this.mainLoader.add("ui-ad", `${this.pathTo("sprites")}/ui_ad.png`);
 
         // Config
