@@ -4,18 +4,13 @@
 import { getLocalStorage } from "@core";
 import { EventEmitter, nonNull, type Constructor } from "@elumixor/frontils";
 import { configurator } from "../configurator";
+import type { IHandleView } from "../imy-element";
 
 export interface HandleOptions {
     tabGroup?: string;
     saved?: boolean;
     section?: string;
     onUpdate?: (instances: Iterable<object>, value: unknown) => void;
-}
-
-export interface IHandleView {
-    view: HTMLDivElement;
-    title: HTMLParagraphElement;
-    container: HTMLDivElement;
 }
 
 export abstract class Handle<T = unknown, U = T> {
@@ -68,7 +63,7 @@ export abstract class Handle<T = unknown, U = T> {
         this.view = view;
         this.id = id;
 
-        view.addHandle(this);
+        // view.addChild(this);
 
         if (this.saved) {
             // Try loading the value from the storage

@@ -46,36 +46,38 @@ export class ResourcesZombie extends BaseResources {
     constructor() {
         super("resources/assets", "resources/html");
 
+        const sprites = this.pathTo("sprites");
+
         // Environment and pickups
-        this.mainLoader.add("background", `${this.pathTo("sprites")}/background.png`);
-        this.mainLoader.add("crystal", `${this.pathTo("sprites")}/brain.png`);
-        this.mainLoader.add("shadow", `${this.pathTo("sprites")}/shadow.png`);
+        this.mainLoader.add("background", `${sprites}/background.png`);
+        this.mainLoader.add("crystal", `${sprites}/brain.png`);
+        this.mainLoader.add("shadow", `${sprites}/shadow.png`);
 
         // Summons
-        this.mainLoader.add("bite", `${this.pathTo("sprites")}/ui_abyss_bite.png`);
-        this.mainLoader.add("beholder", `${this.pathTo("sprites")}/ui_beholder.png`);
+        this.mainLoader.add("bite", `${sprites}/ui_abyss_bite.png`);
+        this.mainLoader.add("beholder", `${sprites}/ui_beholder.png`);
 
         // Weapons, abilities, and particles
-        this.mainLoader.add("lightning", `${this.pathTo("sprites")}/frankenzombie.png`);
-        this.mainLoader.add("spit", `${this.pathTo("sprites")}/reflux.png`);
-        this.mainLoader.add("boomerang", `${this.pathTo("sprites")}/legmerang.png`);
+        this.mainLoader.add("lightning", `${sprites}/frankenzombie.png`);
+        this.mainLoader.add("spit", `${sprites}/reflux.png`);
+        this.mainLoader.add("boomerang", `${sprites}/legmerang.png`);
 
         // UI
-        this.mainLoader.add("ui-fart", `${this.pathTo("sprites")}/ui_deadly_fart.png`);
-        this.mainLoader.add("ui-vomit", `${this.pathTo("sprites")}/ui_acid_vomit.png`);
-        this.mainLoader.add("ui-boomerang", `${this.pathTo("sprites")}/legmerang.png`);
-        this.mainLoader.add("ui-frankenzombie", `${this.pathTo("sprites")}/ui_frankenzombie.png`);
-        this.mainLoader.add("ui-reflux", `${this.pathTo("sprites")}/ui_reflux.png`);
-        this.mainLoader.add("ui-spirit", `${this.pathTo("sprites")}/ui_evil_spirit.png`);
-        this.mainLoader.add("ui-pool", `${this.pathTo("sprites")}/ui_acid_vomit.png`);
-        this.mainLoader.add("ui-zombiecide", `${this.pathTo("sprites")}/ui_zombiecide.png`);
+        this.mainLoader.add("ui-fart", `${sprites}/ui_deadly_fart.png`);
+        this.mainLoader.add("ui-vomit", `${sprites}/ui_acid_vomit.png`);
+        this.mainLoader.add("ui-boomerang", `${sprites}/legmerang.png`);
+        this.mainLoader.add("ui-frankenzombie", `${sprites}/ui_frankenzombie.png`);
+        this.mainLoader.add("ui-reflux", `${sprites}/ui_reflux.png`);
+        this.mainLoader.add("ui-spirit", `${sprites}/ui_evil_spirit.png`);
+        this.mainLoader.add("ui-pool", `${sprites}/ui_acid_vomit.png`);
+        this.mainLoader.add("ui-zombiecide", `${sprites}/ui_zombiecide.png`);
 
         // UI
-        this.mainLoader.add("ui-card", `${this.pathTo("sprites")}/ui_ability_card.png`);
-        this.mainLoader.add("ui-card-rare", `${this.pathTo("sprites")}/ui_ability_card_rare.png`);
-        this.mainLoader.add("ui-card-label", `${this.pathTo("sprites")}/ui_card_label.png`);
-        this.mainLoader.add("ui-star", `${this.pathTo("sprites")}/ui_star.png`);
-        this.mainLoader.add("ui-ad", `${this.pathTo("sprites")}/ui_ad.png`);
+        this.mainLoader.add("ui-card", `${sprites}/ui_ability_card.png`);
+        this.mainLoader.add("ui-card-rare", `${sprites}/ui_ability_card_rare.png`);
+        this.mainLoader.add("ui-card-label", `${sprites}/ui_card_label.png`);
+        this.mainLoader.add("ui-star", `${sprites}/ui_star.png`);
+        this.mainLoader.add("ui-ad", `${sprites}/ui_ad.png`);
 
         // Config
         this.mainLoader.add("config", `${this.rootAssetsFolder}/config.json`);

@@ -40,7 +40,7 @@ export class CircleColliderComponent extends Component {
     }
 
     override destroy() {
-        this.collisionManager.delete(this);
+        this.level.getComponent(CollisionManager)?.delete(this);
         super.destroy();
     }
 }

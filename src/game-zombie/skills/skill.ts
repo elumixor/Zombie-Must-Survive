@@ -13,7 +13,7 @@ export class Skill {
     actor?: Actor;
 
     /** Level 0 means it is not yet learned and should not be active on the actor */
-    @c(c.num({ min: 0, max: 5, slider: true, step: 1 }), { saved: false })
+    @c(c.num({ min: 0, max: 5, slider: true, step: 1 }), { saved: false, section: "Skills" })
     get level() {
         return this._level;
     }

@@ -1,7 +1,8 @@
 import { EventEmitter } from "@elumixor/frontils";
 import { createElement } from "../create-element";
-import type { IHandleView } from "../handles";
 import type { IEditor } from "./editor";
+import type { IHandleView } from "../imy-element";
+import "./number.scss";
 
 export interface NumericOptions {
     min?: number;
@@ -14,7 +15,7 @@ export function numberEditor(
     view: IHandleView,
     { min, max, step, defaultValue = 0 }: NumericOptions = {},
 ): IEditor<number> {
-    const input = createElement("input", { className: "editor standard" });
+    const input = createElement("input", { className: "editor number" });
     input.type = "number";
 
     if (min !== undefined) input.min = min.toString();
@@ -25,7 +26,7 @@ export function numberEditor(
 
     const changed = new EventEmitter<number>();
 
-    view.view.appendChild(input);
+    view.content.appendChild(input);
     input.addEventListener("input", () => changed.emit(Number(input.value)));
 
     const update = (value: number) => (input.value = String(value));

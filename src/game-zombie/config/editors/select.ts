@@ -1,7 +1,7 @@
 import { EventEmitter } from "@elumixor/frontils";
 import { createElement } from "../create-element";
-import type { IHandleView } from "../handles";
 import type { IEditor } from "./editor";
+import type { IHandleView } from "../imy-element";
 
 export interface SelectOptions<T> {
     options?: T[];
@@ -23,7 +23,7 @@ export function selectEditor<const T>(view: IHandleView, { options, defaultValue
 
     const changed = new EventEmitter<T>();
 
-    view.view.appendChild(select);
+    view.container.appendChild(select);
     select.addEventListener("change", () => changed.emit(options![select.selectedIndex]));
 
     const update = (value: T) => {

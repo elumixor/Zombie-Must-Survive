@@ -1,6 +1,6 @@
 import { numberEditor, sliderEditor, type NumericOptions } from "../editors";
-import { Handle, type IHandleView } from "./handle";
-import "./numeric.scss";
+import type { IHandleView } from "../imy-element";
+import { Handle } from "./handle";
 
 type ExtendedNumericOptions = NumericOptions & {
     slider?: boolean;

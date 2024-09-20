@@ -1,0 +1,20 @@
+@import "../styles/mixins.scss";
+
+.array-container {
+    margin-right: 0;
+    margin-left: 0;
+}
+
+.array-button {
+    margin-left: 10px;
+}
+
+.array-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.special-array-handle-view {
+    margin-right: 0;
+}

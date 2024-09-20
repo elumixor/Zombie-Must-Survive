@@ -26,7 +26,7 @@ export class Resizer {
         protected readonly renderer: IRenderer,
         options: RequiredScales,
     ) {
-        window.addEventListener("resize", () => this.update(), false);
+        new ResizeObserver(() => this.update()).observe(this.canvasContainer);
 
         const landscape = options.landscape;
         const portrait = options.portrait;
@@ -113,7 +113,7 @@ export class Resizer {
     }
 
     protected calculateDimensions() {
-        const { clientWidth, clientHeight } = document.documentElement;
+        const { clientWidth, clientHeight } = this.canvasContainer;
 
         const orientation = clientWidth > clientHeight ? "landscape" : "portrait";
 

@@ -1,59 +1,36 @@
 @import "./variables.scss";
 @import "./mixins.scss";
 
-.noround {
-    border-radius: 0 !important;
-}
-
 .configurator {
     font-family: Roboto, sans-serif;
     color: $gray;
 
-    position: fixed;
-    top: 10px;
-    left: 10px;
+    position: relative;
     min-width: 200px;
-    background-color: rgba(255, 255, 255, 0.9);
     background-color: rgba(255, 255, 255, 0.9);
     border-radius: 5px;
     max-width: 450px;
+    width: 100%;
     z-index: 10000;
 
-    max-height: 90%;
     display: flex;
     flex-direction: column;
+    user-select: none;
 }
 
-.c-view {
-    overflow: scroll;
+.configurator-content {
+    overflow-y: scroll;
 }
 
 .c-header {
     display: flex;
     padding: 0.25rem;
     align-items: baseline;
-}
-
-.section-content {
-    display: flex;
-    flex-wrap: wrap;
-    border-radius: $border;
-    background-color: #d9dde2;
-    margin-top: 0.2rem;
-    padding: 0.2rem;
-}
-
-.section-header {
-    font-weight: bold;
-    font-style: italic;
-    background-color: #9aaec9 !important;
+    justify-content: end;
 }
 
 .c-button {
-    z-index: 10000;
-    position: fixed;
-    top: 15px;
-    left: 15px;
+    margin: 1px;
     color: white;
     background-color: #333;
     padding: 0.2rem 0.5rem;
@@ -61,20 +38,39 @@
     cursor: pointer;
     font-family: Roboto, sans-serif;
     font-size: 14px;
+    border: none;
 
     &:hover {
         background-color: #666;
     }
 }
 
+.show-button {
+    z-index: 99999;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+}
+
 .c-title {
     padding: 0.5rem 0.25rem;
 }
 
-.flex {
-    display: flex;
+.c-dragger {
+    cursor: move;
+    flex-grow: 1;
+    width: 10px;
+    background-color: #5e2783;
+    position: absolute;
+    top: 0;
+    right: -10px;
+    bottom: 0;
+
+    &:hover {
+        background-color: #c77bfa;
+    }
 }
 
-.flex-grow {
-    flex-grow: 1;
+.w-full {
+    width: 100%;
 }

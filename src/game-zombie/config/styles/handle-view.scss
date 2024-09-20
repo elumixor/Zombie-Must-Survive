@@ -1,0 +1,15 @@
+.handle-view-container {
+    display: flex;
+    margin: 5px;
+    align-items: baseline;
+}
+
+.handle-view-header {
+    margin: 0;
+    min-width: 7rem;
+}
+
+.handle-view-content {
+    flex-grow: 1;
+    display: flex;
+}

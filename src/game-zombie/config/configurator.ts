@@ -1,40 +1,49 @@
 import { getLocalStorage } from "@core";
 import { EventEmitter, nonNull } from "@elumixor/frontils";
-import { createElement } from "./create-element";
+import { createElement, createView } from "./create-element";
+import { Toggle } from "./toggle";
 import "./styles/configurator.scss";
-import { Tab } from "./tab";
 
 export class Configurator {
-    readonly visibilityChanged = new EventEmitter<boolean>();
     readonly reloadRequested = new EventEmitter();
 
     private readonly localStorage = nonNull(getLocalStorage());
 
     private readonly container = createElement("div", { className: "configurator" });
     private readonly topHeader = createElement("div", { className: "c-header", parent: this.container });
-    private readonly title = createElement("div", {
-        className: "c-title secondary flex-grow",
-        parent: this.topHeader,
-        textContent: "Configurator",
-    });
 
     private readonly refreshButton = createElement("div", {
-        className: "action noround",
+        className: "c-button",
         parent: this.topHeader,
-        textContent: "refresh",
+        textContent: "reset",
     });
     private readonly exportButton = createElement("div", {
-        className: "action noround",
+        className: "c-button",
         parent: this.topHeader,
         textContent: "export",
     });
-    private readonly header = createElement("div", { className: "c-header", parent: this.container });
-    private readonly view = createElement("div", { className: "c-view", parent: this.container });
+    private readonly closeButton = createElement("div", {
+        className: "c-button",
+        parent: this.topHeader,
+        textContent: "x",
+    });
 
-    private readonly tabs = new Map<string, Tab>();
-    private readonly sections = new Map<string, HTMLElement>();
+    private readonly content = new Toggle("Content", { open: true, header: false });
+    private readonly dragger = createElement("div", { className: "c-dragger", parent: this.container });
+
+    // Add the button to show/hide the configurator
+    private readonly showButton = createElement("div", {
+        className: "c-button show-button",
+        parent: document.body,
+        textContent: "show configurator (c)",
+    });
 
     constructor() {
+        document.body.prepend(this.container);
+
+        this.container.appendChild(this.content.container);
+        this.content.container.classList.add("configurator-content");
+
         // Show itself on the "R/r" key press
         document.addEventListener("keydown", (e) => {
             if (e.code === "KeyC") this.visible = !this.visible;
@@ -42,19 +51,32 @@ export class Configurator {
 
         this.exportButton.addEventListener("click", () => this.export());
         this.refreshButton.addEventListener("click", () => this.reloadRequested.emit());
+        this.showButton.addEventListener("click", () => (this.visible = true));
+        this.closeButton.addEventListener("click", () => (this.visible = false));
 
-        this.visible = false;
+        this.visible = true;
 
-        // Add the button to show/hide the configurator
-        const button = createElement("div", {
-            className: "c-button",
-            parent: document.body,
-            textContent: "show configurator",
+        // Add the resize functionality for the dragger
+        let isDragging = false;
+        let offsetX = 0;
+        let initialWidth = 0;
+
+        this.dragger.addEventListener("mousedown", (e) => {
+            isDragging = true;
+
+            offsetX = e.clientX;
+            initialWidth = this.container.offsetWidth;
         });
 
-        button.addEventListener("click", () => {
-            this.visible = !this.visible;
-            button.textContent = this.visible ? "hide configurator" : "show configurator";
+        document.addEventListener("mousemove", (e) => {
+            if (!isDragging) return;
+
+            const width = initialWidth + e.clientX - offsetX;
+            this.container.style.maxWidth = `${width}px`;
+        });
+
+        document.addEventListener("mouseup", () => {
+            isDragging = false;
         });
     }
 
@@ -62,10 +84,8 @@ export class Configurator {
         return this.container.style.display !== "none";
     }
     protected set visible(value: boolean) {
-        if (value === this.visible) return;
-
+        this.showButton.style.display = value ? "none" : "block";
         this.container.style.display = value ? "flex" : "none";
-        this.visibilityChanged.emit(value);
     }
 
     getView(propertyName: string, name?: string, section?: string) {
@@ -78,101 +98,44 @@ export class Configurator {
         tab = this.transformText(tab);
         group = this.transformText(group);
 
-        const id = `${tab}:${group}:${propertyName}`;
+        const tabPath = `${tab}:${group}`;
+        const id = `${tabPath}:${propertyName}`;
+        const path = section ? `${section}:${tabPath}` : tabPath;
 
-        const tabElement = this.getTab(tab, section);
-        const groupElement = tabElement.getGroup(group);
-        const view = groupElement.createView(propertyName);
+        const toggle = this.content.findOrCreate(path);
+        const view = createView(propertyName, toggle.content);
 
         return { view, id };
     }
 
     load({ config }: { config: Record<string, Record<string, Record<string, string>>> }) {
-        for (const [tabName, tab] of Object.entries(config))
-            for (const [groupName, group] of Object.entries(tab))
-                for (const [propertyName, value] of Object.entries(group))
-                    this.localStorage.setItem(`${tabName}:${groupName}:${propertyName}`, value);
-    }
-
-    private getTab(name: string, section?: string) {
-        const tab = this.tabs.get(name);
-        if (tab) return tab;
-
-        const tabElement = new Tab(name);
-        this.tabs.set(name, tabElement);
-
-        if (!section) this.header.appendChild(tabElement.header);
-        else {
-            let sectionElement = this.sections.get(section);
-            if (!sectionElement) {
-                const { sectionElement: sectionHeader, sectionContent } = this.createSection(section);
-                this.sections.set(section, sectionContent);
-                this.header.appendChild(sectionHeader);
-                sectionElement = sectionContent;
-            }
-
-            sectionElement.appendChild(tabElement.header);
-        }
-
-        tabElement.selected.subscribe(() => this.selectTab(tabElement));
-
-        return tabElement;
-    }
-
-    private createSection(name: string) {
-        const sectionElement = createElement("div", { className: "section" });
-        const sectionHeader = createElement("div", {
-            className: "section-header action",
-            parent: sectionElement,
-            textContent: name,
-        });
-
-        const sectionContent = createElement("div", {
-            className: "section-content",
-            parent: sectionElement,
-        });
-
-        sectionHeader.addEventListener("click", () => {
-            const isVisible = sectionContent.style.display !== "none";
-            sectionContent.style.display = isVisible ? "none" : "flex";
-        });
-
-        return { sectionElement, sectionContent };
-    }
-
-    private selectTab(tab: Tab) {
-        for (const t of this.tabs.values()) t.header.classList.toggle("selected", t === tab);
-
-        const previous = this.view.firstChild;
-        if (previous) this.view.removeChild(previous);
-
-        this.view.appendChild(tab.container);
+        // for (const [tabName, tab] of Object.entries(config))
+        //     for (const [groupName, group] of Object.entries(tab))
+        //         for (const [propertyName, value] of Object.entries(group))
+        //             this.localStorage.setItem(`${tabName}:${groupName}:${propertyName}`, value);
     }
 
     private export() {
-        const data = Object.fromEntries(
-            [...this.tabs.values()].map((tab) => [
-                tab.name,
-                Object.fromEntries(
-                    [...tab.groups.values()].map((group) => [
-                        group.name,
-                        Object.fromEntries([...group.handles].map((handle) => handle.serialized)),
-                    ]),
-                ),
-            ]),
-        );
-
-        const json = JSON.stringify({ config: data }, null, 4);
-        const blob = new Blob([json], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
-
-        const a = createElement("a", { parent: document.body });
-        a.href = url;
-        a.download = "config.json";
-        a.click();
-
-        URL.revokeObjectURL(url);
-        document.body.removeChild(a);
+        // const data = Object.fromEntries(
+        //     [...this.tabs.values()].map((tab) => [
+        //         tab.title,
+        //         Object.fromEntries(
+        //             [...tab.groups.values()].map((group) => [
+        //                 group.name,
+        //                 Object.fromEntries([...group.handles].map((handle) => handle.serialized)),
+        //             ]),
+        //         ),
+        //     ]),
+        // );
+        // const json = JSON.stringify({ config: data }, null, 4);
+        // const blob = new Blob([json], { type: "application/json" });
+        // const url = URL.createObjectURL(blob);
+        // const a = createElement("a", { parent: document.body });
+        // a.href = url;
+        // a.download = "config.json";
+        // a.click();
+        // URL.revokeObjectURL(url);
+        // document.body.removeChild(a);
     }
 
     private transformText(text: string): string {

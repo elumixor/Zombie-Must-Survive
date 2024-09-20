@@ -52,7 +52,6 @@ export class Game {
             this.time.add(() => (fpsCounter.textContent = `FPS: ${round(1000 / this.time.dMs)}`));
         });
 
-        configurator.visibilityChanged.subscribe((visible) => (this.time.paused = visible));
         configurator.reloadRequested.subscribe(() => configurator.load(this.resources.get("config")!));
 
         // We will need to uncomment this later for PROD builds?

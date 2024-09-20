@@ -1,5 +1,5 @@
 import type { EventEmitter } from "@elumixor/frontils";
-import type { IHandleView } from "../handles";
+import type { IHandleView } from "../imy-element";
 
 export interface IEditor<T> {
     view: IHandleView;
@@ -8,3 +8,7 @@ export interface IEditor<T> {
 }
 
 export type IEditorFactory<T> = (view: IHandleView) => IEditor<T>;
+
+export interface ArrayButtonContainer {
+    arrayButtonContainer: HTMLElement;
+}

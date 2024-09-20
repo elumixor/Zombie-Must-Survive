@@ -1,9 +1,9 @@
 import { EventEmitter } from "@elumixor/frontils";
 import { createElement } from "../create-element";
-import type { IHandleView } from "../handles";
 import "../styles/slider.scss";
 import type { IEditor } from "./editor";
 import type { NumericOptions } from "./number";
+import type { IHandleView } from "../imy-element";
 
 export function sliderEditor(
     view: IHandleView,
@@ -19,14 +19,14 @@ export function sliderEditor(
     sliderInput.max = max.toString();
     sliderInput.step = step.toString();
 
-    view.view.classList.add("slider-container");
+    view.content.classList.add("slider-container");
 
     // Append the input element to the container
-    view.view.appendChild(sliderInput);
+    view.content.appendChild(sliderInput);
 
     const regularInput = createElement("input", {
         className: "slider-input-regular",
-        parent: view.view,
+        parent: view.content,
     });
 
     regularInput.type = "number";

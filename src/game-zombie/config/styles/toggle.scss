@@ -1,0 +1,27 @@
+@import "./mixins.scss";
+
+.toggle-header {
+    cursor: pointer;
+    padding: 5px;
+
+    &:hover {
+        background-color: #0000000c;
+    }
+}
+
+.toggle-container.open {
+    background-color: #00000010;
+    border: 1px solid #00000020;
+    border-right: none;
+
+    > .toggle-header {
+        border-bottom: 1px solid #00000020;
+        font-weight: bold;
+    }
+}
+
+.toggle-container .toggle-container.open {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    margin-left: 0.5rem;
+}
