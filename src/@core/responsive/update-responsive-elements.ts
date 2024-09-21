@@ -63,6 +63,7 @@ export function updateResponsiveElement(
         if (typeof fitTo === "number") element.fitTo?.(fitTo);
         else element.fitTo?.(...(fitTo as Parameters<Container["fitTo"]>)); // Idk why, but this assertion is needed
     }
+
     if (pin !== undefined || x !== undefined)
         element.x = (useClientScale ? dimensions.clientWidth : dimensions.width) * unwrap(pin ?? 0).first + (x ?? 0);
     if (pin !== undefined || y !== undefined)

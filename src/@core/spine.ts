@@ -53,6 +53,13 @@ export class Spine<
         return this.skeleton.data.animations.map(({ name }) => name);
     }
 
+    get speed() {
+        return this.state.timeScale;
+    }
+    set speed(value) {
+        this.state.timeScale = value;
+    }
+
     // get currentAnimation() {
     //     return this.state.tracks.first.animation.name;
 

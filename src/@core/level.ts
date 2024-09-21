@@ -27,6 +27,8 @@ export class Level extends Actor implements IResizeObservable {
     constructor() {
         super();
 
+        this.ui.name = "UI";
+
         this.layers.add("default");
         const uiLayer = this.layers.add("ui", new Group(1000));
         this.ui.parentLayer = uiLayer;

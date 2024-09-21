@@ -10,7 +10,7 @@ declare global {
     /** Draws a string directly on the screen. Has no effect on PROD builds */
     function logs(
         value: unknown,
-        options?: { duration?: number; color?: string; key?: number; useConsole?: boolean },
+        options?: { duration?: number; color?: string; key?: number | string; useConsole?: boolean },
     ): void;
 }
 
@@ -46,7 +46,7 @@ Reflect.defineProperty(globalThis, "debug", {
 
 Reflect.defineProperty(globalThis, "logs", {
     value: import.meta.env.DEV
-        ? (value: unknown, { duration = 2, color = "auto", key = -1, useConsole = true } = {}) => {
+        ? (value: unknown, { duration = 2, color = "auto", key = -1 as string | number, useConsole = true } = {}) => {
               let div = document.getElementById("__debug-string");
               if (!div) {
                   div = document.createElement("div");
@@ -73,7 +73,7 @@ Reflect.defineProperty(globalThis, "logs", {
               }
 
               const map = Reflect.get(globalThis, "__debug-string-map") as Map<
-                  number,
+                  number | string,
                   { timerId: number; div: HTMLElement }
               >;
 

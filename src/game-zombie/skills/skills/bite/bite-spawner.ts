@@ -41,6 +41,7 @@ export class BiteSpawnerComponent extends Component {
         const spine = this.resources.bite.copy();
         spine.parentLayer = this.level.layers.get("foreground");
         this.level.addChild(spine);
+        spine.scale.set(this.radius / 100);
         // spine.width = spine.height = this.radius * 2;
 
         let spawnPosition;

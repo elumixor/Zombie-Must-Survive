@@ -2,24 +2,152 @@
     "config": {
         "Reflux Skill": {
             "General": {
-                "damage": "[1]",
-                "cooldown": "[0.1]",
-                "pierce": "[0]",
+                "numProjectiles": "[1,2,3,4,5]",
+                "damage": "[10,6,5,5,7]",
+                "cooldown": "[0.5,0.5,0.4,0.4,0.3]",
+                "distance": "1500",
+                "speed": "25",
+                "spread": "5",
                 "level": "0"
             }
         },
         "Fart Skill": {
             "General": {
-                "damage": "[1]",
-                "radius": "[1]",
-                "cooldown": "[1]",
+                "damage": "[1,2,2,3,4]",
+                "radius": "[70,80,90,100,120]",
+                "cooldown": "[1,1,0.9,0.9,0.7]",
+                "level": "0"
+            }
+        },
+        "Boomerang Skill": {
+            "General": {
+                "damage": "[5,6,6,7,7]",
+                "instances": "[1,2,3,4,5]",
+                "speed": "[0.05,0.05,0.05,0.05,0.05]",
+                "cooldown": "[2,2,2,2,1]",
+                "lifetime": "[2,1,2,1,0.5]",
+                "level": "0"
+            }
+        },
+        "Acid Pool Skill": {
+            "General": {
+                "damage": "[1,1,1,1,1]",
+                "damageRate": "[1,0.7,0.5,0.4,0.3]",
+                "radius": "[100,125,150,150,150]",
+                "range": "[500,550,600,600,600]",
+                "lifetime": "[1,2,3,4,5]",
+                "spawnCooldown": "[2,1.5,1.5,1,1]",
+                "travelDuration": "1",
+                "level": "0"
+            }
+        },
+        "Frankenzombie Skill": {
+            "General": {
+                "damage": "[5,5,5,5,5]",
+                "cooldown": "[0.5,0.5,0.45,0.35,0.25]",
+                "distance": "[450,450,500,500,550]",
+                "numBounces": "[5,7,9,11,15]",
+                "level": "0"
+            }
+        },
+        "Spirit Skill": {
+            "General": {
+                "numSpirits": "[1,1,2,3,5]",
+                "damage": "[5,5,5,10,10]",
+                "chance": "[0.1,0.2,0.2,0.2,0.3]",
+                "speed": "[20]",
+                "level": "0"
+            }
+        },
+        "Scream Skill": {
+            "General": {
+                "cooldown": "[1,1,1,0.8,0.8]",
+                "radius": "[300,350,350,400,400]",
+                "growSpeed": "[300]",
+                "freezeDuration": "[1,1,1,2,2]",
+                "level": "0"
+            }
+        },
+        "Zombiecide Skill": {
+            "General": {
+                "damage": "[10,10,10,10,10]",
+                "lifetime": "[3,4,5,6,7]",
+                "maxInstances": "[3,4,5,7,10]",
+                "level": "0"
+            }
+        },
+        "Bite Skill": {
+            "General": {
+                "damage": "[30,30,40,40,50]",
+                "radius": "[100,100,120,120,150]",
+                "spawnCooldown": "[5,4,3,2,1]",
+                "level": "0"
+            }
+        },
+        "Beholder Skill": {
+            "General": {
+                "damage": "[10,10,10,10,10]",
+                "fireCooldown": "[1,0.9,0.8,0.7,0.5]",
+                "spawnCooldown": "[3,3,2,2,1]",
+                "maxInstances": "[2,3,4,5,6]",
+                "lifetime": "[5,6,7,8,9]",
+                "level": "0"
+            }
+        },
+        "Gold Skill": {
+            "General": {
+                "goldPerSecond": "[1,2,3,4,5]",
+                "level": "0"
+            }
+        },
+        "Magnet Skill": {
+            "General": {
+                "extraRadius": "[50,100,150,225,300]",
+                "level": "0"
+            }
+        },
+        "Max Hp Skill": {
+            "General": {
+                "hpAdded": "[10,20,30,40,50]",
+                "level": "0"
+            }
+        },
+        "Movement Skill": {
+            "General": {
+                "msAdded": "[1,2,3,4,5]",
+                "level": "0"
+            }
+        },
+        "Regeneration Skill": {
+            "General": {
+                "healthPercentRestored": "[1,2,3,4,5]",
                 "level": "0"
             }
         },
         "Player": {
             "General": {
-                "speed": "10"
+                "levelXpFactor": "10",
+                "constitution": "5",
+                "baseHp": "25",
+                "restoreHpOnLevelUp": "false",
+                "forceLevelUp": "undefined",
+                "forceDeath": "",
+                "speed": "15",
+                "invulnerable": "false",
+                "xpGain": "1",
+                "noXP": "false"
+            }
+        },
+        "Enemy Manager": {
+            "General": {
+                "stagesConfig": "[{\"duration\":5,\"enemies\":[{\"enemyType\":\"villager1\",\"spawnInterval\":1,\"count\":5},{\"enemyType\":\"villager2\",\"spawnInterval\":3,\"count\":1},{\"enemyType\":\"villager3\",\"spawnInterval\":3,\"count\":1}]},{\"duration\":5,\"enemies\":[{\"enemyType\":\"villager1\",\"spawnInterval\":0.5,\"count\":5}]}]",
+                "enemiesConfig": "{\"villager1\":{\"speed\":5,\"damage\":1,\"health\":10,\"lag\":0.5},\"villager2\":{\"speed\":3,\"damage\":4,\"health\":20,\"lag\":0.45},\"villager3\":{\"speed\":7,\"damage\":3,\"health\":10,\"lag\":0.4}}",
+                "autoStart": "true",
+                "restartOnEnd": "false",
+                "clearEnemies": "",
+                "stopStages": ""
             }
         }
-    }
+    },
+    "version": 1
 }

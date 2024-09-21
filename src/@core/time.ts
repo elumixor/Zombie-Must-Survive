@@ -55,6 +55,10 @@ export class Time {
         return this.ticker.deltaMS;
     }
 
+    get ds() {
+        return this.ticker.deltaMS / 1000;
+    }
+
     /** Time scale of the last frame */
     get dt() {
         return this.ticker.deltaTime;
@@ -147,7 +151,7 @@ export class Time {
     /** Executes a callback every specified number of seconds. Respects the current speed of the game */
     interval(callback: () => void, seconds: number) {
         let elapsed = 0;
-        const ms = seconds * 1000;
+        let ms = seconds * 1000;
         const callbackWrapper = () => {
             elapsed += this.dMs;
             if (elapsed >= ms) {
@@ -158,6 +162,12 @@ export class Time {
         this.add(callbackWrapper);
 
         return {
+            get duration() {
+                return ms;
+            },
+            set duration(value) {
+                ms = value;
+            },
             clear: () => this.remove(callbackWrapper),
         };
     }

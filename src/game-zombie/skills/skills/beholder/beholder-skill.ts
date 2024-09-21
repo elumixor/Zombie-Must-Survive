@@ -4,7 +4,7 @@ import { cskill } from "game-zombie/skills/skill.editors";
 import { Texture } from "pixi.js";
 import { Skill } from "../../skill";
 import { NumProperty } from "../../skill-property";
-import { BeholderSpawnerComponent } from "./beholder-spawner";
+import { BeholderComponent } from "./beholder-component";
 
 @c
 export class BeholderSkill extends Skill {
@@ -21,10 +21,10 @@ export class BeholderSkill extends Skill {
 
     private readonly fireDistance = 1000;
 
-    private component?: BeholderSpawnerComponent;
+    private component?: BeholderComponent;
 
     protected override addToActor(actor: Actor) {
-        this.component = new BeholderSpawnerComponent(actor);
+        this.component = new BeholderComponent(actor);
         actor.addComponent(this.component);
     }
 

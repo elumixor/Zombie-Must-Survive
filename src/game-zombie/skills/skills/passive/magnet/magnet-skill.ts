@@ -13,11 +13,23 @@ export class MagnetSkill extends Skill {
 
     @cskill private readonly extraRadius = this.addProperty(new NumProperty("Extra Radius"));
 
+    private currentIncrease = 0;
+    protected override removeFromActor(actor: Actor) {
+        super.removeFromActor(actor);
+        assert(actor instanceof Player);
+        actor.pickupCollider.radius -= this.currentIncrease;
+        this.currentIncrease = 0;
+    }
+
     override update(actor: Actor, level: number) {
         assert(actor instanceof Player);
+        if (level === 0) return;
 
-        const previous = level === 1 ? 0 : this.extraRadius.value(level - 1);
+        const previous = this.currentIncrease;
         const current = this.extraRadius.value(level);
-        actor.pickupCollider.radius += current - previous;
+        const diff = current - previous;
+        this.currentIncrease = current;
+
+        actor.pickupCollider.radius += diff;
     }
 }

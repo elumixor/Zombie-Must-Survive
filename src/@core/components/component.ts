@@ -1,9 +1,11 @@
+import { c } from "game-zombie/config";
 import type { Actor } from "../actor";
 
 /** Components add functionality to {@link Actor}s. They do not have {@link tickEnabled} by default. */
 export class Component {
     /** Whether the component should be updated every frame */
     tickEnabled = true;
+    protected beginPlayCalled = true;
 
     constructor(readonly actor: Actor) {}
 
@@ -17,10 +19,12 @@ export class Component {
     }
 
     beginPlay() {
-        return;
+        this.beginPlayCalled = true;
     }
 
     destroy() {
+        c.unsubscribe(this);
+
         this.actor.removeComponent(this);
     }
 }

@@ -10,13 +10,13 @@ export class GoldComponent extends Component {
 
     beginPlay() {
         super.beginPlay();
-        assert(!this.interval);
-        this.interval = this.time.interval(() => this.addGold(), 1);
+        this.updateParams();
     }
 
     updateParams() {
-        if (!this.interval) return;
-        this.interval.clear();
+        if (!this.beginPlayCalled) return;
+
+        this.interval?.clear();
         this.interval = this.time.interval(() => this.addGold(), 1);
     }
 

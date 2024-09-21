@@ -1,7 +1,8 @@
-import { di } from "@elumixor/di";
 import type { IPoint } from "@core/utils";
+import { di } from "@elumixor/di";
 import { EventEmitter, getElementOrThrow, type ISubscription } from "@elumixor/frontils";
-import { Container, type IRenderer } from "pixi.js";
+import type { IRenderer } from "pixi.js";
+import { observableProxies } from "./types";
 
 export interface RequiredScales {
     landscape: IPoint;
@@ -15,7 +16,7 @@ export class Resizer {
     protected readonly rotated = new EventEmitter<IDimensions>();
     protected readonly canvasContainer = getElementOrThrow("canvas-container");
     /** In case we want to unsubscribe */
-    protected readonly boundMap = new WeakMap<
+    protected readonly boundMap = new Map<
         IResizeObservable | IRotateObservable,
         { resize?: ISubscription<unknown>; rotate?: ISubscription<unknown> }
     >();
@@ -77,8 +78,6 @@ export class Resizer {
             rotate: undefined as ISubscription<unknown> | undefined,
         };
 
-        if (observable instanceof Container) observable.on("destroyed", () => this.unsubscribe(observable));
-
         if (isResizeObservable)
             bound.resize = this.resized.subscribe(observable.resize.bind(observable)) as ISubscription<unknown>;
         if (isRotateObservable)
@@ -93,12 +92,16 @@ export class Resizer {
     }
 
     unsubscribe(observable: object) {
-        const found = this.boundMap.get(observable as IResizeObservable | IRotateObservable);
-        if (!found) return;
-        this.boundMap.delete(observable as IResizeObservable | IRotateObservable);
+        const proxies = Reflect.get(observable, observableProxies) as object[] | undefined;
 
-        found.resize?.unsubscribe();
-        found.rotate?.unsubscribe();
+        for (const el of [...(proxies ?? []), observable]) {
+            const found = this.boundMap.get(el as IResizeObservable | IRotateObservable);
+            if (!found) return;
+            this.boundMap.delete(el as IResizeObservable | IRotateObservable);
+
+            found.resize?.unsubscribe();
+            found.rotate?.unsubscribe();
+        }
     }
 
     update() {

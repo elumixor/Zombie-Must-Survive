@@ -8,26 +8,35 @@ export class ScreamComponent extends Component {
     radius = 1;
     freezeDuration = 1;
     cooldown = 1;
-    speed = 1;
+    growSpeed = 1;
 
-    private timeout?: ReturnType<Time["timeout"]>;
+    private interval?: ReturnType<Time["timeout"]>;
     private beginPlayCalled = false;
-
-    private get duration() {
-        return this.radius / this.speed;
-    }
 
     beginPlay() {
         super.beginPlay();
+
         this.beginPlayCalled = true;
         this.updateParams();
     }
 
+    override destroy() {
+        super.destroy();
+
+        this.stop();
+    }
+
     updateParams() {
         if (!this.beginPlayCalled) return;
-        this.activate();
-        this.timeout?.clear();
-        this.timeout = this.time.interval(() => this.activate(), this.cooldown + this.duration);
+
+        this.stop();
+
+        this.interval = this.time.interval(() => this.activate(), this.cooldown);
+    }
+
+    private stop() {
+        this.interval?.clear();
+        this.interval = undefined;
     }
 
     private activate() {
@@ -35,7 +44,7 @@ export class ScreamComponent extends Component {
 
         scream.radius = this.radius;
         scream.freezeDuration = this.freezeDuration;
-        scream.duration = this.duration;
+        scream.growSpeed = this.growSpeed;
 
         this.actor.addChild(scream);
     }

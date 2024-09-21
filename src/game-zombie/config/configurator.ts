@@ -1,9 +1,9 @@
 import { getLocalStorage } from "@core";
 import { EventEmitter, nonNull, nonNullAssert } from "@elumixor/frontils";
 import { createElement, createView } from "./create-element";
-import { Toggle } from "./toggle";
-import "./styles/configurator.scss";
 import type { Handle } from "./handles";
+import "./styles/configurator.scss";
+import { Toggle } from "./toggle";
 import { transformText } from "./transform-text";
 
 export class Configurator {
@@ -50,15 +50,13 @@ export class Configurator {
 
         // Show itself on the "R/r" key press
         document.addEventListener("keydown", (e) => {
-            if (e.code === "KeyC") this.visible = !this.visible;
+            if (e.code === "KeyC" && !e.ctrlKey) this.visible = !this.visible;
         });
 
         this.exportButton.addEventListener("click", () => this.export());
         this.resetButton.addEventListener("click", () => this.reloadRequested.emit(undefined));
         this.showButton.addEventListener("click", () => (this.visible = true));
         this.closeButton.addEventListener("click", () => (this.visible = false));
-
-        this.visible = true;
 
         // Add the resize functionality for the dragger
         let isDragging = false;
@@ -84,12 +82,19 @@ export class Configurator {
         });
     }
 
-    protected get visible() {
+    get visible() {
         return this.container.style.display !== "none";
     }
-    protected set visible(value: boolean) {
+    set visible(value: boolean) {
         this.showButton.style.display = value ? "none" : "block";
         this.container.style.display = value ? "flex" : "none";
+    }
+
+    protected get localVersion() {
+        return Number(this.localStorage.getItem("config-version") ?? -1);
+    }
+    protected set localVersion(value) {
+        this.localStorage.setItem("config-version", String(value));
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -115,11 +120,19 @@ export class Configurator {
         return { view, id };
     }
 
-    load({ config }: { config: Record<string, unknown> }, id?: string) {
+    load(
+        { config, version = 0 }: { config: Record<string, unknown>; version?: number },
+        { reset }: { reset?: true | string } = {},
+    ) {
+        if (!reset) {
+            if (this.localVersion > version) return;
+            this.localVersion = version + 1;
+        }
+
         // Recursively load the config
         const load = (data: Record<string, unknown>, path?: string) => {
             if (typeof data !== "object") {
-                if (id !== undefined && path !== id) return;
+                if (reset !== undefined && reset !== true && path !== reset) return;
 
                 nonNullAssert(path);
 
@@ -158,7 +171,7 @@ export class Configurator {
             current[last] = value;
         }
 
-        const json = JSON.stringify({ config: data }, null, 4);
+        const json = JSON.stringify({ config: data, version: this.localVersion }, null, 4);
         const blob = new Blob([json], { type: "application/json" });
         const url = URL.createObjectURL(blob);
         const a = createElement("a", { parent: document.body });

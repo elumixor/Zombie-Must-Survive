@@ -13,7 +13,7 @@ export class ScreamSkill extends Skill {
 
     @cskill private readonly cooldown = this.addProperty(new NumProperty("Cooldown"));
     @cskill private readonly radius = this.addProperty(new NumProperty("Radius"));
-    @cskill private readonly speed = this.addProperty(new NumProperty("Speed"));
+    @cskill private readonly growSpeed = this.addProperty(new NumProperty("Speed"));
     @cskill private readonly freezeDuration = this.addProperty(new NumProperty("Freeze Duration"));
 
     private component?: ScreamComponent;
@@ -34,7 +34,7 @@ export class ScreamSkill extends Skill {
         this.component.radius = this.radius.value(level);
         this.component.freezeDuration = this.freezeDuration.value(level);
         this.component.cooldown = this.cooldown.value(level);
-        this.component.speed = this.speed.value(level);
+        this.component.growSpeed = this.growSpeed.value(level);
 
         this.component.updateParams();
     }

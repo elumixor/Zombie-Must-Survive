@@ -8,7 +8,7 @@ export class FrankenzombieComponent extends Component {
     private readonly time = di.inject(Time);
 
     damage = 1;
-    radius = 1;
+    distance = 1;
     numBounces = 1;
     cooldown = 1;
 
@@ -17,6 +17,7 @@ export class FrankenzombieComponent extends Component {
 
     beginPlay() {
         super.beginPlay();
+
         this.beginPlayCalled = true;
         this.updateParams();
     }
@@ -50,7 +51,10 @@ export class FrankenzombieComponent extends Component {
     }
 
     private getNextTarget(current: Actor, enemies: Enemy[], hit: Set<Actor>) {
-        const available = enemies.filter((enemy) => !hit.has(enemy) && enemy.distanceTo(current) <= this.radius);
+        const available = enemies.filter((enemy) => {
+            const distance = enemy.distanceTo(current);
+            return !hit.has(enemy) && distance <= this.distance;
+        });
         return available.pick() as Enemy | undefined;
     }
 

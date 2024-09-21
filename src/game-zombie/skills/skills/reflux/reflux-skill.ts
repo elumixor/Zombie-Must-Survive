@@ -16,11 +16,32 @@ export class RefluxSkill extends Skill {
     @cskill private readonly damage = this.addProperty(new NumProperty("Damage", [1]));
     @cskill private readonly cooldown = this.addProperty(new NumProperty("Cooldown", [0.5]));
 
-    @c(c.num(), { section: "Skills" })
+    @c(c.num(), {
+        section: "Skills",
+        onUpdate([instance]) {
+            const i = instance as RefluxSkill;
+            i.update(i.actor!, i.level);
+        },
+    })
     private readonly distance = 500;
 
-    @c(c.num(), { section: "Skills" })
+    @c(c.num(), {
+        section: "Skills",
+        onUpdate([instance]) {
+            const i = instance as RefluxSkill;
+            i.update(i.actor!, i.level);
+        },
+    })
     private readonly speed = 10;
+
+    @c(c.num(), {
+        section: "Skills",
+        onUpdate([instance]) {
+            const i = instance as RefluxSkill;
+            i.update(i.actor!, i.level);
+        },
+    })
+    private readonly spread = 2;
 
     private readonly projectileTexture = Texture.from("spit");
 
@@ -41,8 +62,10 @@ export class RefluxSkill extends Skill {
         if (!this.component) return;
 
         this.component.numProjectiles = this.numProjectiles.value(level);
-        this.component.spread = this.component.numProjectiles * 10;
+        this.component.spread = this.component.numProjectiles * this.spread;
         this.component.cooldown = this.cooldown.value(level);
+
+        this.component.triggerRange = this.distance;
 
         this.component.projectileConfig.texture = this.projectileTexture;
         this.component.projectileConfig.distance = this.distance;

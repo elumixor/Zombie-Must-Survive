@@ -16,6 +16,7 @@ export class PoolActor extends Actor {
     radius = 50;
     targetPoint = vec2.zero;
     tickEnabled = false;
+    travelDuration = 0.5;
 
     private elapsed = 0;
     private readonly collider = this.addComponent(new CircleColliderComponent(this));
@@ -26,7 +27,7 @@ export class PoolActor extends Actor {
     constructor() {
         super();
 
-        this.layer = "foreground";
+        this.layer = "background";
         this.collider.isTrigger = true;
 
         this.collider.targetTags.add("enemy");
@@ -40,11 +41,11 @@ export class PoolActor extends Actor {
 
     startAnimation() {
         this.collider.radius = this.radius;
-        // this.spine.uniformHeight = this.radius * 3;
+        this.spine.scale.set(this.radius / 100);
         this.elapsed = this.damageRate; // to start damaging immediately
         this.spine.animate("attack", { loop: true });
 
-        const duration = 0.5;
+        const duration = this.travelDuration;
 
         const scale = this.spine.scale.x;
         void this.time.fromTo(this.scale, { x: 0, y: 0 }, { x: scale, y: scale, duration });
@@ -82,7 +83,7 @@ export class PoolActor extends Actor {
 
         this.elapsed += ds;
         if (this.elapsed <= this.damageRate) return;
-        this.elapsed -= ds;
+        this.elapsed -= this.damageRate;
 
         for (const actor of this.damagingActors) actor.getComponent(HealthComponent)?.damage(this.damage);
     }

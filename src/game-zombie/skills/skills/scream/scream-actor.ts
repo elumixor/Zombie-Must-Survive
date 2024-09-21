@@ -1,5 +1,6 @@
 import { Actor, CircleColliderComponent } from "@core";
 import { di } from "@elumixor/di";
+import { all } from "@elumixor/frontils";
 import { Enemy } from "game-zombie/actors";
 import { ResourcesZombie } from "game-zombie/resources-zombie";
 
@@ -7,7 +8,7 @@ export class ScreamActor extends Actor {
     private readonly resources = di.inject(ResourcesZombie);
 
     freezeDuration = 1;
-    duration = 1;
+    growSpeed = 1;
     radius = 1;
 
     private readonly sprite = this.addChild(this.resources.scream.copy());
@@ -37,15 +38,19 @@ export class ScreamActor extends Actor {
 
     private async animate() {
         const p = { radius: 0 };
-        this.sprite.animate("attack", { loop: true });
-        await this.time.to(p, {
-            radius: this.radius,
-            duration: this.duration * 0.8,
-            onUpdate: () => {
-                this.collider.radius = p.radius;
-                // this.sprite.uniformHeight = p.radius * 2;
-            },
-        });
+
+        this.sprite.scale.set(this.radius / 250);
+
+        await all(
+            this.sprite.animate("attack", { promise: true }),
+            this.time.to(p, {
+                radius: this.radius,
+                duration: this.radius / this.growSpeed,
+                onUpdate: () => {
+                    this.collider.radius = p.radius;
+                },
+            }),
+        );
 
         await this.time.to(this, {
             alpha: 0,

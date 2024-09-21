@@ -13,7 +13,14 @@ export class MaxHpSkill extends Skill {
 
     @cskill private readonly hpAdded = this.addProperty(new NumProperty("HP Added"));
 
+    protected override removeFromActor(actor: Actor) {
+        super.removeFromActor(actor);
+        assert(actor instanceof Player);
+        actor.bonusHealth = 0;
+    }
     override update(actor: Actor, level: number) {
+        if (level === 0) return;
+
         assert(actor instanceof Player);
         actor.bonusHealth = this.hpAdded.value(level);
     }

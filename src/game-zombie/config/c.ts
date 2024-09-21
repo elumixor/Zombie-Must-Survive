@@ -1,6 +1,6 @@
 import { bool } from "./editors/bool";
 import { button } from "./editors/button";
-import { num, registerHandle, registerInstance, type HandleOptions, type Handle } from "./handles";
+import { num, registerHandle, registerInstance, type HandleOptions, type Handle, unsubscribeInstance } from "./handles";
 import type { AbstractConstructor, Constructor } from "@elumixor/frontils";
 
 /** When used on a class, will add a call after constructor() is done to register instance */
@@ -37,5 +37,7 @@ function propertyDecorator(handle: Handle, options?: HandleOptions): PropertyDec
 c.num = num;
 c.bool = bool;
 c.button = button;
+
+c.unsubscribe = unsubscribeInstance;
 
 export { c };

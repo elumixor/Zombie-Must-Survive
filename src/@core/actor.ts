@@ -4,6 +4,8 @@ import type { Constructor } from "@elumixor/frontils";
 import { Container, DisplayObject } from "pixi.js";
 import { Component } from "./components";
 import { Time } from "./time";
+import { c } from "game-zombie/config";
+import { Resizer } from "./responsive";
 
 /**
  * Actor is a container for {@link Component}s that can be updated every frame ({@link Actor.update})
@@ -97,9 +99,12 @@ export class Actor extends Container {
 
     /** Destroys the actor and all its children and components and removes it from the parent */
     override destroy() {
+        c.unsubscribe(this);
+        di.inject(Resizer).unsubscribe(this);
+
         this.parent.removeChild(this);
         for (const component of [...this.components]) component.destroy();
-        for (const child of this.children) child.destroy();
+        for (const child of [...this.children]) child.destroy();
         super.destroy();
     }
 

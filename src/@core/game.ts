@@ -8,8 +8,8 @@ import { Time } from "./time";
 /** Game class is responsible for creating all the game classes and managing the levels */
 @di.injectable
 export class Game {
-    private readonly app = di.inject(App);
-    private readonly resources = di.inject(BaseResources);
+    protected readonly app = di.inject(App);
+    protected readonly resources = di.inject(BaseResources);
 
     /** Instantiate game-wide time manager */
     protected readonly time = new Time();
@@ -52,10 +52,10 @@ export class Game {
             this.time.add(() => (fpsCounter.textContent = `FPS: ${round(1000 / this.time.dMs)}`));
         });
 
-        configurator.reloadRequested.subscribe((id) => configurator.load(this.resources.get("config")!, id));
-
-        // We will need to uncomment this later for PROD builds?
-        // configurator.load(this.resources.get("config")!);
+        configurator.visible = this.app.isDesktop;
+        configurator.reloadRequested.subscribe((id) =>
+            configurator.load(this.resources.get("config")!, { reset: id ?? true }),
+        );
     }
 
     get currentLevel() {

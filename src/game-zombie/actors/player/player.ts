@@ -16,7 +16,7 @@ export class Player extends Actor {
     private readonly resources = di.inject(ResourcesZombie);
     private readonly controls = di.inject(Controls);
 
-    gold = 0;
+    private _gold = 0;
 
     @c(c.num())
     speed = 10;
@@ -87,6 +87,14 @@ export class Player extends Actor {
 
     set bonusHealth(value: number) {
         this.playerState.bonusHealth = value;
+    }
+
+    get gold() {
+        return this._gold;
+    }
+    set gold(value) {
+        this._gold = value;
+        logs(`Player now has ${value} gold`, { color: "#FFD700", key: "gold" });
     }
 
     override beginPlay() {

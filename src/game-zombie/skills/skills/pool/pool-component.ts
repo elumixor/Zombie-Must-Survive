@@ -3,7 +3,7 @@ import { PoolActor } from "./pool-actor";
 import { di } from "@elumixor/di";
 import { Enemy } from "game-zombie/actors";
 
-export class PoolSpawnerComponent extends Component {
+export class PoolComponent extends Component {
     private readonly time = di.inject(Time);
 
     tickEnabled = false;
@@ -13,22 +13,30 @@ export class PoolSpawnerComponent extends Component {
     lifetime = 1;
     radius = 1;
     spawnCooldown = 1;
+    range = 1;
+    travelDuration = 0.5;
 
     private interval?: ReturnType<Time["interval"]>;
+
+    private beginPlayCalled = false;
 
     beginPlay() {
         super.beginPlay();
 
-        assert(!this.interval);
-        this.spawn();
-        this.interval = this.time.interval(() => this.spawn(), this.spawnCooldown);
+        this.beginPlayCalled = true;
+        this.updateParams();
     }
 
     updateParams() {
-        if (this.interval) {
-            this.interval.clear();
-            this.interval = this.time.interval(() => this.spawn(), this.spawnCooldown);
-        }
+        if (!this.beginPlayCalled) return;
+
+        this.interval?.clear();
+        this.interval = this.time.interval(() => this.spawn(), this.spawnCooldown);
+    }
+
+    destroy() {
+        super.destroy();
+        this.interval?.clear();
     }
 
     private spawn() {
@@ -38,19 +46,17 @@ export class PoolSpawnerComponent extends Component {
         poolActor.damage = this.damage;
         poolActor.damageRate = this.damageRate;
         poolActor.radius = this.radius;
+        poolActor.travelDuration = this.travelDuration;
 
         this.level.addChild(poolActor);
 
         // Get all enemies in the level that are in range
-        const maxRange = 500;
-        const enemies = this.level
-            .getActorsOfType(Enemy)
-            .filter((enemy) => enemy.distanceTo(this.actor) <= maxRange * 1.5); // add some more range
+        const enemies = this.level.getActorsOfType(Enemy).filter((enemy) => enemy.distanceTo(this.actor) <= this.range);
         let spawnPosition;
 
         // Set random position if there are no enemies
         if (enemies.isEmpty) {
-            spawnPosition = this.actor.worldPosition.add(vec2.random.withLength(random(0.5 * maxRange, maxRange)));
+            spawnPosition = this.actor.worldPosition.add(vec2.random.withLength(random(0.5 * this.range, this.range)));
         } else {
             // Otherwise, set the position to the enemy with the most enemies around
             const enemiesAround = enemies.map((enemy) => this.enemiesAround(enemy, enemies));

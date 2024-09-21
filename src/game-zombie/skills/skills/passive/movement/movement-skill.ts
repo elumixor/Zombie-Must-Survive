@@ -13,12 +13,23 @@ export class MovementSkill extends Skill {
 
     @cskill private readonly msAdded = this.addProperty(new NumProperty("Movement Speed Added"));
 
+    private currentIncrease = 0;
+    protected override removeFromActor(actor: Actor) {
+        assert(actor instanceof Player);
+        actor.speed -= this.currentIncrease;
+        this.currentIncrease = 0;
+    }
+
     override update(actor: Actor, level: number) {
         assert(actor instanceof Player);
 
-        const previous = level === 1 ? 0 : this.msAdded.value(level - 1);
-        const current = this.msAdded.value(level);
+        if (level === 0) return;
 
-        actor.speed += current - previous;
+        const previous = this.currentIncrease;
+        const current = this.msAdded.value(level);
+        const diff = current - previous;
+        this.currentIncrease = current;
+
+        actor.speed += diff;
     }
 }

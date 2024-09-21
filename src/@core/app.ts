@@ -45,6 +45,9 @@ export class App {
         Ticker.shared.maxFPS = maxFPS;
         gsap.ticker.fps(maxFPS);
 
+        // Somehow gsap does not work nicely with some pixi stuff
+        gsap.config({ nullTargetWarn: false });
+
         this.pixiApp.ticker.maxFPS = maxFPS;
 
         this.canvasContainer.appendChild(this.view);

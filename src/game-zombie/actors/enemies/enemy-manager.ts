@@ -1,49 +1,11 @@
-import { Actor, Time, Vec2, type Interval, type Timeout } from "@core";
-import { di } from "@elumixor/di";
+import { Actor, Vec2 } from "@core";
 import { EventEmitter } from "@elumixor/frontils";
 import { c } from "game-zombie/config";
 import { Enemy } from "./enemy";
 import { enemiesEditor, stagesEditor } from "./enemy-manager.editor";
 import { EnemyType } from "./enemy-type";
-import type { IEnemyStageConfig, IStageConfig } from "./types";
-
-class Stage {
-    readonly ended = new EventEmitter();
-    readonly spawnRequested = new EventEmitter<IEnemyStageConfig>();
-
-    private readonly time = di.inject(Time);
-    private timeout?: Timeout;
-    private intervals = [] as Interval[];
-
-    constructor(
-        public stageConfig: IStageConfig = {
-            duration: 1,
-            enemies: [],
-        },
-    ) {}
-
-    start() {
-        this.stop();
-
-        this.timeout = this.time.timeout(() => this.end(), this.stageConfig.duration);
-        this.intervals = this.stageConfig.enemies.map((enemy) =>
-            this.time.interval(() => this.spawnRequested.emit(enemy), enemy.spawnInterval),
-        );
-    }
-
-    stop() {
-        this.timeout?.clear();
-        for (const interval of this.intervals) interval.clear();
-
-        this.timeout = undefined;
-        this.intervals = [];
-    }
-
-    private end() {
-        this.stop();
-        this.ended.emit();
-    }
-}
+import type { IStageConfig } from "./types";
+import { Stage } from "./stage";
 
 @c
 export class EnemyManager extends Actor {
@@ -85,6 +47,8 @@ export class EnemyManager extends Actor {
 
     @c(c.bool())
     private readonly autoStart = true as boolean;
+    @c(c.bool())
+    private readonly restartOnEnd = false as boolean;
 
     override beginPlay() {
         super.beginPlay();
@@ -97,9 +61,12 @@ export class EnemyManager extends Actor {
 
         this.stages = stages.map((stageConfig) => new Stage(stageConfig));
         for (const [index, stage] of this.stages.entries()) {
-            stage.ended.subscribeOnce(() => {
+            stage.ended.subscribe(() => {
                 logs(`Stage ${index + 1} ended`, { duration: 1, color: "#f6a" });
-                this.startStage(index + 1);
+
+                let nextIndex = this.stages.indexOf(stage) + 1;
+                if (nextIndex >= this.stages.length && this.restartOnEnd) nextIndex = 0;
+                this.startStage(nextIndex);
             });
             stage.spawnRequested.subscribe((enemyConfig) => {
                 for (const _ of range(enemyConfig.count)) this.spawn(enemyConfig.enemyType);
@@ -141,8 +108,11 @@ export class EnemyManager extends Actor {
 
     startStage(index: number) {
         this.stopStages();
-        this.stages[index]?.start();
 
+        const stage = this.stages[index] as Stage | undefined;
+
+        if (!stage) return;
+        stage.start();
         logs(`Starting stage ${index + 1}`, { duration: 1, color: "#6fa" });
     }
 

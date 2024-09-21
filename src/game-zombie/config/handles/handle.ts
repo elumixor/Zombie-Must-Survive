@@ -4,7 +4,7 @@
 import { getLocalStorage } from "@core";
 import { EventEmitter, nonNull, type Constructor } from "@elumixor/frontils";
 import { configurator } from "../configurator";
-import type { IResetView } from "../imy-element";
+import type { IHandleView, IResetView } from "../imy-element";
 import type { IEditor } from "../editors/editor";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -75,19 +75,16 @@ export abstract class Handle<T = unknown, U = T> {
     }
 
     instantiate(instance: object, Class: Constructor) {
-        if (this.instances.nonEmpty) {
-            this.instances.add(instance);
-            if (this.saved) this.load();
-            return;
-        }
-
         this.instances.add(instance);
 
-        if (!this.tabGroup) this.tabGroup = Class.name;
+        const hasView = (this.view as IHandleView | undefined) !== undefined;
+        if (!hasView) {
+            if (!this.tabGroup) this.tabGroup = Class.name;
 
-        const { view, id } = configurator.addHandle(this, String(this.propertyKey), this.tabGroup, this.section);
-        this.view = view;
-        this.id = id;
+            const { view, id } = configurator.addHandle(this, String(this.propertyKey), this.tabGroup, this.section);
+            this.view = view;
+            this.id = id;
+        }
 
         // view.addChild(this);
 
@@ -95,9 +92,12 @@ export abstract class Handle<T = unknown, U = T> {
             // Try loading the value from the storage
             this.load();
 
-            // Save whatever we have now to the storage
-            this.save();
+            if (!hasView)
+                // Save whatever we have now to the storage
+                this.save();
         }
+
+        if (hasView) return;
 
         const { changed: viewChanged, resetRequested } = this.addToView(this.view);
 
@@ -149,7 +149,7 @@ export abstract class Handle<T = unknown, U = T> {
 
     private onViewChanged(value: U) {
         for (const instance of this.instances) this.set(value, instance);
-        if (this.saved) this.save();
+        if (this.saved) this.save(value);
         this.changed.emit({ instances: this.instances, value });
     }
 
@@ -159,8 +159,8 @@ export abstract class Handle<T = unknown, U = T> {
         if (storedValue === undefined) return;
         for (const instance of this.instances) this.set(storedValue, instance);
     }
-    protected save() {
-        this.storage.setItem(this.id, this.serialize(this.get()));
+    protected save(value = this.get()) {
+        this.storage.setItem(this.id, this.serialize(value));
     }
 
     /* Extract value */
@@ -213,6 +213,10 @@ export function registerInstance(instance: object, target: object) {
     // Add instance to handles
     for (const handle of allHandles) handle.instantiate(instance, Class);
     for (const handle of allHandles) handle.updateInstances();
+}
+
+export function unsubscribeInstance(instance: object) {
+    for (const handles of collected.values()) for (const handle of handles) handle.instances.delete(instance);
 }
 
 function getTarget(target: object) {

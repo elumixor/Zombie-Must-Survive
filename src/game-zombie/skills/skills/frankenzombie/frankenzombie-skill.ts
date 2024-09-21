@@ -14,7 +14,7 @@ export class FrankenzombieSkill extends Skill {
 
     @cskill private readonly damage = this.addProperty(new NumProperty("Damage"));
     @cskill private readonly cooldown = this.addProperty(new NumProperty("Cooldown"));
-    @cskill private readonly radius = this.addProperty(new NumProperty("Radius"));
+    @cskill private readonly distance = this.addProperty(new NumProperty("Radius"));
     @cskill private readonly numBounces = this.addProperty(new NumProperty("Bounces"));
 
     private component?: FrankenzombieComponent;
@@ -33,7 +33,7 @@ export class FrankenzombieSkill extends Skill {
         if (!this.component) return;
 
         this.component.damage = this.damage.value(level);
-        this.component.radius = this.radius.value(level);
+        this.component.distance = this.distance.value(level);
         this.component.numBounces = this.numBounces.value(level);
         this.component.cooldown = this.cooldown.value(level);
 

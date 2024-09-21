@@ -66,6 +66,7 @@ export class MainLevel extends Level implements IResizeObservable {
     private reset() {
         di.uninject(GameState);
         this.destroy();
+        this.gameState.destroy();
         this.time.reset();
         void this.game.changeLevel(new MainLevel());
     }

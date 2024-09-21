@@ -1,4 +1,4 @@
-import { Actor, CircleColliderComponent, PhysicsComponent, TrackerComponent } from "@core";
+import { Actor, CircleColliderComponent, PhysicsComponent, Time, TrackerComponent } from "@core";
 import { di } from "@elumixor/di";
 import { HealthComponent, HitEffectComponent, MeleeAttackComponent } from "game-zombie/components";
 import { ResourcesZombie } from "game-zombie/resources-zombie";
@@ -16,6 +16,8 @@ export class Enemy extends Actor {
     readonly health = this.addComponent(new HealthComponent(this));
     readonly hitEffect = this.addComponent(new HitEffectComponent(this));
     readonly weapon = this.addComponent(new MeleeAttackComponent(this));
+
+    private freezeTimeout?: ReturnType<Time["timeout"]>;
 
     constructor(enemyType: EnemyType) {
         super();
@@ -76,10 +78,20 @@ export class Enemy extends Actor {
         this.tracker.tickEnabled = false;
         this.weapon.tickEnabled = false;
 
-        void this.time.delay(seconds).then(() => {
+        this.spine.speed = 0;
+
+        if (this.freezeTimeout) this.freezeTimeout.clear();
+
+        this.freezeTimeout = this.time.timeout(() => {
             this.tracker.tickEnabled = true;
             this.weapon.tickEnabled = true;
-        });
+            this.spine.speed = 1;
+        }, seconds);
+    }
+
+    override destroy() {
+        super.destroy();
+        this.freezeTimeout?.clear();
     }
 
     private async attack() {

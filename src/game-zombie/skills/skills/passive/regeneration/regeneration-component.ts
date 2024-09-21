@@ -10,24 +10,24 @@ export class RegenerationComponent extends Component {
 
     beginPlay() {
         super.beginPlay();
-        assert(!this.interval);
-        this.interval = this.time.interval(() => this.regenerateHealth(), 1);
+        this.updateParams();
     }
 
     updateParams() {
-        if (!this.interval) return;
-        this.interval.clear();
+        if (!this.beginPlayCalled) return;
+
+        this.interval?.clear();
         this.interval = this.time.interval(() => this.regenerateHealth(), 1);
+    }
+
+    override destroy() {
+        super.destroy();
+        this.interval?.clear();
     }
 
     private regenerateHealth() {
         const health = this.actor.getComponent(HealthComponent);
         assert(health);
-        health.heal(health.maxHealth * this.healthPercentRestored);
-    }
-
-    destroy() {
-        super.destroy();
-        this.interval?.clear();
+        health.heal((health.maxHealth * this.healthPercentRestored) / 100);
     }
 }

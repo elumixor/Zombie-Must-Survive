@@ -4,7 +4,7 @@ import { BeholderTurret } from "./beholder-turret";
 
 /** Spawns {@link BeholderTurret} */
 
-export class BeholderSpawnerComponent extends Component {
+export class BeholderComponent extends Component {
     private readonly time = di.inject(Time);
     tickEnabled = false;
 
@@ -29,10 +29,14 @@ export class BeholderSpawnerComponent extends Component {
     }
 
     updateParams() {
-        if (this.interval) {
-            this.interval.clear();
-            this.interval = this.time.interval(() => this.spawn(), this.spawnCooldown);
-        }
+        this.interval?.clear();
+        this.interval = this.time.interval(() => this.spawn(), this.spawnCooldown);
+    }
+
+    destroy() {
+        super.destroy();
+        this.interval?.clear();
+        this.interval = undefined;
     }
 
     private spawn() {

@@ -123,4 +123,9 @@ export class PlayerState {
     forceLevelUp() {
         this.xp = this.nextLevelXp;
     }
+
+    @c(c.button(), { tabGroup: "Player" })
+    forceDeath() {
+        this.hp = 0;
+    }
 }

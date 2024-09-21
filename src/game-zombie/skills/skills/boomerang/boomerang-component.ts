@@ -12,12 +12,12 @@ export class BoomerangComponent extends Component {
     lifetime = 5;
     cooldown = 10;
 
-    private readonly boomerangs = new Array<BoomerangActor>();
-    private timeout?: ReturnType<Time["timeout"]>;
+    private spawnInterval?: ReturnType<Time["interval"]>;
     private beginPlayCalled = false;
 
     beginPlay() {
         super.beginPlay();
+
         this.beginPlayCalled = true;
         this.updateParams();
     }
@@ -25,42 +25,39 @@ export class BoomerangComponent extends Component {
     override destroy() {
         super.destroy();
 
-        this.destroyCurrent();
-        this.timeout?.clear();
+        this.stop();
     }
 
     updateParams() {
         if (!this.beginPlayCalled) return;
 
-        this.destroyCurrent();
-        this.spawn();
+        this.stop();
+
+        this.spawnInterval = this.time.interval(() => this.spawn(), this.cooldown);
     }
 
     private spawn() {
-        this.timeout?.clear();
-
         const angleDiff = (Math.PI * 2) / this.instances;
 
-        for (let i = 0; i < this.instances; i++) {
+        const boomerangs = range(this.instances).map((i) => {
             const boomerang = new BoomerangActor();
             boomerang.flyAngle = angleDiff * i;
             boomerang.flyRadius = this.radius;
             boomerang.speed = this.speed;
             boomerang.damage = this.damage;
             this.actor.addChild(boomerang);
-            this.boomerangs.push(boomerang);
-        }
+            return boomerang;
+        });
 
-        this.timeout = this.time.timeout(() => this.nextRound(), this.lifetime);
+        void this.time.delay(this.lifetime).then(() => this.destroyCurrent(boomerangs));
     }
 
-    private nextRound() {
-        this.timeout = this.time.timeout(() => this.spawn(), this.cooldown);
-        this.destroyCurrent();
+    private stop() {
+        this.spawnInterval?.clear();
+        this.spawnInterval = undefined;
     }
 
-    private destroyCurrent() {
-        for (const boomerang of this.boomerangs) boomerang.flyRadiusIncrease = 0.5;
-        this.boomerangs.clear();
+    private destroyCurrent(boomerangs: BoomerangActor[]) {
+        for (const boomerang of boomerangs) boomerang.flyRadiusIncrease = 0.5;
     }
 }
