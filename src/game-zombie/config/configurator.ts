@@ -1,21 +1,23 @@
 import { getLocalStorage } from "@core";
-import { EventEmitter, nonNull } from "@elumixor/frontils";
+import { EventEmitter, nonNull, nonNullAssert } from "@elumixor/frontils";
 import { createElement, createView } from "./create-element";
 import { Toggle } from "./toggle";
 import "./styles/configurator.scss";
+import type { Handle } from "./handles";
+import { transformText } from "./transform-text";
 
 export class Configurator {
-    readonly reloadRequested = new EventEmitter();
+    readonly reloadRequested = new EventEmitter<string | undefined>();
 
     private readonly localStorage = nonNull(getLocalStorage());
 
     private readonly container = createElement("div", { className: "configurator" });
     private readonly topHeader = createElement("div", { className: "c-header", parent: this.container });
 
-    private readonly refreshButton = createElement("div", {
+    private readonly resetButton = createElement("div", {
         className: "c-button",
         parent: this.topHeader,
-        textContent: "reset",
+        textContent: "reset all",
     });
     private readonly exportButton = createElement("div", {
         className: "c-button",
@@ -30,6 +32,8 @@ export class Configurator {
 
     private readonly content = new Toggle("Content", { open: true, header: false });
     private readonly dragger = createElement("div", { className: "c-dragger", parent: this.container });
+
+    private readonly handles = new Map<string, Handle>();
 
     // Add the button to show/hide the configurator
     private readonly showButton = createElement("div", {
@@ -50,7 +54,7 @@ export class Configurator {
         });
 
         this.exportButton.addEventListener("click", () => this.export());
-        this.refreshButton.addEventListener("click", () => this.reloadRequested.emit());
+        this.resetButton.addEventListener("click", () => this.reloadRequested.emit(undefined));
         this.showButton.addEventListener("click", () => (this.visible = true));
         this.closeButton.addEventListener("click", () => (this.visible = false));
 
@@ -88,15 +92,16 @@ export class Configurator {
         this.container.style.display = value ? "flex" : "none";
     }
 
-    getView(propertyName: string, name?: string, section?: string) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    addHandle(handle: Handle<any>, propertyName: string, name?: string, section?: string) {
         let tab = "general";
         let group = "general" as string | undefined;
 
         if (name) [tab, group] = name.split(":");
         if (group === undefined) group = "general";
 
-        tab = this.transformText(tab);
-        group = this.transformText(group);
+        tab = transformText(tab);
+        group = transformText(group);
 
         const tabPath = `${tab}:${group}`;
         const id = `${tabPath}:${propertyName}`;
@@ -105,46 +110,63 @@ export class Configurator {
         const toggle = this.content.findOrCreate(path);
         const view = createView(propertyName, toggle.content);
 
+        this.handles.set(id, handle);
+
         return { view, id };
     }
 
-    load({ config }: { config: Record<string, Record<string, Record<string, string>>> }) {
-        // for (const [tabName, tab] of Object.entries(config))
-        //     for (const [groupName, group] of Object.entries(tab))
-        //         for (const [propertyName, value] of Object.entries(group))
-        //             this.localStorage.setItem(`${tabName}:${groupName}:${propertyName}`, value);
+    load({ config }: { config: Record<string, unknown> }, id?: string) {
+        // Recursively load the config
+        const load = (data: Record<string, unknown>, path?: string) => {
+            if (typeof data !== "object") {
+                if (id !== undefined && path !== id) return;
+
+                nonNullAssert(path);
+
+                this.localStorage.setItem(path, data);
+                this.handles.get(path)!.reset();
+                return;
+            }
+
+            for (const key in data) {
+                const value = data[key];
+                load(value as Record<string, unknown>, path ? `${path}:${key}` : key);
+            }
+        };
+
+        load(config);
+    }
+
+    resetSingle(id: string) {
+        this.reloadRequested.emit(id);
     }
 
     private export() {
-        // const data = Object.fromEntries(
-        //     [...this.tabs.values()].map((tab) => [
-        //         tab.title,
-        //         Object.fromEntries(
-        //             [...tab.groups.values()].map((group) => [
-        //                 group.name,
-        //                 Object.fromEntries([...group.handles].map((handle) => handle.serialized)),
-        //             ]),
-        //         ),
-        //     ]),
-        // );
-        // const json = JSON.stringify({ config: data }, null, 4);
-        // const blob = new Blob([json], { type: "application/json" });
-        // const url = URL.createObjectURL(blob);
-        // const a = createElement("a", { parent: document.body });
-        // a.href = url;
-        // a.download = "config.json";
-        // a.click();
-        // URL.revokeObjectURL(url);
-        // document.body.removeChild(a);
-    }
+        const data = {} as Record<string, unknown>;
+        for (const handle of this.handles.values()) {
+            const [key, value] = handle.serialized;
 
-    private transformText(text: string): string {
-        // Split by camelCase and capitalize each word
-        return text
-            .replace(/([a-z])([A-Z])/g, "$1 $2") // Split camelCase
-            .split(" ")
-            .map((word) => word.capitalize())
-            .join(" ");
+            // Split the key by ":" and assign the value to the correct path
+            const keys = key.split(":");
+            const last = keys.pop()!;
+            let current = data;
+            for (const key of keys) {
+                if (!current[key]) current[key] = {};
+                current = current[key] as Record<string, unknown>;
+            }
+
+            current[last] = value;
+        }
+
+        const json = JSON.stringify({ config: data }, null, 4);
+        const blob = new Blob([json], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = createElement("a", { parent: document.body });
+        a.href = url;
+        a.download = "config.json";
+        a.click();
+        URL.revokeObjectURL(url);
+        document.body.removeChild(a);
     }
 }
 export const configurator = new Configurator();

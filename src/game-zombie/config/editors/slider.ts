@@ -1,12 +1,12 @@
 import { EventEmitter } from "@elumixor/frontils";
 import { createElement } from "../create-element";
+import type { IResetView } from "../imy-element";
 import "../styles/slider.scss";
 import type { IEditor } from "./editor";
 import type { NumericOptions } from "./number";
-import type { IHandleView } from "../imy-element";
 
 export function sliderEditor(
-    view: IHandleView,
+    view: IResetView,
     { min = -10, max = 10, step = 0.5, defaultValue = 0 }: NumericOptions,
 ): IEditor<number> {
     // Create the input element for the slider
@@ -59,5 +59,5 @@ export function sliderEditor(
         regularInput.value = value.toString();
     };
 
-    return { changed, update, view };
+    return { changed, update, view, resetRequested: view.resetRequested };
 }

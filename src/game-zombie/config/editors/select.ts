@@ -1,14 +1,14 @@
 import { EventEmitter } from "@elumixor/frontils";
 import { createElement } from "../create-element";
+import type { IResetView } from "../imy-element";
 import type { IEditor } from "./editor";
-import type { IHandleView } from "../imy-element";
 
 export interface SelectOptions<T> {
     options?: T[];
     defaultValue?: T;
 }
 
-export function selectEditor<const T>(view: IHandleView, { options, defaultValue }: SelectOptions<T> = {}): IEditor<T> {
+export function selectEditor<const T>(view: IResetView, { options, defaultValue }: SelectOptions<T> = {}): IEditor<T> {
     const select = createElement("select", { className: "editor" });
 
     if (options) {
@@ -30,5 +30,5 @@ export function selectEditor<const T>(view: IHandleView, { options, defaultValue
         select.value = String(value);
     };
 
-    return { changed, update, view };
+    return { changed, update, view, resetRequested: view.resetRequested };
 }

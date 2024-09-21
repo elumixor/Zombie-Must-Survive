@@ -1,7 +1,7 @@
 import { EventEmitter } from "@elumixor/frontils";
 import { createElement } from "../create-element";
+import type { IResetView } from "../imy-element";
 import type { IEditor } from "./editor";
-import type { IHandleView } from "../imy-element";
 import "./number.scss";
 
 export interface NumericOptions {
@@ -12,7 +12,7 @@ export interface NumericOptions {
 }
 
 export function numberEditor(
-    view: IHandleView,
+    view: IResetView,
     { min, max, step, defaultValue = 0 }: NumericOptions = {},
 ): IEditor<number> {
     const input = createElement("input", { className: "editor number" });
@@ -31,5 +31,5 @@ export function numberEditor(
 
     const update = (value: number) => (input.value = String(value));
 
-    return { changed, update, view };
+    return { changed, update, view, resetRequested: view.resetRequested };
 }

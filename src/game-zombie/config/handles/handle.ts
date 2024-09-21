@@ -4,7 +4,8 @@
 import { getLocalStorage } from "@core";
 import { EventEmitter, nonNull, type Constructor } from "@elumixor/frontils";
 import { configurator } from "../configurator";
-import type { IHandleView } from "../imy-element";
+import type { IResetView } from "../imy-element";
+import type { IEditor } from "../editors/editor";
 
 export interface HandleOptions {
     tabGroup?: string;
@@ -16,14 +17,36 @@ export interface HandleOptions {
 export abstract class Handle<T = unknown, U = T> {
     readonly changed = new EventEmitter<{ instances: Iterable<object>; value: U }>();
     private readonly storage = nonNull(getLocalStorage());
-    private instances = new Set<object>();
+    protected instances = new Set<object>();
     private Class!: object;
     private propertyKey!: string | symbol;
-    private view!: IHandleView;
-    private id!: string;
+    private view!: IResetView;
+    id!: string;
     private saved!: boolean;
     private tabGroup?: string;
     private section?: string;
+
+    static create<T, Rest extends unknown[]>(factory: (view: IResetView, ...args: Rest) => IEditor<T>) {
+        return (...options: Rest) =>
+            new (class extends Handle<T> {
+                private editor!: IEditor<T>;
+                private readonly options;
+
+                constructor(...options: Rest) {
+                    super();
+                    this.options = options;
+                }
+
+                override addToView(view: IResetView) {
+                    this.editor = factory(view, ...this.options);
+                    return this.editor;
+                }
+
+                override updateView(value: T) {
+                    this.editor.update(value);
+                }
+            })(...options);
+    }
 
     protected get propertyValue() {
         return Reflect.get(this.instances.first, this.propertyKey) as T;
@@ -37,7 +60,7 @@ export abstract class Handle<T = unknown, U = T> {
     }
 
     get serialized() {
-        return [this.propertyKey, this.storage.getItem(this.id) ?? ""];
+        return [this.id, this.storage.getItem(this.id) ?? ""];
     }
 
     register(Class: Constructor, propertyKey: string | symbol, options?: HandleOptions) {
@@ -59,7 +82,7 @@ export abstract class Handle<T = unknown, U = T> {
 
         if (!this.tabGroup) this.tabGroup = Class.name;
 
-        const { view, id } = configurator.getView(String(this.propertyKey), this.tabGroup, this.section);
+        const { view, id } = configurator.addHandle(this, String(this.propertyKey), this.tabGroup, this.section);
         this.view = view;
         this.id = id;
 
@@ -73,9 +96,11 @@ export abstract class Handle<T = unknown, U = T> {
             this.save();
         }
 
-        const viewChanged = this.addToView(this.view);
+        const { changed: viewChanged, resetRequested } = this.addToView(this.view);
+
         this.updateView(this.get());
         viewChanged.subscribe((value) => this.onViewChanged(value));
+        resetRequested.subscribe(() => configurator.resetSingle(this.id));
     }
 
     copy() {
@@ -84,7 +109,17 @@ export abstract class Handle<T = unknown, U = T> {
         return result;
     }
 
-    protected abstract addToView(view: IHandleView): EventEmitter<U>;
+    reset() {
+        this.load();
+        this.updateView(this.get());
+    }
+
+    updateInstances() {
+        const value = this.get();
+        this.onViewChanged(value);
+    }
+
+    protected abstract addToView(view: IResetView): { changed: EventEmitter<U>; resetRequested: EventEmitter };
     protected abstract updateView(value: U): void;
 
     /** Can be overridden to operate, for example, on some property of the object, in case the value is not primitive */
@@ -172,6 +207,7 @@ export function registerInstance(instance: object, target: object) {
 
     // Add instance to handles
     for (const handle of allHandles) handle.instantiate(instance, Class);
+    for (const handle of allHandles) handle.updateInstances();
 }
 
 function getTarget(target: object) {

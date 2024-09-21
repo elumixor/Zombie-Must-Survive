@@ -1,6 +1,8 @@
 import { EventEmitter } from "@elumixor/frontils";
+import { c } from "game-zombie/config";
 import { Skill } from "game-zombie/skills";
 
+@c
 export class PlayerState {
     readonly levelChanged = new EventEmitter<number>();
     readonly levelUp = new EventEmitter<number>();
@@ -11,16 +13,38 @@ export class PlayerState {
 
     readonly skills = new Set<Skill>();
 
+    @c(c.num(), { tabGroup: "Player" })
     private readonly levelXpFactor = 10;
+
+    @c(c.num(), { tabGroup: "Player" })
     private readonly constitution = 5;
+
+    @c(c.num(), {
+        tabGroup: "Player",
+        onUpdate: (instances) => {
+            for (const instance of instances) {
+                const i = instance as { _hp: number; maxHp: number; hpChanged: EventEmitter<number> };
+                i._hp = i.maxHp;
+                i.hpChanged.emit(i._hp);
+            }
+        },
+    })
     private readonly baseHp = 100;
+
+    @c(c.bool(), { tabGroup: "Player" })
+    private restoreHpOnLevelUp = false;
 
     private _xp = 0;
     private _bonusHealth = 0;
     private _hp = this.maxHp;
 
     constructor() {
-        this.levelChanged.subscribe(() => (this.hp = this.maxHp));
+        this.levelChanged.subscribe(() => {
+            if (this.restoreHpOnLevelUp) this.hp = this.maxHp;
+            else {
+                this.hpChanged.emit(this.hp);
+            }
+        });
     }
 
     get isDead() {
@@ -93,5 +117,10 @@ export class PlayerState {
 
     get remainingXp() {
         return this.nextLevelXp - this.xp;
+    }
+
+    @c(c.button(), { tabGroup: "Player" })
+    forceLevelUp() {
+        this.xp = this.nextLevelXp;
     }
 }

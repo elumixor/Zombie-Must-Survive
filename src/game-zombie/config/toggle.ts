@@ -1,6 +1,7 @@
 import { createElement } from "./create-element";
 import type { IMyElement, IToggleElement } from "./imy-element";
 import "./styles/toggle.scss";
+import { transformText } from "./transform-text";
 
 export class Toggle implements IToggleElement {
     readonly container = createElement("div", { className: "toggle-container" });
@@ -71,7 +72,7 @@ export class Toggle implements IToggleElement {
         const [first, ...rest] = path.split(":");
         let current = this.subElements.get(first);
         if (!current) {
-            current = new Toggle(first);
+            current = new Toggle(transformText(first));
             this.addChild(current);
         }
 

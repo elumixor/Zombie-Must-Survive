@@ -1,3 +1,5 @@
+import { bool } from "./editors/bool";
+import { button } from "./editors/button";
 import { num, registerHandle, registerInstance, type HandleOptions, type Handle } from "./handles";
 import type { AbstractConstructor, Constructor } from "@elumixor/frontils";
 
@@ -32,5 +34,7 @@ function propertyDecorator(handle: Handle, options?: HandleOptions): PropertyDec
 }
 
 c.num = num;
+c.bool = bool;
+c.button = button;
 
 export { c };

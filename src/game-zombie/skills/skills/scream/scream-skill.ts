@@ -29,7 +29,7 @@ export class ScreamSkill extends Skill {
     }
 
     override update(_actor: Actor, level: number) {
-        assert(this.component);
+        if (!this.component) return;
 
         this.component.radius = this.radius.value(level);
         this.component.freezeDuration = this.freezeDuration.value(level);

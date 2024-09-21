@@ -31,7 +31,7 @@ export class BoomerangSkill extends Skill {
     }
 
     override update(_actor: Actor, level: number) {
-        assert(this.component);
+        if (!this.component) return;
 
         this.component.radius = this.radius;
         this.component.speed = this.speed.value(level);

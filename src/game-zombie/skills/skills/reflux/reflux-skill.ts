@@ -12,13 +12,16 @@ export class RefluxSkill extends Skill {
     readonly description = "Spit toxic projectiles at enemies.";
     readonly texture = Texture.from("ui-reflux");
 
-    private readonly numProjectiles = this.addProperty(new NumProperty("Projectiles", [1]));
-
+    @cskill private readonly numProjectiles = this.addProperty(new NumProperty("Projectiles", [1]));
     @cskill private readonly damage = this.addProperty(new NumProperty("Damage", [1]));
     @cskill private readonly cooldown = this.addProperty(new NumProperty("Cooldown", [0.5]));
-    @cskill private readonly pierce = this.addProperty(new NumProperty("Pierce", [0], { hideZero: true }));
 
+    @c(c.num(), { section: "Skills" })
     private readonly distance = 500;
+
+    @c(c.num(), { section: "Skills" })
+    private readonly speed = 10;
+
     private readonly projectileTexture = Texture.from("spit");
 
     private component?: ProjectileWeaponComponent;
@@ -45,6 +48,7 @@ export class RefluxSkill extends Skill {
         this.component.projectileConfig.distance = this.distance;
         this.component.projectileConfig.alignToDirection = true;
         this.component.projectileConfig.damage = this.damage.value(level);
-        this.component.projectileConfig.pierce = this.pierce.value(level);
+        this.component.projectileConfig.movement.maxSpeed = this.speed;
+        this.component.projectileConfig.movement.minSpeed = this.speed;
     }
 }

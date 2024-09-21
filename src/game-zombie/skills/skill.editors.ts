@@ -7,7 +7,7 @@ export const cskill: PropertyDecorator = (target, propertyKey) => {
         onUpdate(instances) {
             for (const instance of instances) {
                 const skill = instance as Skill;
-                skill.update(skill.actor!, skill.level);
+                if (skill.actor) skill.update(skill.actor, skill.level);
             }
         },
     })(target, propertyKey);

@@ -32,6 +32,11 @@ export class BiteSpawnerComponent extends Component {
         }
     }
 
+    override destroy(): void {
+        super.destroy();
+        this.interval?.clear();
+    }
+
     private async spawn() {
         const spine = this.resources.bite.copy();
         spine.parentLayer = this.level.layers.get("foreground");

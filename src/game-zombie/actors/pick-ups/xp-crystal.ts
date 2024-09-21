@@ -13,6 +13,9 @@ export class XpCrystal extends PickUp {
     @c(c.num(), { tabGroup: "Player" })
     xpGain = 1;
 
+    @c(c.bool(), { tabGroup: "Player" })
+    private noXP = false;
+
     private readonly shadow = this.addChild(Sprite.from("shadow"));
     private readonly sprite = this.addChild(Sprite.from("crystal"));
 
@@ -26,7 +29,7 @@ export class XpCrystal extends PickUp {
 
         this.shadow.y = 5;
 
-        this.collected.subscribe(() => (this.playerState.xp += this.xpGain));
+        this.collected.subscribe(() => (this.playerState.xp += this.noXP ? 0 : this.xpGain));
     }
 
     override beginPlay() {

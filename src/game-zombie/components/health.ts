@@ -7,6 +7,8 @@ export class HealthComponent extends Component {
     readonly healed = new EventEmitter<number>();
     readonly died = new EventEmitter();
 
+    invulnerable = false;
+
     maxHealth = 10;
     minHealth = 0;
 
@@ -22,6 +24,8 @@ export class HealthComponent extends Component {
     set health(value) {
         value = clamp(value, this.minHealth, this.maxHealth);
         if (this._hp === value) return;
+
+        if (this.invulnerable && value < this._hp) return;
 
         const dead = this.isDead;
         this._hp = value;

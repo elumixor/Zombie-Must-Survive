@@ -1,11 +1,10 @@
-import type { EventEmitter } from "@elumixor/frontils";
 import { arrayEditor, groupEditor, Handle, selectEditor, sliderEditor } from "game-zombie/config";
 import type { IEditor } from "game-zombie/config/editors/editor";
-import type { IHandleView } from "game-zombie/config/imy-element";
+import type { IResetView } from "game-zombie/config/imy-element";
 import type { EnemyType } from "./enemy-type";
 import type { IEnemyStageConfig, IStage } from "./types";
 
-function enemyEditor(view: IHandleView): IEditor<IEnemyStageConfig> {
+function enemyEditor(view: IResetView): IEditor<IEnemyStageConfig> {
     return groupEditor(
         view,
         {
@@ -22,7 +21,7 @@ function enemyEditor(view: IHandleView): IEditor<IEnemyStageConfig> {
     );
 }
 
-function stageEditor(view: IHandleView): IEditor<IStage> {
+function stageEditor(view: IResetView): IEditor<IStage> {
     return groupEditor(
         view,
         {
@@ -43,13 +42,13 @@ function stageEditor(view: IHandleView): IEditor<IStage> {
 class StagesEditor extends Handle<IStage[]> {
     private editor!: IEditor<IStage[]>;
 
-    protected override addToView(view: IHandleView): EventEmitter<IStage[]> {
+    protected override addToView(view: IResetView) {
         this.editor = arrayEditor(view, (view) => stageEditor(view), {
             title: (index) => `Stage ${index + 1}`,
             defaultValue: { duration: 15, enemies: [] },
         });
 
-        return this.editor.changed;
+        return this.editor;
     }
 
     protected override updateView(value: IStage[]): void {

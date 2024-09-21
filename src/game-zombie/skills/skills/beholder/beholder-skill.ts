@@ -34,7 +34,7 @@ export class BeholderSkill extends Skill {
     }
 
     override update(_actor: Actor, level: number) {
-        assert(this.component);
+        if (!this.component) return;
 
         this.component.damage = this.damage.value(level);
         this.component.fireCooldown = this.fireCooldown.value(level);

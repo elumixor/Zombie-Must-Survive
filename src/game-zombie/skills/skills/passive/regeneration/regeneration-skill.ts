@@ -26,7 +26,7 @@ export class RegenerationSkill extends Skill {
     }
 
     override update(_actor: Actor, level: number) {
-        assert(this.component);
+        if (!this.component) return;
 
         this.component.healthPercentRestored = this.healthPercentRestored.value(level);
     }

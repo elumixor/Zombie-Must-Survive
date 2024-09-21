@@ -59,16 +59,24 @@
 .c-dragger {
     cursor: move;
     flex-grow: 1;
-    width: 10px;
-    background-color: #5e2783;
+    background-color: #9900ffad;
     position: absolute;
+    width: 0px;
+    right: 0px;
     top: 0;
-    right: -10px;
     bottom: 0;
+    transition:
+        width 0.1s,
+        right 0.1s;
 
     &:hover {
-        background-color: #c77bfa;
+        background-color: #c163ffad;
     }
+}
+
+.configurator:hover .c-dragger {
+    right: -20px;
+    width: 20px;
 }
 
 .w-full {

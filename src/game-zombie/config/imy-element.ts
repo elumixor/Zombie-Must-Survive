@@ -1,3 +1,5 @@
+import type { EventEmitter } from "@elumixor/frontils";
+
 export interface IMyElement {
     title: string;
     readonly container: HTMLElement;
@@ -7,6 +9,9 @@ export interface IMyElement {
 export interface IHandleView extends IMyElement {
     readonly header: HTMLElement;
     readonly content: HTMLElement;
+}
+export interface IResetView extends IHandleView {
+    readonly resetRequested: EventEmitter;
 }
 
 export interface IToggleElement extends IHandleView {

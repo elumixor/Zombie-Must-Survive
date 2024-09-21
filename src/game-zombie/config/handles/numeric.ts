@@ -1,5 +1,5 @@
 import { numberEditor, sliderEditor, type NumericOptions } from "../editors";
-import type { IHandleView } from "../imy-element";
+import type { IResetView } from "../imy-element";
 import { Handle } from "./handle";
 
 type ExtendedNumericOptions = NumericOptions & {
@@ -25,14 +25,14 @@ export class NumericHandle extends Handle<number> {
         super.set(value, instance);
     }
 
-    override addToView(view: IHandleView) {
-        const { changed, update } = this.options.slider
+    override addToView(view: IResetView) {
+        const { changed, update, resetRequested } = this.options.slider
             ? sliderEditor(view, this.options)
             : numberEditor(view, this.options);
 
         this.update = update;
 
-        return changed;
+        return { changed, resetRequested };
     }
 
     override updateView(value: number) {

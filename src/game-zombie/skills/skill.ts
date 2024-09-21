@@ -22,6 +22,8 @@ export class Skill {
         if (previous === value) return;
         this._level = value;
 
+        logs(`Skill ${this.name} level changed to ${value}`);
+
         if (previous === 0 && value > 0 && this.actor) this.addToActor(this.actor);
         else if (previous > 0 && value === 0 && this.actor) this.removeFromActor(this.actor);
 

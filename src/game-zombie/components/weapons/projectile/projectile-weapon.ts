@@ -11,7 +11,7 @@ export class ProjectileWeaponComponent extends WeaponComponent {
     attackWithTargetInRange = true;
 
     protected override use(targetsInRange: Actor[]) {
-        const { carrierVelocity } = this;
+        // const { carrierVelocity } = this;
 
         const closestTarget = this.closest(targetsInRange);
         assert(closestTarget);
@@ -33,7 +33,7 @@ export class ProjectileWeaponComponent extends WeaponComponent {
             projectile.worldPosition = this.actor.worldPosition;
 
             // Add carrier velocity
-            projectile.physics.addVelocity(carrierVelocity);
+            // projectile.physics.addVelocity(carrierVelocity);
         }
     }
 }

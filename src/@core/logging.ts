@@ -1,3 +1,5 @@
+import { getElementOrThrow } from "@elumixor/frontils";
+
 declare global {
     function log(...args: unknown[]): void;
     // If PROD - will have no effect
@@ -49,7 +51,7 @@ Reflect.defineProperty(globalThis, "logs", {
               if (!div) {
                   div = document.createElement("div");
                   div.id = "__debug-string";
-                  div.style.position = "fixed";
+                  div.style.position = "absolute";
                   div.style.top = "0";
                   div.style.left = "0";
                   div.style.zIndex = "9999";
@@ -60,7 +62,7 @@ Reflect.defineProperty(globalThis, "logs", {
                   div.style.fontWeight = "medium";
                   div.style.padding = "8px";
                   div.style.pointerEvents = "none";
-                  document.body.appendChild(div);
+                  getElementOrThrow("canvas-container").appendChild(div);
 
                   Reflect.defineProperty(globalThis, "__debug-string-map", {
                       value: new Map<number, { timerId: number; div: HTMLElement }>(),

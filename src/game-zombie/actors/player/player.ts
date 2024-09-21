@@ -21,6 +21,16 @@ export class Player extends Actor {
     @c(c.num())
     speed = 10;
 
+    @c(c.bool(), {
+        tabGroup: "Player",
+        onUpdate: (instances, value) => {
+            for (const instance of instances) {
+                const i = instance as Player;
+                i.health.invulnerable = value as boolean;
+            }
+        },
+    })
+    private invulnerable = false;
     readonly spine = this.addChild(this.resources.zombie.copy());
     readonly collider = this.addComponent(new CircleColliderComponent(this));
     readonly pickupCollider = this.addComponent(new CircleColliderComponent(this));
@@ -32,6 +42,7 @@ export class Player extends Actor {
 
     private readonly followScaleMaxDistance = 30;
     private readonly followScaleMinScale = 0.8;
+
     private readonly followScaleSpeed = 0.1;
     private readonly followDistanceFactor = 0.1;
 
@@ -55,6 +66,8 @@ export class Player extends Actor {
 
         // Animate on hit - tween to red
         this.health.damaged.subscribe((damage) => {
+            if (this.invulnerable) return;
+
             this.hitEffect.tintSprite(this.spine);
             this.hitEffect.showText(damage);
         });

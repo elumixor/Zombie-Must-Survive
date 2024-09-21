@@ -4,6 +4,7 @@ import type { IHandleView } from "../imy-element";
 import type { ArrayButtonContainer, IEditor, IEditorFactory } from "./editor";
 import "./array.scss";
 import { Toggle } from "../toggle";
+import { transformText } from "../transform-text";
 
 export function arrayEditor<T>(
     view: IHandleView,
@@ -33,6 +34,7 @@ export function arrayEditor<T>(
 
     // Create an event emitter
     const changed = new EventEmitter<T[]>();
+    const resetRequested = new EventEmitter();
 
     let currentEditors = new Array<IEditor<T>>();
     const currentValues = new Array<T>();
@@ -40,7 +42,7 @@ export function arrayEditor<T>(
     // Function to add a new element editor
     const addElement = () => {
         const index = currentEditors.length;
-        const elementView = createView(title(index), elementsContainer);
+        const elementView = createView(transformText(title(index)), elementsContainer);
         const elementEditor = elementEditorFactory(elementView) as IEditor<T> & Partial<ArrayButtonContainer>;
 
         if (elementEditor.arrayButtonContainer) elementView.container.classList.add("special-array-handle-view");
@@ -72,6 +74,7 @@ export function arrayEditor<T>(
             currentValues[index] = value;
             emitChange();
         });
+        resetRequested.subscribe(() => elementEditor.resetRequested.emit());
 
         return elementEditor;
     };
@@ -103,8 +106,8 @@ export function arrayEditor<T>(
             currentValues[index] = value;
         }
 
-        headerTextNode.textContent = view.title + ` (${currentEditors.length})`;
+        headerTextNode.textContent = transformText(view.title) + ` (${currentEditors.length})`;
     };
 
-    return { changed, update, view };
+    return { changed, update, view, resetRequested };
 }

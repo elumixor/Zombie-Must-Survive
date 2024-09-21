@@ -52,7 +52,7 @@ export class Game {
             this.time.add(() => (fpsCounter.textContent = `FPS: ${round(1000 / this.time.dMs)}`));
         });
 
-        configurator.reloadRequested.subscribe(() => configurator.load(this.resources.get("config")!));
+        configurator.reloadRequested.subscribe((id) => configurator.load(this.resources.get("config")!, id));
 
         // We will need to uncomment this later for PROD builds?
         // configurator.load(this.resources.get("config")!);

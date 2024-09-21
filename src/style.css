@@ -10,6 +10,10 @@ body {
     display: flex;
 }
 
+#canvas-container {
+    position: relative;
+}
+
 #canvas-container,
 #canvas-container > canvas {
     left: 0%;

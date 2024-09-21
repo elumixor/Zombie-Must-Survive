@@ -30,7 +30,7 @@ export class SpiritSkill extends Skill {
     }
 
     override update(_actor: Actor, level: number) {
-        assert(this.component);
+        if (!this.component) return;
 
         this.component.numSpirits = this.numSpirits.value(level);
         this.component.damage = this.damage.value(level);
