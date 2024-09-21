@@ -12,13 +12,13 @@ export class ResourcesZombie extends BaseResources {
     /* Enemies */
 
     @spine("enemies/villager1/villager1")
-    declare readonly worker: EnemySpine;
+    declare readonly villager1: EnemySpine;
 
     @spine("enemies/villager2/villager2")
-    declare readonly soldier: EnemySpine;
+    declare readonly villager2: EnemySpine;
 
     @spine("enemies/villager3/villager3")
-    declare readonly doctor: EnemySpine;
+    declare readonly villager3: EnemySpine;
 
     /* Abilities */
 

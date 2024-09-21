@@ -7,17 +7,20 @@ import { configurator } from "../configurator";
 import type { IResetView } from "../imy-element";
 import type { IEditor } from "../editors/editor";
 
-export interface HandleOptions {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export interface HandleOptions<T extends Handle<any> = Handle<any>> {
     tabGroup?: string;
     saved?: boolean;
     section?: string;
-    onUpdate?: (instances: Iterable<object>, value: unknown) => void;
+    onUpdate?: (instances: Iterable<object>, value: unknown, handle: T) => void;
+    onCreated?: (instances: Iterable<object>, value: unknown, handle: T) => void;
 }
 
 export abstract class Handle<T = unknown, U = T> {
     readonly changed = new EventEmitter<{ instances: Iterable<object>; value: U }>();
+    readonly created = new EventEmitter<{ instances: Iterable<object>; value: U }>();
     private readonly storage = nonNull(getLocalStorage());
-    protected instances = new Set<object>();
+    instances = new Set<object>();
     private Class!: object;
     private propertyKey!: string | symbol;
     private view!: IResetView;
@@ -98,7 +101,9 @@ export abstract class Handle<T = unknown, U = T> {
 
         const { changed: viewChanged, resetRequested } = this.addToView(this.view);
 
-        this.updateView(this.get());
+        const value = this.get();
+        this.updateView(value);
+        this.created.emit({ instances: this.instances, value });
         viewChanged.subscribe((value) => this.onViewChanged(value));
         resetRequested.subscribe(() => configurator.resetSingle(this.id));
     }

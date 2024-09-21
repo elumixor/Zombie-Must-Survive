@@ -1,9 +1,9 @@
 import { EventEmitter } from "@elumixor/frontils";
 import { createElement } from "../create-element";
 import type { IResetView } from "../imy-element";
-import "../styles/slider.scss";
 import type { IEditor } from "./editor";
 import type { NumericOptions } from "./number";
+import "./slider.scss";
 
 export function sliderEditor(
     view: IResetView,
@@ -19,7 +19,7 @@ export function sliderEditor(
     sliderInput.max = max.toString();
     sliderInput.step = step.toString();
 
-    view.content.classList.add("slider-container");
+    view.content.classList.add("slider-content");
 
     // Append the input element to the container
     view.content.appendChild(sliderInput);

@@ -54,6 +54,8 @@ export function createView(propertyName: string, parent?: HTMLElement): IResetVi
 
     document.addEventListener("click", () => (contextMenu.style.display = "none"));
 
+    contextMenu.style.display = "none";
+
     header.textContent = transformText(propertyName);
 
     return {

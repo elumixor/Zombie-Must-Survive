@@ -6,6 +6,8 @@ import "./array.scss";
 import { Toggle } from "../toggle";
 import { transformText } from "../transform-text";
 
+export type ArrayEditor<T> = IEditor<T[]> & { editors: IEditor<T>[] };
+
 export function arrayEditor<T>(
     view: IHandleView,
     elementEditorFactory: IEditorFactory<T>,
@@ -13,7 +15,7 @@ export function arrayEditor<T>(
         title?: (index: number) => string;
         defaultValue?: T;
     },
-): IEditor<T[]> {
+): ArrayEditor<T> {
     const toggle = new Toggle(view.title, { open: true });
     view.addChild(toggle);
     view.header.style.display = "none";
@@ -21,7 +23,6 @@ export function arrayEditor<T>(
     const title = options?.title ?? ((index) => `Element ${index}`);
 
     view.container.classList.add("array-container");
-    toggle.container.classList.add("w-full");
     toggle.header.classList.add("array-header");
 
     const elementsContainer = createElement("div", { parent: toggle.content });
@@ -45,7 +46,7 @@ export function arrayEditor<T>(
         const elementView = createView(transformText(title(index)), elementsContainer);
         const elementEditor = elementEditorFactory(elementView) as IEditor<T> & Partial<ArrayButtonContainer>;
 
-        if (elementEditor.arrayButtonContainer) elementView.container.classList.add("special-array-handle-view");
+        if (elementEditor.arrayButtonContainer) elementView.container.classList.add("mr-0");
 
         currentValues.push(options?.defaultValue ?? (null as T));
         if (options?.defaultValue) elementEditor.update(options.defaultValue);
@@ -109,5 +110,13 @@ export function arrayEditor<T>(
         headerTextNode.textContent = transformText(view.title) + ` (${currentEditors.length})`;
     };
 
-    return { changed, update, view, resetRequested };
+    return {
+        changed,
+        update,
+        view,
+        resetRequested,
+        get editors() {
+            return currentEditors;
+        },
+    };
 }

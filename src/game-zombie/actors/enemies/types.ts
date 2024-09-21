@@ -6,7 +6,14 @@ export interface IEnemyStageConfig {
     count: number;
 }
 
-export interface IStage {
+export interface IStageConfig {
     duration: number;
     enemies: IEnemyStageConfig[];
+}
+
+export interface IEnemyConfig {
+    speed: number;
+    damage: number;
+    health: number;
+    lag: number;
 }

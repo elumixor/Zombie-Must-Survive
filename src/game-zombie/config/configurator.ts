@@ -103,8 +103,8 @@ export class Configurator {
         tab = transformText(tab);
         group = transformText(group);
 
-        const tabPath = `${tab}:${group}`;
-        const id = `${tabPath}:${propertyName}`;
+        const id = `${tab}:${group}:${propertyName}`;
+        const tabPath = group === "General" ? tab : `${tab}:${group}`;
         const path = section ? `${section}:${tabPath}` : tabPath;
 
         const toggle = this.content.findOrCreate(path);

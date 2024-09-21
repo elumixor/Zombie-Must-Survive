@@ -14,11 +14,7 @@ export class MainLevel extends Level implements IResizeObservable {
     private readonly background = this.addChild(new Background());
     private readonly player = this.addChild(new Player());
 
-    readonly enemyManager = this.addChild(
-        new EnemyManager(
-
-        ),
-    );
+    readonly enemyManager = this.addChild(new EnemyManager());
 
     @responsive({ pin: [0.5, 0], y: 30 })
     private readonly clock = this.ui.addChild(new Clock());
@@ -45,7 +41,7 @@ export class MainLevel extends Level implements IResizeObservable {
             this.addChild(c);
         }
 
-        this.enemyManager.player = this.player;
+        this.enemyManager.enemiesTarget = this.player;
 
         this.player.died.subscribe(() => this.onPlayerDied());
 

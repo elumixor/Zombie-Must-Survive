@@ -43,5 +43,8 @@ export class ButtonHandle extends Handle<() => number, void> {
     override save() {
         return;
     }
+    override set() {
+        return;
+    }
 }
 export const button = () => new ButtonHandle();
