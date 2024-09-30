@@ -126,14 +126,14 @@
         },
         "Player": {
             "General": {
-                "levelXpFactor": "10",
-                "constitution": "5",
-                "baseHp": "25",
-                "restoreHpOnLevelUp": "false",
+                "levelXPThresholds": "[10,20,30,40,50]",
+                "levelMaxHealth": "[10,20,30,40,50]",
+                "restoreHpOnLevelUp": "0",
                 "forceLevelUp": "undefined",
                 "forceDeath": "",
                 "speed": "15",
                 "invulnerable": "false",
+                "startingXPCrystals": "20",
                 "xpGain": "1",
                 "noXP": "false"
             }
@@ -142,12 +142,12 @@
             "General": {
                 "stagesConfig": "[{\"duration\":5,\"enemies\":[{\"enemyType\":\"villager1\",\"spawnInterval\":1,\"count\":5},{\"enemyType\":\"villager2\",\"spawnInterval\":3,\"count\":1},{\"enemyType\":\"villager3\",\"spawnInterval\":3,\"count\":1}]},{\"duration\":5,\"enemies\":[{\"enemyType\":\"villager1\",\"spawnInterval\":0.5,\"count\":5}]}]",
                 "enemiesConfig": "{\"villager1\":{\"speed\":5,\"damage\":1,\"health\":10,\"lag\":0.5},\"villager2\":{\"speed\":3,\"damage\":4,\"health\":20,\"lag\":0.45},\"villager3\":{\"speed\":7,\"damage\":3,\"health\":10,\"lag\":0.4}}",
-                "autoStart": "true",
+                "autoStart": "false",
                 "restartOnEnd": "false",
                 "clearEnemies": "",
                 "stopStages": ""
             }
         }
     },
-    "version": 1
+    "version": 2
 }

@@ -137,7 +137,7 @@ export class Configurator {
                 nonNullAssert(path);
 
                 this.localStorage.setItem(path, data);
-                this.handles.get(path)!.reset();
+                this.handles.get(path)?.reset();
                 return;
             }
 
