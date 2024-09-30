@@ -44,7 +44,7 @@ export class Zombie extends Actor {
         this.weapon.delay = 0.05;
     }
 
-    beginPlay() {
+    override beginPlay() {
         super.beginPlay();
         this.spine.animate("run", { loop: true });
 

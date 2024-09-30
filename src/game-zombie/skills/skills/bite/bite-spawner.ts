@@ -9,7 +9,7 @@ export class BiteSpawnerComponent extends Component {
     private readonly time = di.inject(Time);
     private readonly resources = di.inject(ResourcesZombie);
 
-    tickEnabled = false;
+    override tickEnabled = false;
 
     damage = 1;
     radius = 100;
@@ -17,7 +17,7 @@ export class BiteSpawnerComponent extends Component {
 
     private interval?: ReturnType<Time["interval"]>;
 
-    beginPlay() {
+    override beginPlay() {
         super.beginPlay();
 
         assert(!this.interval);

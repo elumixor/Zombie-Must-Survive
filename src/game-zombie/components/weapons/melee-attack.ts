@@ -3,7 +3,7 @@ import { WeaponComponent } from "./weapon";
 import { HealthComponent } from "../health";
 
 export class MeleeAttackComponent extends WeaponComponent {
-    triggerRange = 50;
+    override triggerRange = 50;
 
     protected override use(targetInRange?: Actor[]) {
         const closest = targetInRange?.sort(

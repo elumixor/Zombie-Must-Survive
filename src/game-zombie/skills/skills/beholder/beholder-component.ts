@@ -6,7 +6,7 @@ import { BeholderTurret } from "./beholder-turret";
 
 export class BeholderComponent extends Component {
     private readonly time = di.inject(Time);
-    tickEnabled = false;
+    override tickEnabled = false;
 
     damage = 1;
     fireCooldown = 1;
@@ -20,7 +20,7 @@ export class BeholderComponent extends Component {
     private interval?: ReturnType<Time["interval"]>;
     private readonly instances = new Array<BeholderTurret>();
 
-    beginPlay() {
+    override beginPlay() {
         super.beginPlay();
 
         assert(!this.interval);
@@ -33,7 +33,7 @@ export class BeholderComponent extends Component {
         this.interval = this.time.interval(() => this.spawn(), this.spawnCooldown);
     }
 
-    destroy() {
+    override destroy() {
         super.destroy();
         this.interval?.clear();
         this.interval = undefined;

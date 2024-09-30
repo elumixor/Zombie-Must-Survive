@@ -13,12 +13,9 @@ export class FrankenzombieComponent extends Component {
     cooldown = 1;
 
     private interval?: ReturnType<Time["interval"]>;
-    private beginPlayCalled = false;
 
-    beginPlay() {
+    override beginPlay() {
         super.beginPlay();
-
-        this.beginPlayCalled = true;
         this.updateParams();
     }
 

@@ -1,12 +1,9 @@
-import { Time, Actor, rectSprite } from "@core";
-import { di } from "@elumixor/di";
+import { Actor, rectSprite } from "@core";
 import { WeaponComponent } from "./weapon";
 import { HealthComponent } from "../health";
 
 export class RayWeapon extends WeaponComponent {
-    protected readonly time = di.inject(Time);
-
-    protected use(targetsInRange: Actor[]) {
+    protected override use(targetsInRange: Actor[]) {
         const target = this.closest(targetsInRange);
         assert(target);
 

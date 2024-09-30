@@ -3,66 +3,69 @@ import type { Skill } from "game-zombie/skills";
 import { Container, Sprite } from "pixi.js";
 import { TextWidget } from "../text-widget";
 
+const options = {
+    align: "center",
+    wordWrap: true,
+    wordWrapWidth: 200,
+} as const;
+
 export class SkillCard extends Container {
     readonly selected = new EventEmitter();
 
-    readonly totalWidth = 220;
-    private readonly totalHeight = 300;
-    private readonly imageHeight = 40;
-
-    private readonly padding = 20;
+    private readonly bg = this.addChild(Sprite.from("ui-card"));
+    private readonly title = this.addChild(new TextWidget("", { fontSize: 20, ...options }));
+    private readonly description = this.addChild(new TextWidget("", { fontSize: 12, ...options }));
+    private readonly image;
+    private readonly diff = this.addChild(
+        new TextWidget("", { fontSize: 12, ...options, align: "center", whiteSpace: "pre-line" }),
+    );
 
     constructor(readonly skill: Skill) {
         super();
 
-        const options = {
-            wordWrap: true,
-            wordWrapWidth: this.totalWidth - this.padding * 2,
-        };
+        this.name = `SkillCard (${skill.name})`;
 
-        const bg = Sprite.from("ui-card");
-        const labelBg = Sprite.from("ui-card-label");
+        this.image = new Sprite(skill.texture);
+        this.title.text = skill.name;
+        this.description.text = skill.description;
+        this.diff.text = skill.currentDiff;
 
-        const title = new TextWidget(skill.name.toUpperCase(), { fontSize: 20, align: "center", ...options });
+        this.title.y = -this.bg.height / 2 + 20;
+        this.title.fitTo(120, 40, { scaleUp: false });
+        this.image.fitTo(120, 80, { scaleUp: false });
 
-        const image = new Sprite(skill.texture);
-        image.uniformHeight = this.imageHeight;
+        this.image.y += 5;
 
-        const description = new TextWidget(skill.description, { fontSize: 12, align: "center", ...options });
-        const diff = new TextWidget(skill.currentDiff, {
-            fontSize: 12,
-            letterSpacing: 0,
-            lineHeight: 16,
-            dropShadowDistance: 0,
-            dropShadowBlur: 5,
-            padding: 5,
-            whiteSpace: "pre-line",
-            ...options,
-        });
+        this.description.fitTo(160, 40);
+        this.description.y = -73;
 
-        let y = -this.totalHeight / 2 + title.height / 2 + this.padding * 1.5;
-        title.y = y;
-        labelBg.y = y;
+        const starsContainer = this.addChild(new Container());
 
-        y += title.height + 20 + this.totalHeight / 2 - this.padding;
-        bg.y = y;
+        const starsWidth = 140;
+        const step = starsWidth / 5;
 
-        y -= 50;
+        for (const i of range(5)) {
+            const starName = i >= skill.level ? "ui-star-disabled" : "ui-star-enabled";
+            const star = starsContainer.addChild(Sprite.from(starName));
+            star.anchor.set(0.5);
+            star.x = -starsWidth / 2 + step * i + step / 2;
+            star.y = 70;
+        }
 
-        image.y = y;
-        y += this.imageHeight + 20;
-        description.y = y;
-        y += description.height + 20;
-        diff.y = y;
-        diff.x = -this.totalWidth / 2 + this.padding;
+        // Add image on top of the stars
+        this.addChild(this.image);
 
-        const elements = [bg, labelBg, image, title, description];
+        for (const el of [this.bg, this.image, this.title, this.description]) el.anchor.set(0.5);
+        this.diff.anchor.set(0.5, 0);
 
-        for (const el of elements) el.anchor.set(0.5);
-        this.addChild(...elements, diff);
+        this.diff.y = this.bg.height / 2 - 40;
 
         this.interactive = true;
         this.cursor = "pointer";
         this.on("pointerdown", () => this.selected.emit());
+    }
+
+    get totalWidth() {
+        return this.bg.width;
     }
 }

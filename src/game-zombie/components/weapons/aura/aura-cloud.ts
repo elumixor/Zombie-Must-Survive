@@ -4,7 +4,7 @@ import { HealthComponent } from "game-zombie/components";
 import { ResourcesZombie } from "game-zombie/resources-zombie";
 
 export class AuraCloudActor extends Actor {
-    readonly name = "AuraCloud";
+    override readonly name = "AuraCloud";
     private readonly resources = di.inject(ResourcesZombie);
     private readonly spine = this.addChild(this.resources.fart.copy());
     private readonly collider = this.addComponent(new CircleColliderComponent(this));

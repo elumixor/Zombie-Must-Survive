@@ -9,7 +9,7 @@ export class CollisionManager extends Component {
     private readonly componentToRelated = new Map<CircleColliderComponent, CircleColliderComponent[]>();
 
     // Start with the tick disabled and enable it when there are components
-    tickEnabled = false;
+    override tickEnabled = false;
 
     // An optimization to not recalculate related every frame
     // and also to not recalculate related if multiple components are added/removed at once

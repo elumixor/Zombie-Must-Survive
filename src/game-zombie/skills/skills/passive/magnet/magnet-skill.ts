@@ -1,15 +1,16 @@
-import { circleTexture, type Actor } from "@core";
+import type { Actor } from "@core";
 import { Player } from "game-zombie/actors";
 import { c } from "game-zombie/config";
 import { cskill } from "game-zombie/skills/skill.editors";
+import { Texture } from "pixi.js";
 import { Skill } from "../../../skill";
 import { NumProperty } from "../../../skill-property";
 
 @c
 export class MagnetSkill extends Skill {
-    readonly name = "Magnet";
-    readonly description = "Increases the range of XP crystals pick up";
-    readonly texture = circleTexture({ radius: 50, color: "rgb(93, 131, 5)" });
+    override readonly name = "Magnet";
+    override readonly description = "Increases the range of XP crystals pick up";
+    override readonly texture = Texture.from("ui-magnet");
 
     @cskill private readonly extraRadius = this.addProperty(new NumProperty("Extra Radius"));
 

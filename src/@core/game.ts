@@ -52,7 +52,7 @@ export class Game {
             this.time.add(() => (fpsCounter.textContent = `FPS: ${round(1000 / this.time.dMs)}`));
         });
 
-        configurator.visible = this.app.isDesktop;
+        configurator.visible = false;
         configurator.reloadRequested.subscribe((id) =>
             configurator.load(this.resources.get("config")!, { reset: id ?? true }),
         );

@@ -5,7 +5,7 @@ import { Container, FederatedPointerEvent } from "pixi.js";
 
 @responsive
 export class ControlsWidget extends Actor implements IResizeObservable {
-    tickEnabled = false;
+    override tickEnabled = false;
 
     private readonly app = di.inject(App);
     private readonly controls = di.inject(GameControls);

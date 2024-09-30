@@ -7,9 +7,9 @@ import { GoldComponent } from "./gold-component";
 
 @c
 export class GoldSkill extends Skill {
-    readonly name = "Gold";
-    readonly description = "Gives some gold over time";
-    readonly texture = circleTexture({ radius: 50, color: "rgb(201, 161, 30)" });
+    override readonly name = "Gold";
+    override readonly description = "Gives some gold over time";
+    override readonly texture = circleTexture({ radius: 50, color: "rgb(201, 161, 30)" });
 
     @cskill private readonly goldPerSecond = this.addProperty(new NumProperty("Gold Per Second"));
 

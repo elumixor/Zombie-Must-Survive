@@ -4,13 +4,13 @@ import { cskill } from "game-zombie/skills/skill.editors";
 import { Texture } from "pixi.js";
 import { Skill } from "../../skill";
 import { NumProperty } from "../../skill-property";
-import { PoolComponent } from "./pool-component";
+import { AcidPoolComponent } from "./acid-pool-component";
 
 @c
 export class AcidPoolSkill extends Skill {
-    readonly name = "Acid Pool";
-    readonly description = "Acid pool that damages enemies inside it.";
-    readonly texture = Texture.from("ui-pool");
+    override readonly name = "Acid Pool";
+    override readonly description = "Acid pool that damages enemies inside it.";
+    override readonly texture = Texture.from("ui-pool");
 
     @cskill private readonly damage = this.addProperty(new NumProperty("Damage"));
     @cskill private readonly damageRate = this.addProperty(new NumProperty("Damage Rate"));
@@ -28,10 +28,10 @@ export class AcidPoolSkill extends Skill {
     })
     private readonly travelDuration = 0.5;
 
-    private component?: PoolComponent;
+    private component?: AcidPoolComponent;
 
     protected override addToActor(actor: Actor) {
-        this.component = new PoolComponent(actor);
+        this.component = new AcidPoolComponent(actor);
         actor.addComponent(this.component);
     }
 

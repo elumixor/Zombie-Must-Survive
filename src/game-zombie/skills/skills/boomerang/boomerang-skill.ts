@@ -8,9 +8,9 @@ import { BoomerangComponent } from "./boomerang-component";
 
 @c
 export class BoomerangSkill extends Skill {
-    readonly name = "Boomerang";
-    readonly description = "Throws a leg boomerang that damages enemies along its path.";
-    readonly texture = Texture.from("ui-boomerang");
+    override readonly name = "Boomerang";
+    override readonly description = "Throws a leg boomerang that damages enemies along its path.";
+    override readonly texture = Texture.from("ui-boomerang");
     @cskill private readonly damage = this.addProperty(new NumProperty("Damage"));
     @cskill private readonly instances = this.addProperty(new NumProperty("Instances"));
     @cskill private readonly speed = this.addProperty(new NumProperty("Speed"));

@@ -13,12 +13,9 @@ export class BoomerangComponent extends Component {
     cooldown = 10;
 
     private spawnInterval?: ReturnType<Time["interval"]>;
-    private beginPlayCalled = false;
 
-    beginPlay() {
+    override beginPlay() {
         super.beginPlay();
-
-        this.beginPlayCalled = true;
         this.updateParams();
     }
 

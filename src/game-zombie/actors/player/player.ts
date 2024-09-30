@@ -109,6 +109,8 @@ export class Player extends Actor {
 
         // Apply skills
         for (const skill of this.playerState.skills) skill.applyTo(this);
+
+        this.idle();
     }
 
     override destroy() {
@@ -122,6 +124,7 @@ export class Player extends Actor {
     }
 
     private run() {
+        if (this.spine.currentAnimation?.name === "run") return;
         this.spine.animate("run", { loop: true });
     }
 

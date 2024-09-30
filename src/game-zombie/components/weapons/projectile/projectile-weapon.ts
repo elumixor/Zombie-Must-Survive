@@ -7,8 +7,8 @@ export class ProjectileWeaponComponent extends WeaponComponent {
     numProjectiles = 1;
     spread = 0;
     projectileConfig = new ProjectileConfig();
-    triggerRange = 500;
-    attackWithTargetInRange = true;
+    override triggerRange = 500;
+    override attackWithTargetInRange = true;
 
     protected override use(targetsInRange: Actor[]) {
         // const { carrierVelocity } = this;

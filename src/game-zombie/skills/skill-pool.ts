@@ -45,16 +45,16 @@ export class SkillPool {
         this.frankenzombie,
         this.spirit,
         this.scream,
-        this.zombiecide,
+        // this.zombiecide,
         this.bite,
         this.beholder,
 
         /* Passive skills */
 
-        this.gold,
+        // this.gold, // on the prototype stage we don't need it
         this.magnet,
-        this.maxHp,
-        this.movement,
+        // this.maxHp,
+        // this.movement,
         this.regeneration,
     ]);
 

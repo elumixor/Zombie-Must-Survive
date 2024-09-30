@@ -4,9 +4,11 @@ import { di } from "@elumixor/di";
 import { Group } from "@pixi/layers";
 import { EnemyManager, Player, XpCrystal } from "game-zombie/actors";
 import { Background } from "game-zombie/background";
+import { c } from "game-zombie/config";
 import { GameState } from "game-zombie/game-state";
 import { Clock, ControlsWidget, GameOverPopup, LevelUpPopup } from "game-zombie/ui";
 
+@c
 @responsive
 export class MainLevel extends Level implements IResizeObservable {
     private readonly app = di.inject(App);
@@ -23,6 +25,9 @@ export class MainLevel extends Level implements IResizeObservable {
     private readonly gameOverPopup = this.ui.addChild(new GameOverPopup());
     private readonly levelUpPopup = this.ui.addChild(new LevelUpPopup());
 
+    @c(c.num({ step: 1 }), { tabGroup: "Player" })
+    private readonly startingXPCrystals = 20;
+
     constructor() {
         super();
 
@@ -33,13 +38,6 @@ export class MainLevel extends Level implements IResizeObservable {
         this.layers.add("playerUI", new Group(4));
         this.layers.add("ui", new Group(5));
         this.layers.add("popup", new Group(6));
-
-        // Spawn some random crystals...?
-        for (const x of range(20)) {
-            const c = new XpCrystal();
-            c.position = Vec2.random().withLength(random(300, 300 + 25 * x));
-            this.addChild(c);
-        }
 
         this.enemyManager.enemiesTarget = this.player;
 
@@ -52,6 +50,16 @@ export class MainLevel extends Level implements IResizeObservable {
             skill.level++;
             this.time.paused = false;
         });
+    }
+
+    override beginPlay() {
+        super.beginPlay();
+        // Spawn some random crystals...?
+        for (const x of range(this.startingXPCrystals)) {
+            const c = new XpCrystal();
+            c.position = Vec2.random().withLength(random(300, 300 + 25 * x));
+            this.addChild(c);
+        }
     }
 
     private async onPlayerDied() {

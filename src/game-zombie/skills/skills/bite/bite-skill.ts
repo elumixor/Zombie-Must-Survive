@@ -8,9 +8,9 @@ import { BiteSpawnerComponent } from "./bite-spawner";
 
 @c
 export class BiteSkill extends Skill {
-    readonly name = "Bite of the Dead";
-    readonly description = "From the ground rises a huge mouth that bites enemies";
-    readonly texture = Texture.from("bite");
+    override readonly name = "Bite of the Dead";
+    override readonly description = "From the ground rises a huge mouth that bites enemies";
+    override readonly texture = Texture.from("ui-bite");
 
     @cskill private readonly damage = this.addProperty(new NumProperty("Damage"));
     @cskill private readonly radius = this.addProperty(new NumProperty("radius"));

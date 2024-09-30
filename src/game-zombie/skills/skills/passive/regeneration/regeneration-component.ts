@@ -4,11 +4,11 @@ import { HealthComponent } from "game-zombie/components";
 
 export class RegenerationComponent extends Component {
     private readonly time = di.inject(Time);
-    tickEnabled = false;
+    override tickEnabled = false;
     healthPercentRestored = 1;
     private interval?: ReturnType<Time["interval"]>;
 
-    beginPlay() {
+    override beginPlay() {
         super.beginPlay();
         this.updateParams();
     }

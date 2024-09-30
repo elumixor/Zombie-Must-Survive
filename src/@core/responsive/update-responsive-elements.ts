@@ -60,7 +60,7 @@ export function updateResponsiveElement(
     if (uniformWidth) element.uniformWidth = uniformWidth;
     if (uniformHeight) element.uniformHeight = uniformHeight;
     if (fitTo) {
-        if (typeof fitTo === "number") element.fitTo?.(fitTo);
+        if (typeof fitTo === "number") element.fitTo?.(fitTo, fitTo);
         else element.fitTo?.(...(fitTo as Parameters<Container["fitTo"]>)); // Idk why, but this assertion is needed
     }
 

@@ -28,7 +28,7 @@ export class GameOverPopup extends Popup {
         }),
     );
 
-    async show() {
+    override async show() {
         await all(
             super.show(),
             gsap.fromTo(this.gameOverText, { y: -150, alpha: 0 }, { y: -200, alpha: 1, duration: 1, delay: 0.5 }),

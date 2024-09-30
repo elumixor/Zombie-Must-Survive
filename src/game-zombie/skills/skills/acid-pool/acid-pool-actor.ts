@@ -7,7 +7,7 @@ import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 
 gsap.registerPlugin(MotionPathPlugin);
 
-export class PoolActor extends Actor {
+export class AcidPoolActor extends Actor {
     private readonly resources = di.inject(ResourcesZombie);
 
     lifetime = 1;
@@ -15,7 +15,7 @@ export class PoolActor extends Actor {
     damage = 1;
     radius = 50;
     targetPoint = vec2.zero;
-    tickEnabled = false;
+    override tickEnabled = false;
     travelDuration = 0.5;
 
     private elapsed = 0;
@@ -68,7 +68,7 @@ export class PoolActor extends Actor {
         });
     }
 
-    update(dt: number) {
+    override update(dt: number) {
         super.update(dt);
 
         const ds = this.time.dMs / 1000;

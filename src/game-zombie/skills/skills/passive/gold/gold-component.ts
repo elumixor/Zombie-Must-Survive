@@ -4,11 +4,11 @@ import { Player } from "game-zombie/actors";
 
 export class GoldComponent extends Component {
     private readonly time = di.inject(Time);
-    tickEnabled = false;
+    override tickEnabled = false;
     goldPerSecond = 1;
     private interval?: ReturnType<Time["interval"]>;
 
-    beginPlay() {
+    override beginPlay() {
         super.beginPlay();
         this.updateParams();
     }
@@ -25,7 +25,7 @@ export class GoldComponent extends Component {
         this.actor.gold += this.goldPerSecond;
     }
 
-    destroy() {
+    override destroy() {
         super.destroy();
         this.interval?.clear();
     }

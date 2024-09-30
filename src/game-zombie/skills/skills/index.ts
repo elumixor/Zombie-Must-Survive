@@ -4,7 +4,7 @@ export * from "./boomerang";
 export * from "./fart";
 export * from "./frankenzombie";
 export * from "./passive";
-export * from "./pool";
+export * from "./acid-pool";
 export * from "./reflux";
 export * from "./scream";
 export * from "./spirit";

@@ -53,31 +53,41 @@ export class ResourcesZombie extends BaseResources {
         this.mainLoader.add("crystal", `${sprites}/brain.png`);
         this.mainLoader.add("shadow", `${sprites}/shadow.png`);
 
-        // Summons
-        this.mainLoader.add("bite", `${sprites}/ui_abyss_bite.png`);
-        this.mainLoader.add("beholder", `${sprites}/ui_beholder.png`);
-
         // Weapons, abilities, and particles
         this.mainLoader.add("lightning", `${sprites}/frankenzombie.png`);
         this.mainLoader.add("spit", `${sprites}/reflux.png`);
         this.mainLoader.add("boomerang", `${sprites}/legmerang.png`);
 
-        // UI
-        this.mainLoader.add("ui-fart", `${sprites}/ui_deadly_fart.png`);
-        this.mainLoader.add("ui-vomit", `${sprites}/ui_acid_vomit.png`);
-        this.mainLoader.add("ui-boomerang", `${sprites}/legmerang.png`);
-        this.mainLoader.add("ui-frankenzombie", `${sprites}/ui_frankenzombie.png`);
-        this.mainLoader.add("ui-reflux", `${sprites}/ui_reflux.png`);
-        this.mainLoader.add("ui-spirit", `${sprites}/ui_evil_spirit.png`);
-        this.mainLoader.add("ui-pool", `${sprites}/ui_acid_vomit.png`);
-        this.mainLoader.add("ui-zombiecide", `${sprites}/ui_zombiecide.png`);
+        const ui = `${sprites}/ui`;
 
-        // UI
-        this.mainLoader.add("ui-card", `${sprites}/ui_ability_card.png`);
-        this.mainLoader.add("ui-card-rare", `${sprites}/ui_ability_card_rare.png`);
-        this.mainLoader.add("ui-card-label", `${sprites}/ui_card_label.png`);
-        this.mainLoader.add("ui-star", `${sprites}/ui_star.png`);
-        this.mainLoader.add("ui-ad", `${sprites}/ui_ad.png`);
+        // UI - General
+        this.mainLoader.add("ui-ad", `${ui}/ui_ad.png`);
+        this.mainLoader.add("ui-label-bg", `${ui}/ad-text-label.png`);
+        this.mainLoader.add("ui-clip", `${ui}/ad-ability-clip.png`);
+        this.mainLoader.add("ui-ability-arrow", `${ui}/ability-arrow.png`);
+        this.mainLoader.add("ui-card", `${ui}/ability-card.png`);
+        this.mainLoader.add("ui-card-rare", `${ui}/ad-ability-card.png`);
+        this.mainLoader.add("ui-card-rare-bg", `${ui}/ad-ability-card-big.png`);
+        this.mainLoader.add("ui-star-enabled", `${ui}/ability-star-enabled.png`);
+        this.mainLoader.add("ui-star-disabled", `${ui}/ability-star-disabled.png`);
+
+        // UI - skills
+        this.mainLoader.add("ui-zombiecide", `${ui}/ui_zombiecide.png`);
+        this.mainLoader.add("ui-reflux", `${ui}/ui_reflux.png`);
+        this.mainLoader.add("ui-frankenzombie", `${ui}/ui_frankenzombie.png`);
+        this.mainLoader.add("ui-spirit", `${ui}/ui_evil_spirit.png`);
+        this.mainLoader.add("ui-fart", `${ui}/ui_deadly_fart.png`);
+        this.mainLoader.add("ui-beholder", `${ui}/ui_beholder.png`);
+        this.mainLoader.add("ui-bite", `${ui}/ui_abyss_bite.png`);
+        this.mainLoader.add("ui-boomerang", `${sprites}/legmerang.png`);
+        this.mainLoader.add("ui-pool", `${ui}/ui_acid_vomit.png`);
+
+        // UI - Passive skills
+        this.mainLoader.add("ui-speed", `${ui}/ui-speed.png`);
+        this.mainLoader.add("ui-regeneration", `${ui}/ui-regeneration.png`);
+        this.mainLoader.add("ui-max-health", `${ui}/ui-max-health.png`);
+        this.mainLoader.add("ui-magnet", `${ui}/ui-magnet.png`);
+        this.mainLoader.add("ui-health-restore", `${ui}/ui-health-restore.png`);
 
         // Config
         this.mainLoader.add("config", `${this.rootAssetsFolder}/config.json`);

@@ -8,9 +8,9 @@ import { NumProperty } from "../../skill-property";
 
 @c
 export class RefluxSkill extends Skill {
-    readonly name = "Reflux";
-    readonly description = "Spit toxic projectiles at enemies.";
-    readonly texture = Texture.from("ui-reflux");
+    override readonly name = "Reflux";
+    override readonly description = "Spit toxic projectiles at enemies.";
+    override readonly texture = Texture.from("ui-reflux");
 
     @cskill private readonly numProjectiles = this.addProperty(new NumProperty("Projectiles", [1]));
     @cskill private readonly damage = this.addProperty(new NumProperty("Damage", [1]));

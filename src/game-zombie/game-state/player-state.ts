@@ -1,5 +1,5 @@
 import { EventEmitter } from "@elumixor/frontils";
-import { c } from "game-zombie/config";
+import { c, numberEditor } from "game-zombie/config";
 import { Skill } from "game-zombie/skills";
 
 @c
@@ -13,11 +13,11 @@ export class PlayerState {
 
     readonly skills = new Set<Skill>();
 
-    @c(c.num(), { tabGroup: "Player" })
-    private readonly levelXpFactor = 10;
+    @c(c.arr(numberEditor), { tabGroup: "Player" })
+    private readonly levelXPThresholds = [10, 20, 30, 40, 50];
 
-    @c(c.num(), { tabGroup: "Player" })
-    private readonly constitution = 5;
+    @c(c.arr(numberEditor), { tabGroup: "Player" })
+    private readonly levelMaxHealth = [10, 20, 30, 40, 50];
 
     @c(c.num(), {
         tabGroup: "Player",
@@ -29,8 +29,6 @@ export class PlayerState {
             }
         },
     })
-    private readonly baseHp = 100;
-
     @c(c.bool(), { tabGroup: "Player" })
     private restoreHpOnLevelUp = false;
 
@@ -42,6 +40,10 @@ export class PlayerState {
         this.levelChanged.subscribe(() => {
             if (this.restoreHpOnLevelUp) this.hp = this.maxHp;
             else {
+                const currentMaxHp = this.levelMaxHealth[max(this.level - 1, 0)];
+                const previousMaxHp = this.levelMaxHealth[max(this.level - 2, 0)];
+                const diff = currentMaxHp - previousMaxHp;
+                this.hp += diff;
                 this.hpChanged.emit(this.hp);
             }
         });
@@ -68,9 +70,13 @@ export class PlayerState {
     }
 
     get maxHp() {
-        return this.baseHp + this.level * this.constitution + this._bonusHealth;
+        const level = clamp(this.level, 1, this.levelMaxHealth.length) - 1;
+        return this.levelMaxHealth[level] + this.bonusHealth;
     }
 
+    get bonusHealth() {
+        return this._bonusHealth;
+    }
     set bonusHealth(value: number) {
         const diff = value - this._bonusHealth;
         this._bonusHealth = value;
@@ -78,15 +84,7 @@ export class PlayerState {
     }
 
     get level() {
-        const b = this.levelXpFactor / 2;
-        const a = b;
-        const c = -this._xp;
-
-        const D = b * b - 4 * b * c;
-        if (D < 0) throw new Error(`Invalid negative xp ${this._xp}`);
-
-        // Only the positive root is valid
-        return floor((-b + sqrt(D)) / (2 * a)) + 1;
+        return this.levelXPThresholds.filter((xp) => xp <= this.xp).length + 1;
     }
 
     get xp() {
@@ -106,13 +104,12 @@ export class PlayerState {
     }
 
     get nextLevelXp() {
-        const n = this.level;
-        return (n * (n + 1) * this.levelXpFactor) / 2;
+        const level = min(this.level, this.levelXPThresholds.length) - 1;
+        return this.levelXPThresholds[level];
     }
 
     get previousLevelXp() {
-        const n = this.level - 1;
-        return (n * (n + 1) * this.levelXpFactor) / 2;
+        return this.level <= 1 ? 0 : this.levelXPThresholds[this.level - 2];
     }
 
     get remainingXp() {

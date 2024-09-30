@@ -8,9 +8,9 @@ import { NumProperty } from "../../skill-property";
 
 @c
 export class FartSkill extends Skill {
-    readonly name = "Stinky Aura";
-    readonly description = "Releases a stinky cloud that damages enemies.";
-    readonly texture = Texture.from("ui-fart");
+    override readonly name = "Deadly Fart";
+    override readonly description = "Releases a stinky cloud that damages enemies.";
+    override readonly texture = Texture.from("ui-fart");
 
     @cskill protected readonly damage = this.addProperty(new NumProperty("Damage"));
     @cskill protected readonly radius = this.addProperty(new NumProperty("Radius"));

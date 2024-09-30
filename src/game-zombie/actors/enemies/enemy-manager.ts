@@ -10,7 +10,7 @@ import { Stage } from "./stage";
 @c
 export class EnemyManager extends Actor {
     enemiesTarget?: Actor;
-    tickEnabled = false;
+    override tickEnabled = false;
 
     readonly enemyDied = new EventEmitter<Enemy>();
 

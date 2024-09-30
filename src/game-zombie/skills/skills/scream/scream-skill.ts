@@ -7,9 +7,9 @@ import { ScreamComponent } from "./scream-component";
 
 @c
 export class ScreamSkill extends Skill {
-    readonly name = "Banshee Scream";
-    readonly description = "Creates a deadly sonic wave that freezes all enemies in place.";
-    readonly texture = circleTexture({ radius: 50, color: "rgb(10, 162, 200)" });
+    override readonly name = "Banshee Scream";
+    override readonly description = "Creates a deadly sonic wave that freezes all enemies in place.";
+    override readonly texture = circleTexture({ radius: 50, color: "rgb(10, 162, 200)" });
 
     @cskill private readonly cooldown = this.addProperty(new NumProperty("Cooldown"));
     @cskill private readonly radius = this.addProperty(new NumProperty("Radius"));

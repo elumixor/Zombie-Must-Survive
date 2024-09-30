@@ -2,7 +2,7 @@ import { Actor } from "@core";
 import { TextWidget } from "./text-widget";
 
 export class Clock extends Actor {
-    tickEnabled = false;
+    override tickEnabled = false;
 
     private _elapsed = 0;
 

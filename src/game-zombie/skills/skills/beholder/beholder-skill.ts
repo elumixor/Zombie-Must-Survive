@@ -8,10 +8,10 @@ import { BeholderComponent } from "./beholder-component";
 
 @c
 export class BeholderSkill extends Skill {
-    readonly name = "Eye of the beholder";
-    readonly description =
+    override readonly name = "Eye of the beholder";
+    override readonly description =
         "Spawns an eye of the beholder that stands in one place and fires a ray towards a random enemy";
-    readonly texture = Texture.from("beholder");
+    override readonly texture = Texture.from("ui-beholder");
 
     @cskill private readonly damage = this.addProperty(new NumProperty("Damage"));
     @cskill private readonly fireCooldown = this.addProperty(new NumProperty("Fire Cooldown"));

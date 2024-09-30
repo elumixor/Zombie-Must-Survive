@@ -27,7 +27,7 @@ export class Spirit extends Actor {
         this.layer = "foreground";
     }
 
-    beginPlay() {
+    override beginPlay() {
         super.beginPlay();
 
         const { level } = this;

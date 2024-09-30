@@ -5,6 +5,7 @@ export default defineConfig({
     plugins: [tsconfigPaths()],
     base: "./",
     build: {
+        sourcemap: true,
         minify: false,
     },
 });

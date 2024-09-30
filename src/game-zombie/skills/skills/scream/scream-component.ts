@@ -11,12 +11,10 @@ export class ScreamComponent extends Component {
     growSpeed = 1;
 
     private interval?: ReturnType<Time["timeout"]>;
-    private beginPlayCalled = false;
 
-    beginPlay() {
+    override beginPlay() {
         super.beginPlay();
 
-        this.beginPlayCalled = true;
         this.updateParams();
     }
 

@@ -29,13 +29,13 @@ export class BoomerangActor extends Actor {
         });
     }
 
-    beginPlay() {
+    override beginPlay() {
         super.beginPlay();
 
         void this.time.fromTo(this.sprite.scale, { x: 0, y: 0 }, { x: 2, y: 2, duration: 0.2 });
     }
 
-    update(dt: number) {
+    override update(dt: number) {
         super.update(dt);
 
         this.sprite.rotation += dt * this.rotationSpeed;

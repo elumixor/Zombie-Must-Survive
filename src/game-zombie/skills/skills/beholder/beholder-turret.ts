@@ -23,7 +23,7 @@ export class BeholderTurret extends Actor {
         });
     }
 
-    beginPlay() {
+    override beginPlay() {
         super.beginPlay();
 
         this.spine.animate("idle", { loop: true });

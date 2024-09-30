@@ -60,7 +60,7 @@ export class XpWidget extends Container {
 
     private set level(value: number) {
         this.levelText.text = value.toString();
-        this.levelText.fitTo(15, 15);
+        this.levelText.fitTo(30, 30);
         const { x, y } = this.levelText.scale;
         gsap.to(this.levelText.scale, {
             x: x * 1.5,

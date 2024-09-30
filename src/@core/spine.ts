@@ -60,19 +60,9 @@ export class Spine<
         this.state.timeScale = value;
     }
 
-    // get currentAnimation() {
-    //     return this.state.tracks.first.animation.name;
-
-    // It would be nice to do the following:
-    // return (this.state.tracks.first as TrackEntry)?.animation.name as TAnimation | undefined;
-    // However, this results in the following issue
-    // let symbolSpine: Spine<"win">;
-    // let scatterSymbolSpine: Spine<"win" | "scatter">;
-    // Logically, scatter symbol extends symbol, we we should be able to do:
-    // symbolSpine = scatterSymbolSpine;
-    // However, it fails, because of the currentAnimation property. We get
-    // "win" | "scatter" is not assignable to "win"
-    // }
+    get currentAnimation() {
+        return (this.state.tracks.first as { animation?: PIXISpine.IAnimation } | undefined)?.animation;
+    }
 
     onObtain() {
         this.position.set(0);

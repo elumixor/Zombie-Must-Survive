@@ -54,7 +54,7 @@ export class ProgressBarWidget extends Container {
         // Update instantly
         this.foreground.width = width * (this._value / this._max);
         this.textElement.text = `${this._value} / ${this._max}`;
-        this.textElement.uniformHeight = this.border.height * 2 + 20;
+        this.textElement.uniformHeight = this.border.height;
         this.textElement.anchor.set(1, 0.5);
         this.textElement.x = width - borderSize;
     }

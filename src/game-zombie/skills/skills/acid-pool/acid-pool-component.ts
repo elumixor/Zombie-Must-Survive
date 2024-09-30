@@ -1,12 +1,12 @@
 import { Component, Time, vec2 } from "@core";
-import { PoolActor } from "./pool-actor";
+import { AcidPoolActor } from "./acid-pool-actor";
 import { di } from "@elumixor/di";
 import { Enemy } from "game-zombie/actors";
 
-export class PoolComponent extends Component {
+export class AcidPoolComponent extends Component {
     private readonly time = di.inject(Time);
 
-    tickEnabled = false;
+    override tickEnabled = false;
 
     damage = 1;
     damageRate = 1;
@@ -18,12 +18,8 @@ export class PoolComponent extends Component {
 
     private interval?: ReturnType<Time["interval"]>;
 
-    private beginPlayCalled = false;
-
-    beginPlay() {
+    override beginPlay() {
         super.beginPlay();
-
-        this.beginPlayCalled = true;
         this.updateParams();
     }
 
@@ -34,13 +30,13 @@ export class PoolComponent extends Component {
         this.interval = this.time.interval(() => this.spawn(), this.spawnCooldown);
     }
 
-    destroy() {
+    override destroy() {
         super.destroy();
         this.interval?.clear();
     }
 
     private spawn() {
-        const poolActor = new PoolActor();
+        const poolActor = new AcidPoolActor();
 
         poolActor.lifetime = this.lifetime;
         poolActor.damage = this.damage;
