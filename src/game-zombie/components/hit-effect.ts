@@ -1,7 +1,7 @@
-import { Component, Time, tweenNumber } from "@core";
+import { Component, Time } from "@core";
 import { di } from "@elumixor/di";
 import { all } from "@elumixor/frontils";
-import { ColorOverlayFilter } from "@pixi/filter-color-overlay";
+// import { ColorOverlayFilter } from "@pixi/filter-color-overlay";
 import { TextWidget } from "game-zombie/ui";
 import type { DisplayObject, ITextStyle } from "pixi.js";
 
@@ -11,9 +11,9 @@ export class HitEffectComponent extends Component {
     } as ITextStyle;
 
     private readonly time = di.inject(Time);
-    private readonly filter = new ColorOverlayFilter(0xff0000);
+    // private readonly filter = new ColorOverlayFilter(0xff0000);
     private tween?: gsap.core.Tween;
-    private destroyed = false;
+    // private destroyed = false;
 
     showText(damage: number, integer = true) {
         if (integer) damage = Math.round(damage);
@@ -29,22 +29,20 @@ export class HitEffectComponent extends Component {
         void this.animateText(text);
     }
 
-    tintSprite(sprite: DisplayObject) {
-        this.tween?.kill();
-
-        if (sprite.filters === null) sprite.filters = [];
-        sprite.filters.push(this.filter);
-
-        this.tween = tweenNumber(0.8, 0, 0.2, (num) => (this.filter.alpha = num));
-        void this.tween.then(() => {
-            if (!this.destroyed) sprite.filters?.remove(this.filter);
-        });
+    tintSprite(_sprite: DisplayObject) {
+        // this.tween?.kill();
+        // if (sprite.filters === null) sprite.filters = [];
+        // sprite.filters.push(this.filter);
+        // this.tween = tweenNumber(0.8, 0, 0.2, (num) => (this.filter.alpha = num));
+        // void this.tween.then(() => {
+        //     if (!this.destroyed) sprite.filters?.remove(this.filter);
+        // });
     }
 
     override destroy() {
         super.destroy();
         this.tween?.kill();
-        this.destroyed = true;
+        // this.destroyed = true;
     }
 
     private async animateText(text: TextWidget) {
