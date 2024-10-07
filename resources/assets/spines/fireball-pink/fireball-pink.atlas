@@ -1,0 +1,7 @@
+fireball-pink.png
+size:45,45
+filter:Linear,Linear
+pma:true
+fireball-pink
+bounds:2,2,41,41
+offsets:1,0,42,42

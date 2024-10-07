@@ -1,6 +1,7 @@
-import { circleTexture, type Actor } from "@core";
+import type { Actor } from "@core";
 import { c } from "game-zombie/config";
 import { cskill } from "game-zombie/skills/skill.editors";
+import { Texture } from "pixi.js";
 import { Skill } from "../../skill";
 import { NumProperty } from "../../skill-property";
 import { ScreamComponent } from "./scream-component";
@@ -9,7 +10,7 @@ import { ScreamComponent } from "./scream-component";
 export class ScreamSkill extends Skill {
     override readonly name = "Banshee Scream";
     override readonly description = "Creates a deadly sonic wave that freezes all enemies in place.";
-    override readonly texture = circleTexture({ radius: 50, color: "rgb(10, 162, 200)" });
+    override readonly texture = Texture.from("ui-scream");
 
     @cskill private readonly cooldown = this.addProperty(new NumProperty("Cooldown"));
     @cskill private readonly radius = this.addProperty(new NumProperty("Radius"));

@@ -7,7 +7,7 @@ export type EnemySpine = Spine<EnemyAnimation>;
 @di.injectable
 export class ResourcesZombie extends BaseResources {
     @spine("zombie/zombie")
-    declare readonly zombie: Spine<"animation" | "idle" | "run">;
+    declare readonly zombie: Spine<"animation" | "idle" | `run-${"level-up" | "shocked" | "normal"}`>;
 
     /* Enemies */
 
@@ -19,6 +19,15 @@ export class ResourcesZombie extends BaseResources {
 
     @spine("enemies/villager3/villager3")
     declare readonly villager3: EnemySpine;
+
+    @spine("enemies/butcher/butcher")
+    declare readonly butcher: EnemySpine;
+
+    @spine("enemies/enemy-death/enemy-death")
+    declare readonly enemyDeath: EnemySpine;
+
+    @spine("enemies/nun/nun")
+    declare readonly nun: EnemySpine;
 
     /* Abilities */
 
@@ -40,8 +49,16 @@ export class ResourcesZombie extends BaseResources {
     @spine("abilities/vomit/vomit")
     declare readonly pool: Spine<"attack">;
 
-    @spine("abilities/zombiecid/zombiecid")
+    @spine("abilities/zombiecide/zombiecide")
     declare readonly zombiecide: EnemySpine;
+
+    /* Other */
+
+    @spine("brain/brain")
+    declare readonly brain: Spine<"appear" | "idle">;
+
+    @spine("fireball-pink/fireball-pink")
+    declare readonly fireball: Spine<"idle">;
 
     constructor() {
         super("resources/assets", "resources/html");
@@ -50,8 +67,6 @@ export class ResourcesZombie extends BaseResources {
 
         // Environment and pickups
         this.mainLoader.add("background", `${sprites}/background.png`);
-        this.mainLoader.add("crystal", `${sprites}/brain.png`);
-        this.mainLoader.add("shadow", `${sprites}/shadow.png`);
 
         // Weapons, abilities, and particles
         this.mainLoader.add("lightning", `${sprites}/frankenzombie.png`);
@@ -61,26 +76,22 @@ export class ResourcesZombie extends BaseResources {
         const ui = `${sprites}/ui`;
 
         // UI - General
-        this.mainLoader.add("ui-ad", `${ui}/ui_ad.png`);
-        this.mainLoader.add("ui-label-bg", `${ui}/ad-text-label.png`);
-        this.mainLoader.add("ui-clip", `${ui}/ad-ability-clip.png`);
-        this.mainLoader.add("ui-ability-arrow", `${ui}/ability-arrow.png`);
-        this.mainLoader.add("ui-card", `${ui}/ability-card.png`);
-        this.mainLoader.add("ui-card-rare", `${ui}/ad-ability-card.png`);
-        this.mainLoader.add("ui-card-rare-bg", `${ui}/ad-ability-card-big.png`);
+        this.mainLoader.add("ui-card", `${ui}/ui-ability-card.png`);
+        this.mainLoader.add("ui-card-rare", `${ui}/ui-ability-card-reward.png`);
         this.mainLoader.add("ui-star-enabled", `${ui}/ability-star-enabled.png`);
         this.mainLoader.add("ui-star-disabled", `${ui}/ability-star-disabled.png`);
 
         // UI - skills
-        this.mainLoader.add("ui-zombiecide", `${ui}/ui_zombiecide.png`);
-        this.mainLoader.add("ui-reflux", `${ui}/ui_reflux.png`);
-        this.mainLoader.add("ui-frankenzombie", `${ui}/ui_frankenzombie.png`);
-        this.mainLoader.add("ui-spirit", `${ui}/ui_evil_spirit.png`);
-        this.mainLoader.add("ui-fart", `${ui}/ui_deadly_fart.png`);
-        this.mainLoader.add("ui-beholder", `${ui}/ui_beholder.png`);
-        this.mainLoader.add("ui-bite", `${ui}/ui_abyss_bite.png`);
+        this.mainLoader.add("ui-zombiecide", `${ui}/ui-zombiecide.png`);
+        this.mainLoader.add("ui-reflux", `${ui}/ui-reflux.png`);
+        this.mainLoader.add("ui-frankenzombie", `${ui}/ui-frankenzombie.png`);
+        this.mainLoader.add("ui-spirit", `${ui}/ui-evil-spirit.png`);
+        this.mainLoader.add("ui-fart", `${ui}/ui-deadly-fart.png`);
+        this.mainLoader.add("ui-beholder", `${ui}/ui-beholder.png`);
+        this.mainLoader.add("ui-bite", `${ui}/ui-abyss-bite.png`);
         this.mainLoader.add("ui-boomerang", `${sprites}/legmerang.png`);
-        this.mainLoader.add("ui-pool", `${ui}/ui_acid_vomit.png`);
+        this.mainLoader.add("ui-pool", `${ui}/ui-acid-vomit.png`);
+        this.mainLoader.add("ui-scream", `${ui}/ui-banshee-scream.png`);
 
         // UI - Passive skills
         this.mainLoader.add("ui-speed", `${ui}/ui-speed.png`);

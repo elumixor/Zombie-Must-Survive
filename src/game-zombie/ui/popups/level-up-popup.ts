@@ -8,7 +8,6 @@ import { Container } from "pixi.js";
 import { TextWidget } from "../text-widget";
 import { Popup } from "./popup";
 import { SkillCard } from "./skill-card";
-import { SpecialSkillCard } from "./special-skill-card";
 
 @responsive
 export class LevelUpPopup extends Popup {
@@ -31,10 +30,9 @@ export class LevelUpPopup extends Popup {
         // Pick several random skills from the pool
         const skills = this.gameState.skillPool.getSkills();
         const normal = skills.take(3);
-        const special = skills.last;
 
         // Create visual cards/options for each skill
-        const skillCards = normal.map((skill) => new SkillCard(skill));
+        const skillCards = normal.map((skill) => new SkillCard(skill, skill === normal.last));
 
         // Add options to the container and position them correctly
         this.optionsContainer.addChild(...skillCards);
@@ -48,19 +46,16 @@ export class LevelUpPopup extends Popup {
         }
 
         const specialCardContainer = this.optionsContainer.addChild(new Container());
-        const specialCard = specialCardContainer.addChild(new SpecialSkillCard(special));
         specialCardContainer.y = 300;
-
-        const allCards = [...skillCards, specialCard];
 
         // Subscribe to selection events. Store subscriptions for cleanup
         const selected = new EventEmitter<Skill>();
-        const subscriptions = allCards.map((option) => option.selected.subscribe(() => selected.emit(option.skill)));
+        const subscriptions = skillCards.map((option) => option.selected.subscribe(() => selected.emit(option.skill)));
 
         // Animate show
         await all(
             super.show(),
-            gsap.fromTo(allCards, { alpha: 0, y: 100 }, { alpha: 1, y: 0, stagger: 0.1, duration: 0.5, delay: 0.5 }),
+            gsap.fromTo(skillCards, { alpha: 0, y: 100 }, { alpha: 1, y: 0, stagger: 0.1, duration: 0.5, delay: 0.5 }),
             gsap.fromTo(this.levelUpText, { y: -150, alpha: 0 }, { y: -200, alpha: 1, duration: 1 }),
         );
 
@@ -70,7 +65,7 @@ export class LevelUpPopup extends Popup {
         // Fade out
         await all(
             this.hide(),
-            gsap.to(allCards, { alpha: 0, y: -50, stagger: 0.1, duration: 0.5 }),
+            gsap.to(skillCards, { alpha: 0, y: -50, stagger: 0.1, duration: 0.5 }),
             gsap.to(this.levelUpText, { y: -50, alpha: 0, duration: 0.5 }),
         );
 

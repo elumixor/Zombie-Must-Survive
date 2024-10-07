@@ -1,0 +1,32 @@
+{
+"skeleton": { "hash": "B15s1cQpvfs", "spine": "4.0-from-4.1-from-4.2.36", "x": -21, "y": -21, "width": 42, "height": 42 },
+"bones": [
+	{ "name": "root" }
+],
+"slots": [
+	{ "name": "fireball-pink", "bone": "root", "attachment": "fireball-pink" }
+],
+"skins": [
+	{
+		"name": "default",
+		"attachments": {
+			"fireball-pink": {
+				"fireball-pink": { "width": 42, "height": 42 }
+			}
+		}
+	}
+],
+"animations": {
+	"idle": {
+		"bones": {
+			"root": {
+				"scale": [
+					{ "x": 0.8, "y": 1.2 },
+					{ "time": 0.25, "x": 1.2, "y": 0.8 },
+					{ "time": 0.5, "x": 0.8, "y": 1.2 }
+				]
+			}
+		}
+	}
+}
+}

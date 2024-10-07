@@ -1,0 +1,10 @@
+enemy-death.png
+size:88,56
+filter:Linear,Linear
+pma:true
+enemy-bone
+bounds:57,8,29,15
+enemy-skull
+bounds:2,2,53,52
+enemy-spine
+bounds:57,25,21,29

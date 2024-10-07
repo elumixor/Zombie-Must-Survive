@@ -125,7 +125,7 @@ export class Player extends Actor {
 
     private run() {
         if (this.spine.currentAnimation?.name === "run") return;
-        this.spine.animate("run", { loop: true });
+        this.spine.animate("run-normal", { loop: true });
     }
 
     private idle() {
