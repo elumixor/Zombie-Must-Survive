@@ -3,8 +3,8 @@
         "Reflux Skill": {
             "General": {
                 "numProjectiles": "[1,2,3,4,5]",
-                "damage": "[10,6,5,5,7]",
-                "cooldown": "[0.5,0.5,0.4,0.4,0.3]",
+                "damage": "[6,6,5,5,7]",
+                "cooldown": "[0.8,0.5,0.4,0.4,0.3]",
                 "distance": "1500",
                 "speed": "25",
                 "spread": "5",
@@ -13,7 +13,7 @@
         },
         "Fart Skill": {
             "General": {
-                "damage": "[1,2,2,3,4]",
+                "damage": "[4,4,4,4,4]",
                 "radius": "[70,80,90,100,120]",
                 "cooldown": "[1,1,0.9,0.9,0.7]",
                 "level": "0"
@@ -21,7 +21,7 @@
         },
         "Boomerang Skill": {
             "General": {
-                "damage": "[5,6,6,7,7]",
+                "damage": "[1.5,1.5,1.5,1.5,1.5]",
                 "instances": "[1,2,3,4,5]",
                 "speed": "[0.05,0.05,0.05,0.05,0.05]",
                 "cooldown": "[2,2,2,2,1]",
@@ -31,11 +31,11 @@
         },
         "Acid Pool Skill": {
             "General": {
-                "damage": "[1,1,1,1,1]",
-                "damageRate": "[1,0.7,0.5,0.4,0.3]",
-                "radius": "[100,125,150,150,150]",
-                "range": "[500,550,600,600,600]",
-                "lifetime": "[1,2,3,4,5]",
+                "damage": "[2.5,1,1,1,1]",
+                "damageRate": "[0.8,0.7,0.5,0.4,0.3]",
+                "radius": "[150,500,500,500,500]",
+                "range": "[250,250,300,400,500]",
+                "lifetime": "[3,4,4,4,5]",
                 "spawnCooldown": "[2,1.5,1.5,1,1]",
                 "travelDuration": "1",
                 "level": "0"
@@ -44,9 +44,9 @@
         "Frankenzombie Skill": {
             "General": {
                 "damage": "[5,5,5,5,5]",
-                "cooldown": "[0.5,0.5,0.45,0.35,0.25]",
-                "distance": "[450,450,500,500,550]",
-                "numBounces": "[5,7,9,11,15]",
+                "cooldown": "[0.8,0.5,0.45,0.35,0.25]",
+                "distance": "[250,450,500,500,550]",
+                "numBounces": "[4,7,9,11,15]",
                 "level": "0"
             }
         },
@@ -78,16 +78,16 @@
         },
         "Bite Skill": {
             "General": {
-                "damage": "[30,30,40,40,50]",
+                "damage": "[6.5,30,40,40,50]",
                 "radius": "[100,100,120,120,150]",
-                "spawnCooldown": "[5,4,3,2,1]",
+                "spawnCooldown": "[3,3,3,2,1]",
                 "level": "0"
             }
         },
         "Beholder Skill": {
             "General": {
-                "damage": "[10,10,10,10,10]",
-                "fireCooldown": "[1,0.9,0.8,0.7,0.5]",
+                "damage": "[15,15,15,15,15]",
+                "fireCooldown": "[0.7,0.9,0.8,0.7,0.5]",
                 "spawnCooldown": "[3,3,2,2,1]",
                 "maxInstances": "[2,3,4,5,6]",
                 "lifetime": "[5,6,7,8,9]",
@@ -126,28 +126,28 @@
         },
         "Player": {
             "General": {
-                "levelXPThresholds": "[10,20,30,40,50]",
+                "levelXPThresholds": "[15,102,175,255,40000000,40000000,40000000,40000000]",
                 "levelMaxHealth": "[10,20,30,40,50]",
-                "restoreHpOnLevelUp": "0",
+                "restoreHpOnLevelUp": "1",
                 "forceLevelUp": "undefined",
                 "forceDeath": "",
-                "speed": "15",
+                "speed": "10",
                 "invulnerable": "false",
-                "startingXPCrystals": "20",
+                "startingXPCrystals": "5",
                 "xpGain": "1",
                 "noXP": "false"
             }
         },
         "Enemy Manager": {
             "General": {
-                "stagesConfig": "[{\"duration\":5,\"enemies\":[{\"enemyType\":\"villager1\",\"spawnInterval\":1,\"count\":5},{\"enemyType\":\"villager2\",\"spawnInterval\":3,\"count\":1},{\"enemyType\":\"villager3\",\"spawnInterval\":3,\"count\":1}]},{\"duration\":5,\"enemies\":[{\"enemyType\":\"villager1\",\"spawnInterval\":0.5,\"count\":5}]}]",
-                "enemiesConfig": "{\"villager1\":{\"speed\":5,\"damage\":1,\"health\":10,\"lag\":0.5},\"villager2\":{\"speed\":3,\"damage\":4,\"health\":20,\"lag\":0.45},\"villager3\":{\"speed\":7,\"damage\":3,\"health\":10,\"lag\":0.4}}",
-                "autoStart": "false",
+                "stagesConfig": "[{\"duration\":13,\"enemies\":[{\"enemyType\":\"villager1\",\"spawnInterval\":1,\"count\":1}]},{\"duration\":3,\"enemies\":[{\"enemyType\":\"villager1\",\"spawnInterval\":2.9,\"count\":24}]},{\"duration\":15,\"enemies\":[{\"enemyType\":\"villager1\",\"spawnInterval\":1.2,\"count\":1}]},{\"duration\":12,\"enemies\":[{\"enemyType\":\"villager1\",\"spawnInterval\":1.3,\"count\":2}]},{\"duration\":20,\"enemies\":[{\"enemyType\":\"villager1\",\"spawnInterval\":1,\"count\":3},{\"enemyType\":\"villager2\",\"spawnInterval\":4,\"count\":1}]},{\"duration\":3,\"enemies\":[{\"enemyType\":\"villager2\",\"spawnInterval\":2.9,\"count\":7},{\"enemyType\":\"villager2\",\"spawnInterval\":2.9,\"count\":7}]},{\"duration\":3,\"enemies\":[{\"enemyType\":\"villager1\",\"spawnInterval\":2.9,\"count\":35},{\"enemyType\":\"villager2\",\"spawnInterval\":2.9,\"count\":7}]},{\"duration\":15,\"enemies\":[]},{\"duration\":1,\"enemies\":[{\"enemyType\":\"villager3\",\"spawnInterval\":0.8,\"count\":3}]},{\"duration\":10,\"enemies\":[]},{\"duration\":10,\"enemies\":[{\"enemyType\":\"villager1\",\"spawnInterval\":0.5,\"count\":5}]},{\"duration\":21,\"enemies\":[{\"enemyType\":\"villager1\",\"spawnInterval\":5,\"count\":25}]},{\"duration\":21,\"enemies\":[{\"enemyType\":\"villager1\",\"spawnInterval\":5,\"count\":25}]},{\"duration\":12,\"enemies\":[{\"enemyType\":\"villager1\",\"spawnInterval\":3,\"count\":51},{\"enemyType\":\"villager1\",\"spawnInterval\":1,\"count\":4}]},{\"duration\":18,\"enemies\":[]},{\"duration\":21,\"enemies\":[]},{\"duration\":21,\"enemies\":[]}]",
+                "enemiesConfig": "{\"villager1\":{\"speed\":9,\"damage\":1,\"health\":10,\"lag\":0.5},\"villager2\":{\"speed\":13.5,\"damage\":4,\"health\":40,\"lag\":0.45},\"villager3\":{\"speed\":7,\"damage\":9,\"health\":150,\"lag\":0.4}}",
+                "autoStart": "true",
                 "restartOnEnd": "false",
                 "clearEnemies": "",
                 "stopStages": ""
             }
         }
     },
-    "version": 2
+    "version": 4
 }
