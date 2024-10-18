@@ -109,3 +109,5 @@ export class ResourcesZombie extends BaseResources {
         this.mainLoader.add("config", `${this.rootAssetsFolder}/config.json`);
     }
 }
+
+export type EnemySpineKey = "villager1" | "villager2" | "villager3" | "butcher" | "nun";

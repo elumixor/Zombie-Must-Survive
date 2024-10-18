@@ -3,9 +3,8 @@ import { EventEmitter } from "@elumixor/frontils";
 import { c } from "game-zombie/config";
 import { Enemy } from "./enemy";
 import { enemiesEditor, stagesEditor } from "./enemy-manager.editor";
-import { EnemyType } from "./enemy-type";
-import type { IStageConfig } from "./types";
 import { Stage } from "./stage";
+import type { IEnemyConfig, IStageConfig } from "./types";
 
 @c
 export class EnemyManager extends Actor {
@@ -32,16 +31,16 @@ export class EnemyManager extends Actor {
     private readonly stagesConfig = range(5).flatMap(() => [
         {
             duration: 15,
-            enemies: [{ enemyType: EnemyType.Villager1, spawnInterval: 1, count: 5 }],
+            enemies: [{ enemyType: "enemy1", spawnInterval: 1, count: 5 }],
         },
     ]);
 
     @c(enemiesEditor)
-    private readonly enemiesConfig = {
-        [EnemyType.Villager1]: { speed: 1, damage: 1, health: 10, lag: 0.5 },
-        [EnemyType.Villager2]: { speed: 1, damage: 1, health: 10, lag: 0.5 },
-        [EnemyType.Villager3]: { speed: 1, damage: 1, health: 10, lag: 0.5 },
-    };
+    private readonly enemiesConfig = new Map<string, IEnemyConfig>([
+        ["enemy1", { speed: 1, damage: 1, health: 10, lag: 0.5, spine: "villager1" }],
+        ["enemy2", { speed: 1, damage: 1, health: 10, lag: 0.5, spine: "villager2" }],
+        ["enemy3", { speed: 1, damage: 1, health: 10, lag: 0.5, spine: "villager3" }],
+    ]);
 
     private stages = [] as Stage[];
 
@@ -78,7 +77,7 @@ export class EnemyManager extends Actor {
         }
     }
 
-    private spawn(enemyType: EnemyType) {
+    private spawn(enemyType: string) {
         logs(`Spawning enemy ${enemyType}`, { duration: 1, color: "cyan" });
 
         // Spawn a zombie
@@ -94,12 +93,15 @@ export class EnemyManager extends Actor {
         enemy.health.died.subscribeOnce(() => this.onEnemyDied(enemy));
     }
 
-    private getEnemy(enemyType: EnemyType) {
-        const enemy = new Enemy(enemyType);
+    private getEnemy(enemyType: string) {
+        const data = this.enemiesConfig.get(enemyType);
+        assert(data, `Enemy type ${enemyType} not found`);
+
+        const { speed, damage, health, lag, spine: enemySpine } = data;
+
+        const enemy = new Enemy(enemySpine);
 
         enemy.tracker.target = this.enemiesTarget;
-
-        const { speed, damage, health, lag } = this.enemiesConfig[enemyType];
 
         enemy.tracker.force = speed;
         enemy.tracker.lag = lag;

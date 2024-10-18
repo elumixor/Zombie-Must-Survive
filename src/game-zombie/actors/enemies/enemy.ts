@@ -1,9 +1,8 @@
 import { Actor, CircleColliderComponent, PhysicsComponent, Time, TrackerComponent } from "@core";
 import { di } from "@elumixor/di";
 import { HealthComponent, HitEffectComponent, MeleeAttackComponent } from "game-zombie/components";
-import { ResourcesZombie } from "game-zombie/resources-zombie";
+import { ResourcesZombie, type EnemySpineKey } from "game-zombie/resources-zombie";
 import { XpCrystal } from "../pick-ups/xp-crystal";
-import type { EnemyType } from "./enemy-type";
 
 export class Enemy extends Actor {
     private readonly resources = di.inject(ResourcesZombie);
@@ -20,10 +19,10 @@ export class Enemy extends Actor {
     private readonly hitEffect = this.addComponent(new HitEffectComponent(this));
     private freezeTimeout?: ReturnType<Time["timeout"]>;
 
-    constructor(enemyType: EnemyType) {
+    constructor(enemySpine: EnemySpineKey) {
         super();
 
-        this.spine = this.addChild(this.resources[enemyType].copy());
+        this.spine = this.addChild(this.resources[enemySpine].copy());
         this.spine.y = 50;
 
         this.name = "Enemy";

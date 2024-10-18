@@ -2,7 +2,6 @@ import { EventEmitter } from "@elumixor/frontils";
 import { createElement } from "../create-element";
 import type { IResetView } from "../imy-element";
 import type { IEditor } from "./editor";
-import "./number.scss";
 
 export interface NumericOptions {
     min?: number;

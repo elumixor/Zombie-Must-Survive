@@ -1,3 +1,4 @@
+import { EventEmitter } from "@elumixor/frontils";
 import {
     arrayEditor,
     groupEditor,
@@ -5,29 +6,26 @@ import {
     numberEditor,
     selectEditor,
     sliderEditor,
+    stringEditor,
     type ArrayEditor,
 } from "game-zombie/config";
+import { createView } from "game-zombie/config/create-element";
+import { buttonEditor } from "game-zombie/config/editors/button";
 import type { IEditor } from "game-zombie/config/editors/editor";
 import type { IResetView } from "game-zombie/config/imy-element";
-import { EnemyType } from "./enemy-type";
+import type { EnemySpineKey } from "game-zombie/resources-zombie";
 import type { IEnemyConfig, IEnemyStageConfig, IStageConfig } from "./types";
-import { buttonEditor } from "game-zombie/config/editors/button";
-import { createView } from "game-zombie/config/create-element";
-import { EventEmitter } from "@elumixor/frontils";
 
 function stageEnemyEditor(view: IResetView): IEditor<IEnemyStageConfig> {
     return groupEditor(
         view,
         {
-            enemyType: (view) =>
-                selectEditor(view, {
-                    options: [EnemyType.Villager1, EnemyType.Villager2, EnemyType.Villager3],
-                }),
+            enemyType: (view) => stringEditor(view, { defaultValue: "enemy1" }),
             spawnInterval: (view) => sliderEditor(view, { min: 0.1, max: 60, step: 0.5, defaultValue: 1 }),
             count: (view) => sliderEditor(view, { min: 1, max: 60, step: 1, defaultValue: 5 }),
         },
         {
-            enemyType: EnemyType.Villager1,
+            enemyType: "enemy1",
             spawnInterval: 1,
             count: 5,
         },
@@ -42,12 +40,12 @@ function stageEditor(view: IResetView) {
             enemies: (view) =>
                 arrayEditor(view, (view) => stageEnemyEditor(view), {
                     title: (index) => `Enemy ${index + 1}`,
-                    defaultValue: { enemyType: EnemyType.Villager1, spawnInterval: 1, count: 5 },
+                    defaultValue: { enemyType: "enemy1", spawnInterval: 1, count: 5 },
                 }),
         },
         {
             duration: 15,
-            enemies: [{ enemyType: EnemyType.Villager1, spawnInterval: 1, count: 5 }],
+            enemies: [{ enemyType: "enemy1", spawnInterval: 1, count: 5 }],
         },
     );
 
@@ -83,7 +81,8 @@ export const stagesEditor = new (class extends Handle<IStageConfig[]> {
     }
 })();
 
-type EnemiesConfig = Record<EnemyType, IEnemyConfig>;
+type EnemiesConfig = Map<string, IEnemyConfig>;
+type EnemiesConfigRaw = { enemyType: string; config: IEnemyConfig }[];
 
 function enemyConfigEditor(view: IResetView): IEditor<IEnemyConfig> {
     return groupEditor(
@@ -93,33 +92,43 @@ function enemyConfigEditor(view: IResetView): IEditor<IEnemyConfig> {
             damage: (view) => numberEditor(view),
             health: (view) => numberEditor(view),
             lag: (view) => numberEditor(view),
+            spine: (view) => selectEditor(view, { options: ["villager1", "villager2", "villager3", "butcher", "nun"] }),
         },
-        { speed: 1, damage: 1, health: 10, lag: 0.5 },
+        { speed: 1, damage: 1, health: 10, lag: 0.5, spine: "villager1" as EnemySpineKey },
     );
 }
 
-export const enemiesEditor = new (class extends Handle<EnemiesConfig> {
-    private editor!: IEditor<EnemiesConfig>;
+export const enemiesEditor = new (class extends Handle<EnemiesConfig, EnemiesConfigRaw> {
+    private editor!: IEditor<EnemiesConfigRaw>;
 
     protected override addToView(view: IResetView) {
-        // Map all enum values to their respective editor
-        const values = Object.values(EnemyType);
-
-        this.editor = groupEditor(
-            view,
-            Object.fromEntries(values.map((value) => [value, (view) => enemyConfigEditor(view)])) as Record<
-                EnemyType,
-                (view: IResetView) => IEditor<IEnemyConfig>
-            >,
-            Object.fromEntries(
-                values.map((value) => [value, { speed: 1, damage: 1, health: 10, lag: 0.5 }]),
-            ) as EnemiesConfig,
+        this.editor = arrayEditor(view, (view) =>
+            groupEditor(
+                view,
+                { enemyType: (view) => stringEditor(view), config: enemyConfigEditor },
+                {
+                    enemyType: "enemy1",
+                    config: { speed: 1, damage: 1, health: 10, lag: 0.5, spine: "villager1" } as IEnemyConfig,
+                },
+            ),
         );
 
         return this.editor;
     }
+    protected override set(value: EnemiesConfigRaw) {
+        const v = this.propertyValue;
 
-    protected override updateView(value: { [key in EnemyType]: IEnemyConfig }): void {
+        console.log(value, v);
+
+        v.clear();
+        for (const { enemyType, config } of value) v.set(enemyType, config);
+    }
+
+    protected override extractValue(value: EnemiesConfig): EnemiesConfigRaw {
+        return Array.from(value.entries()).map(([enemyType, config]) => ({ enemyType, config }));
+    }
+
+    protected override updateView(value: EnemiesConfigRaw) {
         this.editor.update(value);
     }
 })();

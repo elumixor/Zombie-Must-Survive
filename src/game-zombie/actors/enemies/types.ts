@@ -1,7 +1,7 @@
-import type { EnemyType } from "./enemy-type";
+import type { EnemySpineKey } from "game-zombie/resources-zombie";
 
 export interface IEnemyStageConfig {
-    enemyType: EnemyType;
+    enemyType: string;
     spawnInterval: number;
     count: number;
 }
@@ -16,4 +16,5 @@ export interface IEnemyConfig {
     damage: number;
     health: number;
     lag: number;
+    spine: EnemySpineKey;
 }
