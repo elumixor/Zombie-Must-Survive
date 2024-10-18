@@ -45,7 +45,7 @@ export class SkillPool {
         this.frankenzombie,
         this.spirit,
         this.scream,
-        // this.zombiecide,
+        this.zombiecide,
         this.bite,
         this.beholder,
 
@@ -53,16 +53,21 @@ export class SkillPool {
 
         // this.gold, // on the prototype stage we don't need it
         this.magnet,
-        // this.maxHp,
-        // this.movement,
+        this.maxHp,
+        this.movement,
         this.regeneration,
     ]);
 
-    readonly maxSkillsOnLevelUp = 4;
+    readonly rareSkills = new Set<Skill>([this.beholder, this.bite, this.boomerang]);
+    readonly normalSkills = this.allSkills.difference(this.rareSkills);
+
+    readonly maxSkillsOnLevelUp = 3;
 
     /** Pick `n` skills of a given rarity that are not already learned completely by the target character */
     getSkills() {
         const numSkills = min(this.maxSkillsOnLevelUp, this.allSkills.size);
-        return [...this.allSkills].pick(numSkills, { repeat: false });
+        const normalSkills = [...this.normalSkills].pick(max(0, numSkills - 1), { repeat: false });
+        const rareSkills = [...this.rareSkills].pick(max(0, numSkills - normalSkills.length), { repeat: false });
+        return [...normalSkills, ...rareSkills];
     }
 }
