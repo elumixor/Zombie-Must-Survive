@@ -60,24 +60,27 @@ export class MainLevel extends Level implements IResizeObservable {
             c.position = Vec2.random().withLength(random(300, 300 + 25 * x));
             this.addChild(c);
         }
-
-        void this.levelUpPopup.show();
     }
 
     private async onPlayerDied() {
         logs("Player died", { color: "red" });
         this.time.paused = true;
-        await this.gameOverPopup.show();
-        this.reset();
+        const result = await this.gameOverPopup.show();
+        this.reset(result);
         await this.gameOverPopup.hide();
         this.time.paused = false;
     }
 
-    private reset() {
-        di.uninject(GameState);
-        this.destroy();
-        this.gameState.destroy();
-        this.time.reset();
-        void this.game.changeLevel(new MainLevel());
+    private reset(result: "die" | "revive") {
+        if (result === "die") {
+            di.uninject(GameState);
+            this.destroy();
+            this.gameState.destroy();
+            this.time.reset();
+            void this.game.changeLevel(new MainLevel());
+            return;
+        }
+
+        this.player.health.health = this.player.health.maxHealth;
     }
 }

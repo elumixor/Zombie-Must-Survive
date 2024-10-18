@@ -82,6 +82,9 @@ export class ResourcesZombie extends BaseResources {
         this.mainLoader.add("ui-star-enabled", `${ui}/ability-star-enabled.png`);
         this.mainLoader.add("ui-star-disabled", `${ui}/ability-star-disabled.png`);
         this.mainLoader.add("ui-level-up-background", `${ui}/ui-level-up.png`);
+        this.mainLoader.add("ui-game-over", `${ui}/ui-dead.png`);
+        this.mainLoader.add("ui-die", `${ui}/ui-button-die.png`);
+        this.mainLoader.add("ui-revive", `${ui}/ui-button-continue.png`);
 
         // UI - skills
         this.mainLoader.add("ui-zombiecide", `${ui}/ui-zombiecide.png`);
