@@ -64,7 +64,7 @@ export class AcidPoolComponent extends Component {
         poolActor.targetPoint = spawnPosition;
         poolActor.worldPosition = this.actor.worldPosition;
 
-        poolActor.startAnimation();
+        void poolActor.startAnimation();
     }
 
     private enemiesAround(enemy: Enemy, enemies: Enemy[]) {

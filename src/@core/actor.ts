@@ -99,10 +99,14 @@ export class Actor extends Container {
 
     /** Destroys the actor and all its children and components and removes it from the parent */
     override destroy() {
+        if (this.destroyed) return;
+
         c.unsubscribe(this);
         di.inject(Resizer).unsubscribe(this);
 
-        this.parent.removeChild(this);
+        const parent = this.parent as Container | undefined;
+
+        parent?.removeChild(this);
         for (const component of [...this.components]) component.destroy();
         for (const child of [...this.children]) child.destroy();
         super.destroy();

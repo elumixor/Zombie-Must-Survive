@@ -23,9 +23,6 @@ export class ResourcesZombie extends BaseResources {
     @spine("enemies/butcher/butcher")
     declare readonly butcher: EnemySpine;
 
-    @spine("enemies/enemy-death/enemy-death")
-    declare readonly enemyDeath: EnemySpine;
-
     @spine("enemies/nun/nun")
     declare readonly nun: EnemySpine;
 
@@ -60,6 +57,9 @@ export class ResourcesZombie extends BaseResources {
     @spine("fireball-pink/fireball-pink")
     declare readonly fireball: Spine<"idle">;
 
+    @spine("enemies/enemy-death/enemy-death")
+    declare readonly enemyDeath: Spine<"death">;
+
     constructor() {
         super("resources/assets", "resources/html");
 
@@ -72,6 +72,7 @@ export class ResourcesZombie extends BaseResources {
         this.mainLoader.add("lightning", `${sprites}/frankenzombie.png`);
         this.mainLoader.add("spit", `${sprites}/reflux.png`);
         this.mainLoader.add("boomerang", `${sprites}/legmerang.png`);
+        this.mainLoader.add("acid-pool-projectile", `${sprites}/slime.png`);
 
         const ui = `${sprites}/ui`;
 

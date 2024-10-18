@@ -6,6 +6,7 @@ export class Component {
     /** Whether the component should be updated every frame */
     tickEnabled = true;
     protected beginPlayCalled = true;
+    protected destroyed = false;
 
     constructor(readonly actor: Actor) {}
 
@@ -25,6 +26,7 @@ export class Component {
     destroy() {
         c.unsubscribe(this);
 
+        this.destroyed = true;
         this.actor.removeComponent(this);
     }
 }

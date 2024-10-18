@@ -60,8 +60,6 @@ export class MainLevel extends Level implements IResizeObservable {
             c.position = Vec2.random().withLength(random(300, 300 + 25 * x));
             this.addChild(c);
         }
-
-        void this.levelUpPopup.show();
     }
 
     private async onPlayerDied() {

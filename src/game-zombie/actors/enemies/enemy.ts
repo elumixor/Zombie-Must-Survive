@@ -8,15 +8,16 @@ import type { EnemyType } from "./enemy-type";
 export class Enemy extends Actor {
     private readonly resources = di.inject(ResourcesZombie);
 
-    readonly spine;
-
     readonly tracker = this.addComponent(new TrackerComponent(this));
-    readonly collider = this.addComponent(new CircleColliderComponent(this));
-    readonly physics = this.addComponent(new PhysicsComponent(this));
     readonly health = this.addComponent(new HealthComponent(this));
-    readonly hitEffect = this.addComponent(new HitEffectComponent(this));
     readonly weapon = this.addComponent(new MeleeAttackComponent(this));
 
+    private readonly spine;
+    private readonly deathSpine = this.resources.enemyDeath.copy();
+
+    private readonly collider = this.addComponent(new CircleColliderComponent(this));
+    private readonly physics = this.addComponent(new PhysicsComponent(this));
+    private readonly hitEffect = this.addComponent(new HitEffectComponent(this));
     private freezeTimeout?: ReturnType<Time["timeout"]>;
 
     constructor(enemyType: EnemyType) {
@@ -51,14 +52,16 @@ export class Enemy extends Actor {
         });
 
         this.health.died.subscribe(async () => {
-            this.collider.destroy();
-            this.removeComponent(this.weapon, this.collider, this.tracker);
+            for (const component of [this.health, this.weapon, this.tracker, this.physics]) component.destroy();
 
             const crystal = new XpCrystal();
             crystal.position.copyFrom(this);
             this.level.addChild(crystal);
 
-            await this.spine.animate("die", { promise: true });
+            this.removeChild(this.spine);
+            this.addChild(this.deathSpine);
+
+            await this.deathSpine.animate("death", { promise: true });
 
             this.destroy();
         });
@@ -96,6 +99,6 @@ export class Enemy extends Actor {
 
     private async attack() {
         await this.spine.animate("attack", { promise: true });
-        this.spine.animate("run", { loop: true });
+        if (!this.destroyed) this.spine.animate("run", { loop: true });
     }
 }

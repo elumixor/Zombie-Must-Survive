@@ -47,8 +47,12 @@ export class EnemyManager extends Actor {
 
     @c(c.bool())
     private readonly autoStart = true as boolean;
+
     @c(c.bool())
     private readonly restartOnEnd = false as boolean;
+
+    @c(c.num())
+    private readonly spawnDistance = 100 as number;
 
     override beginPlay() {
         super.beginPlay();
@@ -116,25 +120,33 @@ export class EnemyManager extends Actor {
         logs(`Starting stage ${index + 1}`, { duration: 1, color: "#6fa" });
     }
 
-    private onEnemyDied(enemy: Enemy) {
+    private onEnemyDied(enemy: Enemy, destroy = false) {
         this.enemyDied.emit(enemy);
         this.enemies.remove(enemy);
+
+        if (destroy) {
+            this.level.removeChild(enemy);
+            enemy.destroy();
+        }
+    }
+
+    override destroy(): void {
+        this.clearEnemies();
+        this.stopStages();
+        super.destroy();
     }
 
     private getSpawnPosition() {
         const { screenSize } = this.level;
         const center = screenSize.div(2);
         const maxSize = max(center.x, center.y);
-        const offset = Vec2.random().withLength(maxSize * 1.2);
+        const offset = Vec2.random().withLength(maxSize + this.spawnDistance);
         return this.level.screenToWorld(center.add(offset));
     }
 
     @c(c.button())
     private clearEnemies() {
-        for (const enemy of [...this.enemies]) {
-            enemy.destroy();
-            this.onEnemyDied(enemy);
-        }
+        for (const enemy of [...this.enemies]) this.onEnemyDied(enemy, true);
     }
 
     @c(c.button())

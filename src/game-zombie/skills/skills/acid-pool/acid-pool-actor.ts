@@ -4,6 +4,7 @@ import { HealthComponent } from "game-zombie/components";
 import { ResourcesZombie } from "game-zombie/resources-zombie";
 import { gsap } from "gsap";
 import { MotionPathPlugin } from "gsap/MotionPathPlugin";
+import { Sprite } from "pixi.js";
 
 gsap.registerPlugin(MotionPathPlugin);
 
@@ -20,12 +21,15 @@ export class AcidPoolActor extends Actor {
 
     private elapsed = 0;
     private readonly collider = this.addComponent(new CircleColliderComponent(this));
+    private readonly sprite = this.addChild(Sprite.from("acid-pool-projectile"));
     private readonly spine = this.addChild(this.resources.pool.copy());
 
     private readonly damagingActors = new Set<Actor>();
 
     constructor() {
         super();
+
+        this.spine.visible = false;
 
         this.layer = "background";
         this.collider.isTrigger = true;
@@ -39,7 +43,7 @@ export class AcidPoolActor extends Actor {
         });
     }
 
-    startAnimation() {
+    async startAnimation() {
         this.collider.radius = this.radius;
         this.spine.scale.set(this.radius / 100);
         this.elapsed = this.damageRate; // to start damaging immediately
@@ -54,7 +58,8 @@ export class AcidPoolActor extends Actor {
         const { x, y } = this.targetPoint.sub(this.worldPosition);
         const basePosition = this.worldPosition;
         const topY = min(0, y) - 100;
-        void this.time.to(p, {
+
+        await this.time.to(p, {
             motionPath: {
                 path: [
                     { x: x * 0.5, y: topY },
@@ -66,6 +71,9 @@ export class AcidPoolActor extends Actor {
             ease: "power2.in",
             duration,
         });
+
+        this.sprite.visible = false;
+        this.spine.visible = true;
     }
 
     override update(dt: number) {
