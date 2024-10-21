@@ -11,6 +11,8 @@ export class ProjectileWeaponComponent extends WeaponComponent {
     override attackWithTargetInRange = true;
 
     protected override use(targetsInRange: Actor[]) {
+        super.use(targetsInRange);
+
         // const { carrierVelocity } = this;
 
         const closestTarget = this.closest(targetsInRange);

@@ -3,11 +3,13 @@ import { di } from "@elumixor/di";
 import { all } from "@elumixor/frontils";
 import { RayWeapon } from "game-zombie/components";
 import { ResourcesZombie } from "game-zombie/resources-zombie";
+import { SoundsZombie } from "game-zombie/sounds-zombie";
 import { gsap } from "gsap";
 
 /** Turret that shoots a ray towards a random enemy */
 export class BeholderTurret extends Actor {
     private readonly resources = di.inject(ResourcesZombie);
+    private readonly sounds = di.inject(SoundsZombie);
     readonly spine = this.addChild(this.resources.beholder.copy());
     readonly weapon = this.addComponent(new RayWeapon(this));
 
@@ -18,6 +20,7 @@ export class BeholderTurret extends Actor {
         this.weapon.tags.add("enemy");
 
         this.weapon.onUse.subscribe(async () => {
+            void this.sounds.skills.beholder.attack.play();
             await this.spine.animate("attack", { promise: true });
             this.spine.animate("idle", { loop: true });
         });
@@ -26,6 +29,7 @@ export class BeholderTurret extends Actor {
     override beginPlay() {
         super.beginPlay();
 
+        void this.sounds.skills.beholder.spawn.play();
         this.spine.animate("idle", { loop: true });
 
         this.spine.scale.set(0.7);

@@ -5,12 +5,16 @@ import { cskill } from "game-zombie/skills/skill.editors";
 import { Texture } from "pixi.js";
 import { Skill } from "../../skill";
 import { NumProperty } from "../../skill-property";
+import { SoundsZombie } from "game-zombie/sounds-zombie";
+import { di } from "@elumixor/di";
 
 @c
 export class FartSkill extends Skill {
     override readonly name = "Deadly Fart";
     override readonly description = "Releases a stinky cloud that damages enemies.";
     override readonly texture = Texture.from("ui-fart");
+
+    private readonly sounds = di.inject(SoundsZombie);
 
     @cskill protected readonly damage = this.addProperty(new NumProperty("Damage"));
     @cskill protected readonly radius = this.addProperty(new NumProperty("Radius"));
@@ -20,6 +24,7 @@ export class FartSkill extends Skill {
 
     protected override addToActor(actor: Actor) {
         this.component = new AuraWeaponComponent(actor);
+        this.component.sounds = this.sounds.skills.fart;
         this.component.tags.add("enemy");
         actor.addComponent(this.component);
     }

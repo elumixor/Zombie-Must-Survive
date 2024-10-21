@@ -1,9 +1,11 @@
 import { Component, Time } from "@core";
 import { di } from "@elumixor/di";
+import { SoundsZombie } from "game-zombie/sounds-zombie";
 import { ScreamActor } from "./scream-actor";
 
 export class ScreamComponent extends Component {
     private readonly time = di.inject(Time);
+    private readonly sounds = di.inject(SoundsZombie);
 
     radius = 1;
     freezeDuration = 1;
@@ -39,6 +41,7 @@ export class ScreamComponent extends Component {
 
     private activate() {
         const scream = new ScreamActor();
+        void this.sounds.skills.scream.play();
 
         scream.radius = this.radius;
         scream.freezeDuration = this.freezeDuration;

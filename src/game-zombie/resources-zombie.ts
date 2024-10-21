@@ -7,7 +7,7 @@ export type EnemySpine = Spine<EnemyAnimation>;
 @di.injectable
 export class ResourcesZombie extends BaseResources {
     @spine("zombie/zombie")
-    declare readonly zombie: Spine<"animation" | "idle" | `run-${"level-up" | "shocked" | "normal"}`>;
+    declare readonly zombie: Spine<"animation" | "idle" | "run">;
 
     /* Enemies */
 

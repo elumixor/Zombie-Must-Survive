@@ -1,9 +1,11 @@
 import { Component, Time } from "@core";
-import { BoomerangActor } from "./boomerang-actor";
 import { di } from "@elumixor/di";
+import { SoundsZombie } from "game-zombie/sounds-zombie";
+import { BoomerangActor } from "./boomerang-actor";
 
 export class BoomerangComponent extends Component {
     private readonly time = di.inject(Time);
+    private readonly sounds = di.inject(SoundsZombie);
 
     damage = 5;
     instances = 1;
@@ -34,6 +36,8 @@ export class BoomerangComponent extends Component {
     }
 
     private spawn() {
+        void this.sounds.skills.boomerang.play();
+
         const angleDiff = (Math.PI * 2) / this.instances;
 
         const boomerangs = range(this.instances).map((i) => {

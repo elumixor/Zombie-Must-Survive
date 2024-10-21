@@ -77,12 +77,21 @@ export class Player extends Actor {
             this.health.health = hp;
         });
 
+        this.playerState.levelUp.subscribe(async () => {
+            this.spine.skin = "level-up";
+            this.spine.update(0);
+            await this.time.delay(5);
+            this.spine.skin = "normal";
+        });
+
         // Animate on death
         this.health.died.subscribe(() => this.die());
 
         // Otherwise, the animation spawns as a detached rotated head. Hard to tell why, but spine is strange...
         this.spine.animate("idle");
         this.spine.update(0);
+
+        this.spine.skin = "normal";
     }
 
     set bonusHealth(value: number) {
@@ -125,7 +134,7 @@ export class Player extends Actor {
 
     private run() {
         if (this.spine.currentAnimation?.name === "run") return;
-        this.spine.animate("run-normal", { loop: true });
+        this.spine.animate("run", { loop: true });
     }
 
     private idle() {

@@ -1,4 +1,4 @@
-import { Component, PhysicsComponent, Time, Vec2, type Actor } from "@core";
+import { Component, PhysicsComponent, Sound, Time, Vec2, type Actor } from "@core";
 import { di } from "@elumixor/di";
 import { EventEmitter } from "@elumixor/frontils";
 
@@ -9,6 +9,8 @@ export class WeaponComponent extends Component {
 
     /** Actor tags that this weapon affects/targets  */
     readonly tags = new Set<string>();
+
+    sounds?: Sound | Sound[];
 
     /** Amount of HP that this weapon removes */
     damage = 1;
@@ -48,7 +50,8 @@ export class WeaponComponent extends Component {
     }
 
     protected use(_targetsInRange?: Actor[]) {
-        return;
+        if (Array.isArray(this.sounds)) void this.sounds.pick().play();
+        else void this.sounds?.play();
     }
 
     protected closest(targets: Actor[]) {

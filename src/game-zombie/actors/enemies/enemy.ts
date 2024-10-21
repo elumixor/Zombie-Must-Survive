@@ -3,9 +3,11 @@ import { di } from "@elumixor/di";
 import { HealthComponent, HitEffectComponent, MeleeAttackComponent } from "game-zombie/components";
 import { ResourcesZombie, type EnemySpineKey } from "game-zombie/resources-zombie";
 import { XpCrystal } from "../pick-ups/xp-crystal";
+import { SoundsZombie } from "game-zombie/sounds-zombie";
 
 export class Enemy extends Actor {
     private readonly resources = di.inject(ResourcesZombie);
+    private readonly sounds = di.inject(SoundsZombie);
 
     readonly tracker = this.addComponent(new TrackerComponent(this));
     readonly health = this.addComponent(new HealthComponent(this));
@@ -46,6 +48,9 @@ export class Enemy extends Actor {
         this.health.health = 5;
 
         this.health.damaged.subscribe((damage) => {
+            const hits = this.sounds.enemyHit;
+            const sound = random() < 0.8 ? hits[0] : hits[1];
+            void sound.playOnce();
             this.hitEffect.tintSprite(this.spine);
             this.hitEffect.showText(damage);
         });

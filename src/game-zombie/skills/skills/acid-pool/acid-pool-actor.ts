@@ -2,6 +2,7 @@ import { Actor, CircleColliderComponent, vec2 } from "@core";
 import { di } from "@elumixor/di";
 import { HealthComponent } from "game-zombie/components";
 import { ResourcesZombie } from "game-zombie/resources-zombie";
+import { SoundsZombie } from "game-zombie/sounds-zombie";
 import { gsap } from "gsap";
 import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 import { Sprite } from "pixi.js";
@@ -10,6 +11,7 @@ gsap.registerPlugin(MotionPathPlugin);
 
 export class AcidPoolActor extends Actor {
     private readonly resources = di.inject(ResourcesZombie);
+    private readonly sounds = di.inject(SoundsZombie);
 
     lifetime = 1;
     damageRate = 1;
@@ -44,6 +46,8 @@ export class AcidPoolActor extends Actor {
     }
 
     async startAnimation() {
+        void this.sounds.skills.acidPool.play();
+
         this.collider.radius = this.radius;
         this.spine.scale.set(this.radius / 100);
         this.elapsed = this.damageRate; // to start damaging immediately
