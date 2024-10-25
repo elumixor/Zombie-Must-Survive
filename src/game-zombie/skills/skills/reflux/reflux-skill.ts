@@ -31,7 +31,8 @@ export class RefluxSkill extends Skill {
 
     @c(c.num(), {
         section: "Skills",
-        onUpdate([instance]) {
+        onUpdate(instances) {
+            const [instance] = instances;
             const i = instance as RefluxSkill;
             i.update(i.actor!, i.level);
         },

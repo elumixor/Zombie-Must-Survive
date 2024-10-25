@@ -20,5 +20,7 @@ export class GameState {
 
     destroy() {
         c.unsubscribe(this.player);
+
+        this.skillPool.destroy();
     }
 }

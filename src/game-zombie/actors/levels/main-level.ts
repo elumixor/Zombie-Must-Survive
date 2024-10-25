@@ -28,6 +28,8 @@ export class MainLevel extends Level implements IResizeObservable {
     @c(c.num({ step: 1 }), { tabGroup: "Player" })
     private readonly startingXPCrystals = 20;
 
+    private readonly levelUpSubscription;
+
     constructor() {
         super();
 
@@ -41,9 +43,9 @@ export class MainLevel extends Level implements IResizeObservable {
 
         this.enemyManager.enemiesTarget = this.player;
 
-        this.player.died.subscribe(() => this.onPlayerDied());
+        this.player.died.subscribeOnce(() => this.onPlayerDied());
 
-        this.gameState.player.levelUp.subscribe(async () => {
+        this.levelUpSubscription = this.gameState.player.levelUp.subscribe(async () => {
             this.time.paused = true;
             const skill = await this.levelUpPopup.show();
             skill.applyTo(this.player);
@@ -72,15 +74,23 @@ export class MainLevel extends Level implements IResizeObservable {
     }
 
     private reset(result: "die" | "revive") {
-        if (result === "die") {
-            di.uninject(GameState);
-            this.destroy();
-            this.gameState.destroy();
-            this.time.reset();
-            void this.game.changeLevel(new MainLevel());
+        if (result === "revive") {
+            this.player.health.health = this.player.health.maxHealth;
             return;
         }
 
-        this.player.health.health = this.player.health.maxHealth;
+        this.destroy();
+
+        void this.game.changeLevel(new MainLevel());
+    }
+
+    override destroy() {
+        di.uninject(GameState);
+
+        this.time.reset();
+        this.gameState.destroy();
+        this.levelUpSubscription.unsubscribe();
+
+        super.destroy();
     }
 }

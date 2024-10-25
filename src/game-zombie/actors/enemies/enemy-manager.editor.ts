@@ -118,8 +118,6 @@ export const enemiesEditor = new (class extends Handle<EnemiesConfig, EnemiesCon
     protected override set(value: EnemiesConfigRaw) {
         const v = this.propertyValue;
 
-        console.log(value, v);
-
         v.clear();
         for (const { enemyType, config } of value) v.set(enemyType, config);
     }

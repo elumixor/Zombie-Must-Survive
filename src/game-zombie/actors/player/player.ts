@@ -89,9 +89,8 @@ export class Player extends Actor {
 
         // Otherwise, the animation spawns as a detached rotated head. Hard to tell why, but spine is strange...
         this.spine.animate("idle");
-        this.spine.update(0);
-
         this.spine.skin = "normal";
+        this.spine.update(0);
     }
 
     set bonusHealth(value: number) {

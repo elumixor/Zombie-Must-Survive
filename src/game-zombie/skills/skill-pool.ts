@@ -1,3 +1,4 @@
+import { c } from "game-zombie/config";
 import { Skill } from "./skill";
 import {
     AcidPoolSkill,
@@ -69,5 +70,9 @@ export class SkillPool {
         const normalSkills = [...this.normalSkills].pick(max(0, numSkills - 1), { repeat: false });
         const rareSkills = [...this.rareSkills].pick(max(0, numSkills - normalSkills.length), { repeat: false });
         return [...normalSkills, ...rareSkills];
+    }
+
+    destroy() {
+        for (const skill of this.allSkills) c.unsubscribe(skill);
     }
 }
