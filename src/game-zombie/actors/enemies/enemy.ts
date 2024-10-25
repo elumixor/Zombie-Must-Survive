@@ -56,7 +56,8 @@ export class Enemy extends Actor {
         });
 
         this.health.died.subscribe(async () => {
-            for (const component of [this.health, this.weapon, this.tracker, this.physics]) component.destroy();
+            for (const component of [this.health, this.weapon, this.tracker, this.physics, this.collider])
+                component.destroy();
 
             const crystal = new XpCrystal();
             crystal.position.copyFrom(this);
