@@ -81,7 +81,7 @@ export class EnemyManager extends Actor {
         logs(`Spawning enemy ${enemyType}`, { duration: 1, color: "cyan" });
 
         // Spawn a zombie
-        const enemy = this.getEnemy(enemyType);
+        const enemy = this.createEnemy(enemyType);
 
         // Position it outside the screen
         this.level.addChild(enemy);
@@ -93,7 +93,7 @@ export class EnemyManager extends Actor {
         enemy.health.died.subscribeOnce(() => this.onEnemyDied(enemy));
     }
 
-    private getEnemy(enemyType: string) {
+    private createEnemy(enemyType: string) {
         const data = this.enemiesConfig.get(enemyType);
         assert(data, `Enemy type ${enemyType} not found`);
 
@@ -141,7 +141,7 @@ export class EnemyManager extends Actor {
     private getSpawnPosition() {
         const { screenSize } = this.level;
         const center = screenSize.div(2);
-        const maxSize = max(center.x, center.y);
+        const maxSize = hypot(center.x, center.y);
         const offset = Vec2.random().withLength(maxSize + this.spawnDistance);
         return this.level.screenToWorld(center.add(offset));
     }

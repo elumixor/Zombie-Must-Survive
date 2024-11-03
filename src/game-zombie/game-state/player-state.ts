@@ -64,6 +64,8 @@ export class PlayerState {
         const dead = this.isDead;
         this._hp = value;
 
+        logs(`HP: ${value}`);
+
         this.hpChanged.emit(value);
 
         if (this.hp <= 0 && !dead) this.died.emit();
@@ -99,6 +101,8 @@ export class PlayerState {
         const level = this.level;
         if (previousLevel !== level) this.levelChanged.emit(level);
         if (level > previousLevel) this.levelUp.emit(level);
+
+        logs(`XP: ${value}`, { color: "blue" });
 
         this.xpChanged.emit(value);
     }

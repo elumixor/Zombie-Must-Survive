@@ -53,10 +53,10 @@ export class SkillPool {
         /* Passive skills */
 
         // this.gold, // on the prototype stage we don't need it
-        this.magnet,
-        this.maxHp,
-        this.movement,
-        this.regeneration,
+        // this.magnet,
+        // this.maxHp,
+        // this.movement,
+        // this.regeneration,
     ]);
 
     readonly rareSkills = new Set<Skill>([this.beholder, this.bite, this.boomerang]);

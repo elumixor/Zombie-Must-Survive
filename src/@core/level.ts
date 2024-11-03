@@ -38,7 +38,10 @@ export class Level extends Actor implements IResizeObservable {
 
     get screenSize() {
         const { width, height } = this.resizer.dimensions;
-        return new Vec2(width, height);
+        const {
+            scale: { x: scale },
+        } = this.camera;
+        return new Vec2(width / scale, height / scale);
     }
 
     resize({ scale, clientWidth, clientHeight }: IDimensions) {

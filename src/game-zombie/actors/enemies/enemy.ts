@@ -34,7 +34,7 @@ export class Enemy extends Actor {
             this.spine.scale.x = sign(v.x, 1) * abs(this.spine.scale.x);
             this.physics.addForce(v);
         });
-        this.tracker.lag = 0.5;
+        // this.tracker.lag = 0.5;
 
         this.collider.selfTags.add("enemy");
         this.collider.targetTags.add("enemy");
