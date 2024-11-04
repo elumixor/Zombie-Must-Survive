@@ -37,7 +37,7 @@ export class Game {
             const fpsCounter = document.createElement("div");
             fpsCounter.id = "__fps-counter";
             fpsCounter.style.position = "fixed";
-            fpsCounter.style.top = "0";
+            fpsCounter.style.top = "50px";
             fpsCounter.style.right = "0";
             fpsCounter.style.zIndex = "9999";
             fpsCounter.style.color = "rgb(255 255 255)";

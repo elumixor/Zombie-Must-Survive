@@ -25,10 +25,12 @@ export class TrackerComponent extends Component {
 
     /** Target to reach */
     target?: Actor;
+    lookahead = 0;
 
     private elapsed = 0;
 
     private lastPosition = new Vec2();
+    private previousLastPosition?: Vec2;
 
     override update(dt: number) {
         super.update(dt);
@@ -41,8 +43,24 @@ export class TrackerComponent extends Component {
             this.elapsed -= this.lag;
         }
 
-        // We perform all calculations in the global frame
-        const actorPos = this.actor.worldPosition;
+        const worldPosition = this.actor.worldPosition;
+        let actorPos;
+
+        if (this.lookahead > 0) {
+            const distanceToTarget = worldPosition.distanceTo(this.lastPosition);
+
+            // Lookahead for the target depends on the distance to the target
+            const lookahead = distanceToTarget * this.lookahead;
+
+            const movement = (this.previousLastPosition?.sub(this.lastPosition) ?? Vec2.zero).mul(lookahead);
+            // console.log(movement.x, movement.y);
+            this.previousLastPosition = this.lastPosition;
+
+            // We perform all calculations in the global frame
+            actorPos = worldPosition.add(movement);
+        } else {
+            actorPos = worldPosition;
+        }
 
         const direction = this.lastPosition.sub(actorPos); // from actor to target
         const distance = direction.length;

@@ -53,6 +53,8 @@ export class GameOverPopup extends Popup {
     }
 
     override async show() {
+        gsap.killTweensOf(this.reviveButton.scale);
+
         gsap.to(this.reviveButton.scale, {
             x: 1,
             y: 1,

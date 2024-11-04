@@ -15,6 +15,8 @@ export interface IEnemyConfig {
     speed: number;
     damage: number;
     health: number;
-    lag: number;
     spine: EnemySpineKey;
+    scale: number;
+    lookahead: number;
+    xp: number;
 }

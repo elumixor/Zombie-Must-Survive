@@ -6,7 +6,7 @@ import { EnemyManager, Player, XpCrystal } from "game-zombie/actors";
 import { Background } from "game-zombie/background";
 import { c } from "game-zombie/config";
 import { GameState } from "game-zombie/game-state";
-import { Clock, ControlsWidget, GameOverPopup, LevelUpPopup } from "game-zombie/ui";
+import { Clock, ControlsWidget, GameOverPopup, LevelUpPopup, VolumeButton } from "game-zombie/ui";
 
 @c
 @responsive
@@ -20,6 +20,9 @@ export class MainLevel extends Level implements IResizeObservable {
 
     @responsive({ pin: [0.5, 0], y: 30 })
     private readonly clock = this.ui.addChild(new Clock());
+
+    @responsive({ pin: [1, 0], y: 30, x: -30 })
+    private readonly volumeButton = this.ui.addChild(new VolumeButton());
 
     private readonly mobileControls = this.app.isMobile ? this.ui.addChild(new ControlsWidget()) : undefined;
     private readonly gameOverPopup = this.ui.addChild(new GameOverPopup());
@@ -43,7 +46,7 @@ export class MainLevel extends Level implements IResizeObservable {
 
         this.enemyManager.enemiesTarget = this.player;
 
-        this.player.died.subscribeOnce(() => this.onPlayerDied());
+        this.player.died.subscribe(() => this.onPlayerDied());
 
         this.levelUpSubscription = this.gameState.player.levelUp.subscribe(async () => {
             this.time.paused = true;

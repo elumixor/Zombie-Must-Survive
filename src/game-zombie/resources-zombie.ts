@@ -2,7 +2,7 @@ import { BaseResources, Spine, spine } from "@core";
 import { di } from "@elumixor/di";
 
 export type EnemyAnimation = "attack" | "die" | "run";
-export type EnemySpine = Spine<EnemyAnimation>;
+export type EnemySpine = Spine<EnemyAnimation, "attack">;
 
 @di.injectable
 export class ResourcesZombie extends BaseResources {
@@ -67,6 +67,9 @@ export class ResourcesZombie extends BaseResources {
 
         // Environment and pickups
         this.mainLoader.add("background", `${sprites}/background.png`);
+        this.mainLoader.add("grave-1", `${sprites}/grave1.png`);
+        this.mainLoader.add("grave-2", `${sprites}/grave2.png`);
+        this.mainLoader.add("grave-3", `${sprites}/grave3.png`);
 
         // Weapons, abilities, and particles
         this.mainLoader.add("lightning", `${sprites}/frankenzombie.png`);
@@ -85,6 +88,8 @@ export class ResourcesZombie extends BaseResources {
         this.mainLoader.add("ui-game-over", `${ui}/ui-dead.png`);
         this.mainLoader.add("ui-die", `${ui}/ui-button-die.png`);
         this.mainLoader.add("ui-revive", `${ui}/ui-button-continue.png`);
+        this.mainLoader.add("ui-volume-on", `${ui}/ui-volume-on.png`);
+        this.mainLoader.add("ui-volume-off", `${ui}/ui-volume-off.png`);
 
         // UI - skills
         this.mainLoader.add("ui-zombiecide", `${ui}/ui-zombiecide.png`);

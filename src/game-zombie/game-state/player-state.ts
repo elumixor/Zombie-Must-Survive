@@ -102,7 +102,7 @@ export class PlayerState {
         if (previousLevel !== level) this.levelChanged.emit(level);
         if (level > previousLevel) this.levelUp.emit(level);
 
-        logs(`XP: ${value}`, { color: "blue" });
+        logs(`XP: ${value}`, { color: "rgb(170, 235, 255)" });
 
         this.xpChanged.emit(value);
     }

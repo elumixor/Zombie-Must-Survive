@@ -91,10 +91,12 @@ function enemyConfigEditor(view: IResetView): IEditor<IEnemyConfig> {
             speed: (view) => numberEditor(view),
             damage: (view) => numberEditor(view),
             health: (view) => numberEditor(view),
-            lag: (view) => numberEditor(view),
+            lookahead: (view) => numberEditor(view, { min: 0, max: 1, step: 0.01 }),
+            scale: (view) => numberEditor(view),
+            xp: (view) => numberEditor(view),
             spine: (view) => selectEditor(view, { options: ["villager1", "villager2", "villager3", "butcher", "nun"] }),
         },
-        { speed: 1, damage: 1, health: 10, lag: 0.5, spine: "villager1" as EnemySpineKey },
+        { speed: 1, damage: 1, health: 10, lookahead: 0.5, scale: 1, xp: 1, spine: "villager1" as EnemySpineKey },
     );
 }
 
@@ -108,7 +110,14 @@ export const enemiesEditor = new (class extends Handle<EnemiesConfig, EnemiesCon
                 { enemyType: (view) => stringEditor(view), config: enemyConfigEditor },
                 {
                     enemyType: "enemy1",
-                    config: { speed: 1, damage: 1, health: 10, lag: 0.5, spine: "villager1" } as IEnemyConfig,
+                    config: {
+                        speed: 1,
+                        damage: 1,
+                        health: 10,
+                        lookahead: 0.5,
+                        xp: 1,
+                        spine: "villager1",
+                    } as IEnemyConfig,
                 },
             ),
         );

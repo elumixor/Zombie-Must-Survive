@@ -37,9 +37,9 @@ export class EnemyManager extends Actor {
 
     @c(enemiesEditor)
     private readonly enemiesConfig = new Map<string, IEnemyConfig>([
-        ["enemy1", { speed: 1, damage: 1, health: 10, lag: 0.5, spine: "villager1" }],
-        ["enemy2", { speed: 1, damage: 1, health: 10, lag: 0.5, spine: "villager2" }],
-        ["enemy3", { speed: 1, damage: 1, health: 10, lag: 0.5, spine: "villager3" }],
+        ["enemy1", { speed: 1, damage: 1, health: 10, lookahead: 0.05, scale: 1, xp: 1, spine: "villager1" }],
+        ["enemy2", { speed: 1, damage: 1, health: 10, lookahead: 0.05, scale: 1, xp: 1, spine: "villager2" }],
+        ["enemy3", { speed: 1, damage: 1, health: 10, lookahead: 0.05, scale: 1, xp: 1, spine: "villager3" }],
     ]);
 
     private stages = [] as Stage[];
@@ -97,17 +97,19 @@ export class EnemyManager extends Actor {
         const data = this.enemiesConfig.get(enemyType);
         assert(data, `Enemy type ${enemyType} not found`);
 
-        const { speed, damage, health, lag, spine: enemySpine } = data;
+        const { speed, damage, health, lookahead = 0.02, scale = 1, xp = 1, spine: enemySpine } = data;
 
         const enemy = new Enemy(enemySpine);
 
         enemy.tracker.target = this.enemiesTarget;
 
         enemy.tracker.force = speed;
-        enemy.tracker.lag = lag;
+        enemy.tracker.lookahead = lookahead;
+        enemy.scale.set(scale);
         enemy.weapon.damage = damage;
         enemy.health.maxHealth = health;
         enemy.health.health = enemy.health.maxHealth;
+        enemy.xpFactor = xp;
 
         return enemy;
     }
@@ -132,7 +134,7 @@ export class EnemyManager extends Actor {
         }
     }
 
-    override destroy(): void {
+    override destroy() {
         this.clearEnemies();
         this.stopStages();
         super.destroy();

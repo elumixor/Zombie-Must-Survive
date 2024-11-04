@@ -23,7 +23,7 @@ export class Stage {
 
         this.timeout = this.time.timeout(() => this.end(), this.stageConfig.duration);
         this.intervals = this.stageConfig.enemies.map((enemy) =>
-            this.time.interval(() => this.spawnRequested.emit(enemy), enemy.spawnInterval),
+            this.time.interval(() => this.spawnRequested.emit(enemy), enemy.spawnInterval, true),
         );
     }
 

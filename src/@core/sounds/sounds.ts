@@ -18,8 +18,8 @@ export abstract class BaseSounds {
         this.volume = this.settings.volume;
 
         // Mute when focused out of the window.
-        window.addEventListener("focus", () => (this.muted = false));
-        window.addEventListener("blur", () => (this.muted = true));
+        window.addEventListener("focus", () => Howler.mute(this.muted));
+        window.addEventListener("blur", () => Howler.mute(true));
     }
 
     // We use this field instead of Howler.volume() to restore the volume after unmuting.

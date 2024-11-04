@@ -149,7 +149,9 @@ export class Time {
     }
 
     /** Executes a callback every specified number of seconds. Respects the current speed of the game */
-    interval(callback: () => void, seconds: number) {
+    interval(callback: () => void, seconds: number, immediate = false) {
+        if (immediate) callback();
+
         let elapsed = 0;
         let ms = seconds * 1000;
         const callbackWrapper = () => {

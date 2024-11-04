@@ -28,6 +28,8 @@ export class WeaponComponent extends Component {
 
     delay = 0;
 
+    requiredAnimation?: { trigger: () => void; event: EventEmitter };
+
     protected get carrierVelocity() {
         const physics = this.actor.getComponent(PhysicsComponent);
         return physics ? physics.velocity : Vec2.zero;
@@ -43,8 +45,21 @@ export class WeaponComponent extends Component {
         // Otherwise, check if there are any enemies in range
         if (!this.attackWithTargetInRange || targetsInRange.nonEmpty) {
             this.cooldownFinished = false;
-            this.onUse.emit();
-            this.use(targetsInRange);
+
+            // If there is an animation required, we schedule the use of the weapon upon the trigger
+            if (this.requiredAnimation) {
+                const { trigger, event } = this.requiredAnimation;
+                event.subscribeOnce(() => {
+                    this.onUse.emit();
+                    this.use(targetsInRange);
+                });
+                trigger();
+            } else {
+                this.onUse.emit();
+                this.use(targetsInRange);
+            }
+
+            // Update cooldown
             void this.time.delay(this.cooldown).then(() => (this.cooldownFinished = true));
         }
     }

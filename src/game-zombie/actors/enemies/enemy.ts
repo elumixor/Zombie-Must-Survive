@@ -1,7 +1,7 @@
-import { Actor, CircleColliderComponent, PhysicsComponent, Time, TrackerComponent } from "@core";
+import { Actor, CircleColliderComponent, PhysicsComponent, Time, TrackerComponent, Vec2 } from "@core";
 import { di } from "@elumixor/di";
 import { HealthComponent, HitEffectComponent, MeleeAttackComponent } from "game-zombie/components";
-import { ResourcesZombie, type EnemySpineKey } from "game-zombie/resources-zombie";
+import { ResourcesZombie, type EnemySpine, type EnemySpineKey } from "game-zombie/resources-zombie";
 import { XpCrystal } from "../pick-ups/xp-crystal";
 import { SoundsZombie } from "game-zombie/sounds-zombie";
 
@@ -21,10 +21,12 @@ export class Enemy extends Actor {
     private readonly hitEffect = this.addComponent(new HitEffectComponent(this));
     private freezeTimeout?: ReturnType<Time["timeout"]>;
 
+    xpFactor = 1;
+
     constructor(enemySpine: EnemySpineKey) {
         super();
 
-        this.spine = this.addChild(this.resources[enemySpine].copy());
+        this.spine = this.addChild(this.resources[enemySpine].copy()) as EnemySpine;
         this.spine.y = 50;
 
         this.name = "Enemy";
@@ -34,7 +36,6 @@ export class Enemy extends Actor {
             this.spine.scale.x = sign(v.x, 1) * abs(this.spine.scale.x);
             this.physics.addForce(v);
         });
-        // this.tracker.lag = 0.5;
 
         this.collider.selfTags.add("enemy");
         this.collider.targetTags.add("enemy");
@@ -59,9 +60,17 @@ export class Enemy extends Actor {
             for (const component of [this.health, this.weapon, this.tracker, this.physics, this.collider])
                 component.destroy();
 
-            const crystal = new XpCrystal();
-            crystal.position.copyFrom(this);
-            this.level.addChild(crystal);
+            const count = max(1, round(this.xpFactor));
+            const value = this.xpFactor / count;
+            const scale = lerp(0.5, 1.5, value / 2);
+
+            for (const _ of range(count)) {
+                const crystal = new XpCrystal(value);
+                crystal.scale.set(random(scale * 0.9, scale * 1.1));
+                crystal.position.copyFrom(this);
+                crystal.position.iadd(Vec2.random().withLength(random(50, 100)));
+                this.level.addChild(crystal);
+            }
 
             this.removeChild(this.spine);
             this.addChild(this.deathSpine);
@@ -72,7 +81,10 @@ export class Enemy extends Actor {
         });
 
         this.weapon.tags.add("player");
-        this.weapon.delay = 0.1;
+        this.weapon.requiredAnimation = {
+            trigger: () => void this.attack(),
+            event: this.spine.events.attack,
+        };
         this.weapon.onUse.subscribe(() => this.attack());
     }
 

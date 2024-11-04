@@ -10,6 +10,7 @@ export class ButtonWidget extends Container {
 
     private readonly container = new Container();
 
+    private readonly interactiveElements = [this.container];
     constructor({
         width = 200,
         height = 50,
@@ -27,10 +28,14 @@ export class ButtonWidget extends Container {
         this.textElement = new TextWidget(text, textStyle);
         this.textElement.anchor.set(0.5);
 
+        this.interactiveElements.push(this.textElement);
+
         if (sprite) {
             this.addChild(sprite);
             sprite.anchor.set(0.5);
             if (fit) this.textElement.fitTo(width, height);
+
+            this.interactiveElements.push(sprite);
         } else {
             const background = this.addChild(
                 rectSprite({
@@ -43,6 +48,8 @@ export class ButtonWidget extends Container {
             const foreground = this.addChild(rectSprite({ width, height, color, roundedRadius }));
 
             for (const element of [background, foreground]) element.anchor.set(0.5);
+
+            this.interactiveElements.push(background, foreground);
         }
 
         this.container.addChild(this.textElement);
@@ -50,15 +57,18 @@ export class ButtonWidget extends Container {
         this.addChild(this.container);
 
         this.disabled = false;
-        this.container.on("pointerdown", () => this.clicked.emit());
+
+        for (const element of this.interactiveElements) element.on("pointerdown", () => this.clicked.emit());
     }
 
     get disabled() {
         return this.container.interactive;
     }
     set disabled(value) {
-        this.container.interactive = !value;
-        this.container.cursor = value ? "default" : "pointer";
+        for (const element of this.interactiveElements) {
+            element.interactive = !value;
+            element.cursor = value ? "default" : "pointer";
+        }
     }
 
     get text() {
