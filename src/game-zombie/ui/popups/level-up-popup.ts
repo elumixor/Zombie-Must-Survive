@@ -39,7 +39,7 @@ export class LevelUpPopup extends Popup {
 
     override async show() {
         // Pick several random skills from the pool
-        const skills = this.gameState.skillPool.getSkills();
+        const skills = this.gameState.skillPool.getSkills(this.gameState.player.level);
 
         // Create visual cards/options for each skill
         const skillCards = skills.map((skill) => new SkillCard(skill, skill === skills.last));

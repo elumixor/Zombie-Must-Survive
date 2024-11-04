@@ -59,16 +59,24 @@ export class SkillPool {
         // this.regeneration,
     ]);
 
-    readonly rareSkills = new Set<Skill>([this.beholder, this.bite, this.boomerang]);
+    readonly rareSkills = new Set<Skill>([this.fart, this.bite, this.zombiecide]);
+    readonly ignoredSkills = new Map<number, Set<Skill>>([
+        [2, new Set<Skill>([this.reflux, this.acidPool, this.scream, this.zombiecide, this.beholder, this.spirit])],
+    ]);
     readonly normalSkills = this.allSkills.difference(this.rareSkills);
 
     readonly maxSkillsOnLevelUp = 3;
 
     /** Pick `n` skills of a given rarity that are not already learned completely by the target character */
-    getSkills() {
+    getSkills(level: number) {
         const numSkills = min(this.maxSkillsOnLevelUp, this.allSkills.size);
-        const normalSkills = [...this.normalSkills].pick(max(0, numSkills - 1), { repeat: false });
-        const rareSkills = [...this.rareSkills].pick(max(0, numSkills - normalSkills.length), { repeat: false });
+        const ignored = this.ignoredSkills.get(level) ?? new Set<Skill>();
+
+        const normalSkills = [...this.normalSkills.difference(ignored)].pick(max(0, numSkills - 1), { repeat: false });
+        const rareSkills = [...this.rareSkills.difference(ignored)].pick(max(0, numSkills - normalSkills.length), {
+            repeat: false,
+        });
+
         return [...normalSkills, ...rareSkills];
     }
 
