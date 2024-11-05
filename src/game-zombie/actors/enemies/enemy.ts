@@ -27,7 +27,6 @@ export class Enemy extends Actor {
         super();
 
         this.spine = this.addChild(this.resources[enemySpine].copy()) as EnemySpine;
-        this.spine.y = 50;
 
         this.name = "Enemy";
         this.layer = "foreground";
@@ -40,6 +39,7 @@ export class Enemy extends Actor {
         this.collider.selfTags.add("enemy");
         this.collider.targetTags.add("enemy");
         this.collider.targetTags.add("player");
+        this.collider.targetTags.add("environment");
 
         this.collider.forceRequested.subscribe((v) => this.physics.addForce(v.mul(0.1)));
         this.collider.radius = 50;

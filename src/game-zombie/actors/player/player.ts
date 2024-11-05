@@ -55,11 +55,14 @@ export class Player extends Actor {
         this.health.maxHealth = this.playerState.maxHp;
         this.health.health = this.playerState.hp;
 
-        this.ui.y = -85;
+        this.ui.y = -135;
 
         this.collider.selfTags.add("player");
         this.collider.targetTags.add("enemy");
+        this.collider.targetTags.add("environment");
         this.collider.pushStrength = 100;
+
+        this.collider.forceRequested.subscribe((v) => this.physics.addForce(v.mul(0.1)));
 
         this.pickupCollider.selfTags.add("pickUp");
         this.pickupCollider.radius = 100;
@@ -88,6 +91,7 @@ export class Player extends Actor {
         this.health.died.subscribe(() => this.die());
 
         // Otherwise, the animation spawns as a detached rotated head. Hard to tell why, but spine is strange...
+        this.spine.y = -50;
         this.spine.animate("idle");
         this.spine.skin = "normal";
         this.spine.update(0);
