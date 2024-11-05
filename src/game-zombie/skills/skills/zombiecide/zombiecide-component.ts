@@ -3,6 +3,8 @@ import { MainLevel } from "game-zombie/actors";
 import { Zombie } from "./zombie";
 
 export class ZombiecideComponent extends Component {
+    override tickEnabled = false;
+
     damage = 5;
     lifetime = 5;
     maxInstances = 1;

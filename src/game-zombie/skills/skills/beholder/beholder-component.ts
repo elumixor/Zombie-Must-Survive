@@ -1,45 +1,20 @@
-import { Component, Time, Vec2 } from "@core";
-import { di } from "@elumixor/di";
+import { Vec2 } from "@core";
+import { PeriodicSkillComponent } from "../periodic-skill-component";
 import { BeholderTurret } from "./beholder-turret";
 
 /** Spawns {@link BeholderTurret} */
 
-export class BeholderComponent extends Component {
-    private readonly time = di.inject(Time);
-    override tickEnabled = false;
-
+export class BeholderComponent extends PeriodicSkillComponent {
     damage = 1;
     fireCooldown = 1;
-    spawnCooldown = 1;
     maxInstances = 3;
     lifetime = 2;
     fireDistance = 1000;
-
     spawnRadius = 200;
 
-    private interval?: ReturnType<Time["interval"]>;
     private readonly instances = new Array<BeholderTurret>();
 
-    override beginPlay() {
-        super.beginPlay();
-
-        assert(!this.interval);
-        this.spawn();
-        this.interval = this.time.interval(() => this.spawn(), this.spawnCooldown);
-    }
-
-    updateParams() {
-        this.interval?.clear();
-        this.interval = this.time.interval(() => this.spawn(), this.spawnCooldown);
-    }
-
-    override destroy() {
-        super.destroy();
-        this.interval?.clear();
-        this.interval = undefined;
-    }
-
-    private spawn() {
+    protected override activate() {
         if (this.instances.length >= this.maxInstances) {
             const first = this.instances.shift();
             assert(first);

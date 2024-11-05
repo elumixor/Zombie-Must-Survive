@@ -38,7 +38,7 @@ export class BeholderSkill extends Skill {
 
         this.component.damage = this.damage.value(level);
         this.component.fireCooldown = this.fireCooldown.value(level);
-        this.component.spawnCooldown = this.spawnCooldown.value(level);
+        this.component.cooldown = this.spawnCooldown.value(level);
         this.component.maxInstances = this.maxInstances.value(level);
         this.component.lifetime = this.lifetime.value(level);
         this.component.fireDistance = this.fireDistance;

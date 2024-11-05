@@ -1,43 +1,18 @@
-import { Actor, Component, Time, vec2 } from "@core";
+import { Actor, vec2 } from "@core";
 import { di } from "@elumixor/di";
 import { all } from "@elumixor/frontils";
 import { Enemy } from "game-zombie/actors";
 import { HealthComponent } from "game-zombie/components";
 import { ResourcesZombie } from "game-zombie/resources-zombie";
+import { PeriodicSkillComponent } from "../periodic-skill-component";
 
-export class BiteSpawnerComponent extends Component {
-    private readonly time = di.inject(Time);
+export class BiteSpawnerComponent extends PeriodicSkillComponent {
     private readonly resources = di.inject(ResourcesZombie);
-
-    override tickEnabled = false;
 
     damage = 1;
     radius = 100;
-    spawnCooldown = 1;
 
-    private interval?: ReturnType<Time["interval"]>;
-
-    override beginPlay() {
-        super.beginPlay();
-
-        assert(!this.interval);
-        void this.spawn();
-        this.interval = this.time.interval(() => void this.spawn(), this.spawnCooldown);
-    }
-
-    updateParams() {
-        if (this.interval) {
-            this.interval.clear();
-            this.interval = this.time.interval(() => void this.spawn(), this.spawnCooldown);
-        }
-    }
-
-    override destroy(): void {
-        super.destroy();
-        this.interval?.clear();
-    }
-
-    private async spawn() {
+    protected override async activate() {
         const spine = this.resources.bite.copy();
         spine.parentLayer = this.level.layers.get("foreground");
         this.level.addChild(spine);

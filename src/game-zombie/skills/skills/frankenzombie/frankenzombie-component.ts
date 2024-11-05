@@ -1,32 +1,15 @@
-import { Actor, Component, Time } from "@core";
-import { di } from "@elumixor/di";
+import { Actor } from "@core";
 import { Enemy } from "game-zombie/actors";
 import { HealthComponent } from "game-zombie/components";
 import { Sprite } from "pixi.js";
+import { PeriodicSkillComponent } from "../periodic-skill-component";
 
-export class FrankenzombieComponent extends Component {
-    private readonly time = di.inject(Time);
-
+export class FrankenzombieComponent extends PeriodicSkillComponent {
     damage = 1;
     distance = 1;
     numBounces = 1;
-    cooldown = 1;
 
-    private interval?: ReturnType<Time["interval"]>;
-
-    override beginPlay() {
-        super.beginPlay();
-        this.updateParams();
-    }
-
-    updateParams() {
-        if (!this.beginPlayCalled) return;
-        this.interval?.clear();
-        this.activate();
-        this.interval = this.time.interval(() => this.activate(), this.cooldown);
-    }
-
-    private activate() {
+    protected override activate() {
         const enemies = this.level.getActorsOfType(Enemy);
 
         let current = this.actor;

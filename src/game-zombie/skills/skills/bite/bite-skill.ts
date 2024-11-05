@@ -33,7 +33,7 @@ export class BiteSkill extends Skill {
 
         this.component.damage = this.damage.value(level);
         this.component.radius = this.radius.value(level);
-        this.component.spawnCooldown = this.spawnCooldown.value(level);
+        this.component.cooldown = this.spawnCooldown.value(level);
 
         this.component.updateParams();
     }

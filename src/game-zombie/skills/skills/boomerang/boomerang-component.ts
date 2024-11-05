@@ -1,10 +1,9 @@
-import { Component, Time } from "@core";
 import { di } from "@elumixor/di";
 import { SoundsZombie } from "game-zombie/sounds-zombie";
+import { PeriodicSkillComponent } from "../periodic-skill-component";
 import { BoomerangActor } from "./boomerang-actor";
 
-export class BoomerangComponent extends Component {
-    private readonly time = di.inject(Time);
+export class BoomerangComponent extends PeriodicSkillComponent {
     private readonly sounds = di.inject(SoundsZombie);
 
     damage = 5;
@@ -12,30 +11,8 @@ export class BoomerangComponent extends Component {
     radius = 100;
     speed = 0.05;
     lifetime = 5;
-    cooldown = 10;
 
-    private spawnInterval?: ReturnType<Time["interval"]>;
-
-    override beginPlay() {
-        super.beginPlay();
-        this.updateParams();
-    }
-
-    override destroy() {
-        super.destroy();
-
-        this.stop();
-    }
-
-    updateParams() {
-        if (!this.beginPlayCalled) return;
-
-        this.stop();
-
-        this.spawnInterval = this.time.interval(() => this.spawn(), this.cooldown);
-    }
-
-    private spawn() {
+    protected override activate() {
         void this.sounds.skills.boomerang.play();
 
         const angleDiff = (Math.PI * 2) / this.instances;
@@ -51,11 +28,6 @@ export class BoomerangComponent extends Component {
         });
 
         void this.time.delay(this.lifetime).then(() => this.destroyCurrent(boomerangs));
-    }
-
-    private stop() {
-        this.spawnInterval?.clear();
-        this.spawnInterval = undefined;
     }
 
     private destroyCurrent(boomerangs: BoomerangActor[]) {
