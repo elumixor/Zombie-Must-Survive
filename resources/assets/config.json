@@ -36,7 +36,7 @@
                 "radius": "[150,500,500,500,500]",
                 "range": "[550,250,300,400,500]",
                 "lifetime": "[5,4,4,4,5]",
-                "spawnCooldown": "[6,1.5,1.5,1,1]",
+                "spawnCooldown": "[6,5.5,5,4,1]",
                 "travelDuration": "1",
                 "level": "0"
             }
@@ -126,12 +126,12 @@
         },
         "Player": {
             "General": {
-                "levelXPThresholds": "[17,70,128,200,270,350,450,600]",
+                "levelXPThresholds": "[15,70,128,200,270,350,450,600]",
                 "levelMaxHealth": "[10,20,30,40,50]",
                 "restoreHpOnLevelUp": "1",
                 "forceLevelUp": "undefined",
                 "forceDeath": "",
-                "speed": "7",
+                "speed": "8",
                 "invulnerable": "false",
                 "startingXPCrystals": "7",
                 "xpGain": "1",
@@ -140,8 +140,8 @@
         },
         "Enemy Manager": {
             "General": {
-                "stagesConfig": "[{\"duration\":15,\"enemies\":[{\"enemyType\":\"enemy1\",\"spawnInterval\":2.5,\"count\":1}]},{\"duration\":12,\"enemies\":[{\"enemyType\":\"enemy1\",\"spawnInterval\":1,\"count\":1}]},{\"duration\":3,\"enemies\":[{\"enemyType\":\"enemy1\",\"spawnInterval\":2,\"count\":28}]},{\"duration\":14,\"enemies\":[]},{\"duration\":24,\"enemies\":[{\"enemyType\":\"enemy1\",\"spawnInterval\":3.6,\"count\":6}]},{\"duration\":10,\"enemies\":[]},{\"duration\":3,\"enemies\":[{\"enemyType\":\"enemy2\",\"spawnInterval\":0.8,\"count\":1}]},{\"duration\":11,\"enemies\":[]},{\"duration\":24,\"enemies\":[{\"enemyType\":\"enemy1\",\"spawnInterval\":4,\"count\":4},{\"enemyType\":\"enemy1\",\"spawnInterval\":2,\"count\":3},{\"enemyType\":\"enemy1\",\"spawnInterval\":1,\"count\":2},{\"enemyType\":\"enemy2\",\"spawnInterval\":2,\"count\":1}]},{\"duration\":10,\"enemies\":[]},{\"duration\":3,\"enemies\":[{\"enemyType\":\"enemy4_boss\",\"spawnInterval\":2.6,\"count\":1}]},{\"duration\":24,\"enemies\":[{\"enemyType\":\"enemy1\",\"spawnInterval\":0.6,\"count\":1},{\"enemyType\":\"enemy1\",\"spawnInterval\":3,\"count\":3},{\"enemyType\":\"enemy1\",\"spawnInterval\":15,\"count\":15},{\"enemyType\":\"enemy1\",\"spawnInterval\":6,\"count\":7}]},{\"duration\":18,\"enemies\":[]},{\"duration\":12,\"enemies\":[{\"enemyType\":\"enemy1\",\"spawnInterval\":0.1,\"count\":2},{\"enemyType\":\"enemy1\",\"spawnInterval\":3.5,\"count\":4}]},{\"duration\":10,\"enemies\":[]},{\"duration\":21,\"enemies\":[]},{\"duration\":21,\"enemies\":[]}]",
-                "enemiesConfig": "[{\"enemyType\":\"enemy1\",\"config\":{\"speed\":9,\"damage\":1,\"health\":10,\"lag\":0,\"spine\":\"villager1\"}},{\"enemyType\":\"enemy2\",\"config\":{\"speed\":13.5,\"damage\":4,\"health\":40,\"lag\":0,\"spine\":\"villager2\"}},{\"enemyType\":\"enemy3\",\"config\":{\"speed\":7,\"damage\":9,\"health\":150,\"lag\":0,\"spine\":\"villager3\"}},{\"enemyType\":\"enemy4_boss\",\"config\":{\"speed\":15,\"damage\":11,\"health\":298,\"lag\":0,\"spine\":\"butcher\"}},{\"enemyType\":\"enemy5\",\"config\":{\"speed\":3,\"damage\":7,\"health\":150,\"lag\":0,\"spine\":\"nun\"}},{\"enemyType\":\"enemy6\",\"config\":{\"speed\":17,\"damage\":3,\"health\":25,\"lag\":0,\"spine\":\"villager3\"}}]",
+                "stagesConfig": "[{\"duration\":15,\"enemies\":[{\"enemyType\":\"enemy1\",\"spawnInterval\":2.5,\"count\":1}]},{\"duration\":12,\"enemies\":[{\"enemyType\":\"enemy1\",\"spawnInterval\":1,\"count\":1}]},{\"duration\":3,\"enemies\":[{\"enemyType\":\"enemy1\",\"spawnInterval\":2,\"count\":12}]},{\"duration\":14,\"enemies\":[]},{\"duration\":24,\"enemies\":[{\"enemyType\":\"enemy1\",\"spawnInterval\":3.6,\"count\":4}]},{\"duration\":10,\"enemies\":[]},{\"duration\":3,\"enemies\":[{\"enemyType\":\"enemy2\",\"spawnInterval\":2,\"count\":1}]},{\"duration\":11,\"enemies\":[]},{\"duration\":24,\"enemies\":[{\"enemyType\":\"enemy1\",\"spawnInterval\":4,\"count\":2},{\"enemyType\":\"enemy1\",\"spawnInterval\":2,\"count\":1},{\"enemyType\":\"enemy1\",\"spawnInterval\":1,\"count\":1},{\"enemyType\":\"enemy2\",\"spawnInterval\":2,\"count\":1}]},{\"duration\":10,\"enemies\":[]},{\"duration\":2,\"enemies\":[{\"enemyType\":\"enemy4_boss\",\"spawnInterval\":2,\"count\":1}]},{\"duration\":24,\"enemies\":[{\"enemyType\":\"enemy1\",\"spawnInterval\":1,\"count\":1},{\"enemyType\":\"enemy1\",\"spawnInterval\":3,\"count\":1},{\"enemyType\":\"enemy1\",\"spawnInterval\":15,\"count\":10},{\"enemyType\":\"enemy1\",\"spawnInterval\":6,\"count\":3}]},{\"duration\":18,\"enemies\":[]},{\"duration\":12,\"enemies\":[{\"enemyType\":\"enemy1\",\"spawnInterval\":0.7,\"count\":1},{\"enemyType\":\"enemy2\",\"spawnInterval\":3.5,\"count\":1}]},{\"duration\":10,\"enemies\":[]},{\"duration\":21,\"enemies\":[]},{\"duration\":21,\"enemies\":[]}]",
+                "enemiesConfig": "[{\"enemyType\":\"enemy1\",\"config\":{\"speed\":6,\"damage\":0.5,\"health\":10,\"lag\":0,\"spine\":\"villager1\"}},{\"enemyType\":\"enemy2\",\"config\":{\"speed\":8,\"damage\":3,\"health\":19,\"lag\":0,\"spine\":\"villager2\"}},{\"enemyType\":\"enemy3\",\"config\":{\"speed\":7,\"damage\":9,\"health\":150,\"lag\":0,\"spine\":\"villager3\"}},{\"enemyType\":\"enemy4_boss\",\"config\":{\"speed\":7,\"damage\":11,\"health\":298,\"lag\":0,\"spine\":\"butcher\"}},{\"enemyType\":\"enemy5\",\"config\":{\"speed\":3,\"damage\":7,\"health\":150,\"lag\":0,\"spine\":\"nun\"}},{\"enemyType\":\"enemy6\",\"config\":{\"speed\":17,\"damage\":3,\"health\":25,\"lag\":0,\"spine\":\"villager3\"}}]",
                 "autoStart": "true",
                 "restartOnEnd": "false",
                 "spawnDistance": "100",
@@ -150,5 +150,5 @@
             }
         }
     },
-    "version": 6
+    "version": 7
 }
